@@ -1,0 +1,816 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐍 Python Arcade Quest - Shuffled Options</title>
+    <style>
+        :root {
+            --neon-purple: #A855F7;
+            --deep-purple: #3B0764;
+            --electric-blue: #06B6D4;
+            --dark-space: #0F172A;
+            --bright-gold: #FACC15;
+            --laser-green: #22C55E;
+            --lava-red: #EF4444;
+            --card-gray: #1E293B;
+            --text-white: #F8FAFC;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-space);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .arcade-container {
+            width: 100%;
+            max-width: 850px;
+            background: linear-gradient(145deg, #1E1B4B, #0F172A);
+            border: 6px solid var(--neon-purple);
+            border-radius: 24px;
+            box-shadow: 0px 0px 30px rgba(168, 85, 247, 0.4), inset 0px 0px 15px rgba(6, 182, 212, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- SCREEN HEADER --- */
+        .arcade-header {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 4px solid var(--neon-purple);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .game-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--electric-blue);
+            text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+        }
+
+        .stat-badge {
+            background: var(--card-gray);
+            border: 2px solid var(--neon-purple);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* --- PAGES --- */
+        .screen {
+            display: none;
+            padding: 35px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* --- HOMEPAGE --- */
+        .home-layout {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hero-banner {
+            font-size: 46px;
+            color: var(--bright-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 0px 4px 0px #9A3412, 0 0 20px rgba(250, 204, 21, 0.4);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #93C5FD;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-arcade {
+            background: linear-gradient(135deg, var(--bright-gold), #EAB308);
+            color: var(--deep-purple);
+            border: none;
+            padding: 16px 45px;
+            font-size: 22px;
+            font-weight: 900;
+            border-radius: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0px 6px 0px #A16207, 0px 10px 20px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+        }
+
+        .btn-arcade:active {
+            transform: translateY(4px);
+            box-shadow: 0px 2px 0px #A16207, 0px 4px 10px rgba(0,0,0,0.4);
+        }
+
+        /* --- HUD PANEL --- */
+        .hud-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .timer-container {
+            width: 140px;
+            background: #020617;
+            border: 2px solid var(--electric-blue);
+            border-radius: 20px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), #22D3EE);
+            transition: width 0.1s linear;
+        }
+
+        .level-tag {
+            color: var(--bright-gold);
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        /* --- QUEST MODULES --- */
+        .question-text {
+            font-size: 19px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: #F1F5F9;
+        }
+
+        .code-snippet {
+            background: #020617;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 18px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            color: #A7F3D0;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .option-card {
+            background: var(--card-gray);
+            border: 2px solid #475569;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 16px;
+            color: var(--text-white);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-card:hover {
+            border-color: var(--electric-blue);
+            background: #334155;
+        }
+
+        .option-card.correct-glow {
+            border-color: var(--laser-green) !important;
+            background: rgba(34, 197, 94, 0.2) !important;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .option-card.wrong-glow {
+            border-color: var(--lava-red) !important;
+            background: rgba(239, 68, 68, 0.2) !important;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+        }
+
+        /* --- KNOWLEDGE DRAWER --- */
+        .feedback-view {
+            display: none;
+            background: #1E1B4B;
+            border: 2px solid var(--bright-gold);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .feedback-header {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--bright-gold);
+            margin-bottom: 8px;
+        }
+
+        .feedback-desc {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #E2E8F0;
+        }
+
+        .action-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            background: var(--neon-purple);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0px 4px 0px #6B21A8;
+        }
+
+        .btn-action:active {
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px #6B21A8;
+        }
+
+        /* --- SCOREBOARD --- */
+        .end-layout {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #020617;
+            border: 6px solid var(--bright-gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 34px;
+            font-weight: 900;
+            color: var(--bright-gold);
+            margin: 15px auto 25px auto;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+        }
+
+        .breakdown-card {
+            background: var(--card-gray);
+            border: 2px solid var(--neon-purple);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
+            text-align: left;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+            border-bottom: 1px dashed #334155;
+            padding-bottom: 6px;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .breakdown-score {
+            font-weight: bold;
+            color: var(--electric-blue);
+        }
+
+        .motivational-msg {
+            font-size: 19px;
+            line-height: 1.6;
+            color: #E2E8F0;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="arcade-container">
+        <div class="arcade-header">
+            <div class="game-title">🐍 Python Quest Arena</div>
+            <div id="hud-score" class="stat-badge">⭐ Score: 0</div>
+        </div>
+
+        <div id="screen-home" class="screen active">
+            <div class="home-layout">
+                <h1 class="hero-banner">Python Quiz Game</h1>
+                <p class="hero-subtitle">Test your knowledge! Tackle 30 intermediate questions on Loops, Systems Logic, and Return Functions. You have 50 seconds per question!</p>
+                <button class="btn-arcade" onclick="launchQuizMatchGame()">Get Started 🚀</button>
+            </div>
+        </div>
+
+        <div id="screen-arena" class="screen">
+            <div class="hud-panel">
+                <div id="quest-number-tag" class="stat-badge" style="border-color: var(--electric-blue);">Question 1/30</div>
+                <div id="quest-level-tag" class="level-tag">Level 1: Intermediate Loops</div>
+                <div class="timer-container">
+                    <div id="dynamic-timer-fill" class="timer-bar"></div>
+                </div>
+            </div>
+
+            <div id="question-payload-text" class="question-text">Loading query block...</div>
+            <div id="snippet-code-box" class="code-snippet"></div>
+
+            <div id="choices-grid-layout" class="options-grid"></div>
+
+            <div id="feedback-drawer" class="feedback-view">
+                <div id="feedback-title" class="feedback-header">Let's understand the logic! 💡</div>
+                <div id="feedback-body" class="feedback-desc">Placeholder text...</div>
+            </div>
+
+            <div class="action-container">
+                <button id="next-action-trigger" class="btn-action" onclick="advanceToNextQuestion()" style="display: none;">Next Challenge ➡️</button>
+            </div>
+        </div>
+
+        <div id="screen-victory" class="screen">
+            <div class="end-layout">
+                <h1 class="hero-banner" style="color: var(--electric-blue);">Quest Complete!</h1>
+                <div id="final-score-display" class="score-circle">0/30</div>
+                
+                <div class="breakdown-card">
+                    <h3 style="color: var(--bright-gold); margin-bottom: 15px; text-align: center; text-transform: uppercase; font-size: 14px;">📊 Level Score Breakdown</h3>
+                    <div class="breakdown-row">
+                        <span>Level 1: Intermediate Loops</span>
+                        <span id="breakdown-l1" class="breakdown-score">0 / 10</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Level 2: Systems Logic & Conditions</span>
+                        <span id="breakdown-l2" class="breakdown-score">0 / 10</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Level 3: Functions with Returns</span>
+                        <span id="breakdown-l3" class="breakdown-score">0 / 10</span>
+                    </div>
+                </div>
+
+                <p id="final-motivation-text" class="motivational-msg">Final message loading...</p>
+                <button class="btn-arcade" onclick="restartMatchFromScratch()">Play Again 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questDatabase = [
+            // LEVEL 1: INTERMEDIATE LOOPS (1 - 10)
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What will this skip-counting loop print onto the dashboard screen?",
+                code: "score = 0\nfor i in range(1, 6, 2):\n    score = score + i\nprint(score)",
+                options: ["4", "9", "6", "15"],
+                correct: 1,
+                explain: "The loop pulls values from range(1, 6, 2), which skip-counts by 2s: 1, 3, and 5. It adds them together: 1 + 3 + 5 = 9!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "Look at how this loop updates its counter variable. What is the final printed number?",
+                code: "laps = 1\nwhile laps < 5:\n    laps = laps + 2\nprint(laps)",
+                options: ["3", "4", "6", "5"],
+                correct: 3,
+                explain: "Laps starts at 1. The loop adds 2, making it 3 (3 < 5 is true). It runs again, adding 2 to make it 5. Now 5 < 5 is false, so it stops and prints 5!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "This code calculates bonus values using a variable to limit the loop. What does it print?",
+                code: "total_runs = 3\nsaved_points = 0\nfor k in range(total_runs):\n    saved_points = saved_points + 5\nprint(saved_points)",
+                options: ["15", "10", "20", "5"],
+                correct: 0,
+                explain: "Since total_runs is 3, range(3) loops exactly 3 times (for 0, 1, and 2). It adds 5 each time: 5 + 5 + 5 = 15!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What number displays on the screen when this countdown loop finishes?",
+                code: "gas_liters = 4\nwhile gas_liters > 1:\n    gas_liters = gas_liters - 1\nprint(gas_liters)",
+                options: ["2", "0", "1", "3"],
+                correct: 2,
+                explain: "The loop decreases gas_liters by 1 each time while it is greater than 1 (4 -> 3 -> 2 -> 1). Once it hits 1, 1 > 1 is false, and it prints 1."
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What will the total balance variable contain after running this list loop?",
+                code: "balance = 10\nfor gift in [2, 5]:\n    balance = balance + gift\nprint(balance)",
+                options: ["12", "15", "10", "17"],
+                correct: 3,
+                explain: "The code starts with a balance of 10. The loop runs twice, adding 2 (making 12), and then adding 5. 12 + 5 = 17!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "How many text messages will be printed if we execute this specific code block?",
+                code: "counter = 0\nwhile counter < 6:\n    if counter == 3:\n        break\n    print(\"Hello\")\n    counter = counter + 1",
+                options: ["6 messages", "3 messages", "4 messages", "0 messages"],
+                correct: 1,
+                explain: "The loop prints 'Hello' when counter is 0, 1, and 2. When counter becomes 3, the if rule triggers break, which stops the loop instantly!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What number value will be displayed at the very end of this loop?",
+                code: "total = 1\nfor factor in [2, 3]:\n    total = total * factor\nprint(total)",
+                options: ["5", "1", "6", "12"],
+                correct: 2,
+                explain: "The code multiplies total by each value. First, 1 * 2 = 2. Then, it takes that 2 and multiplies it by 3. 2 * 3 = 6!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "Look at the condition in this while loop. How many times will it execute?",
+                code: "points = 12\nwhile points > 12:\n    points = points - 1\n    print(\"Running\")",
+                options: ["0 times", "1 time", "12 times", "Infinite times"],
+                correct: 0,
+                explain: "Since points starts at exactly 12, the condition 12 > 12 is false right from the start. The loop never runs!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What is the final number outputted by this loop tracking your steps?",
+                code: "steps = 0\nfor s in range(4):\n    steps = s\nprint(steps)",
+                options: ["4", "0", "1", "3"],
+                correct: 3,
+                explain: "range(4) yields values 0, 1, 2, and 3. On the final iteration, s is assigned 3, which is then assigned to steps. It prints 3!"
+            },
+            {
+                level: "Level 1: Intermediate Loops 🔁",
+                q: "What will this while loop output when it checks its boundary rule?",
+                code: "value = 5\nwhile value != 2:\n    value = value - 1\nprint(value)",
+                options: ["2", "3", "4", "5"],
+                correct: 0,
+                explain: "The value drops by 1 each pass (5 -> 4 -> 3 -> 2). When value equals 2, the condition 2 != 2 is false, and the loop prints 2."
+            },
+
+            // LEVEL 2: SYSTEMS LOGIC & CONDITIONS (11 - 20)
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "You want to find the highest score between two classmates. What logic condition should replace [ ? ]?",
+                code: "# Story: Check if Sam's score is higher than Alex's\nif sam_score [ ? ] alex_score:\n    print(\"Sam has the highest score!\")",
+                options: ["<", "==", ">", "!="],
+                correct: 2,
+                explain: "To see if Sam's score is higher than Alex's, use the greater-than symbol (`>`)!"
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "A student passes the test if their score is 70 or more. What operator checks this rule correctly?",
+                code: "if student_score [ ? ] 70:\n    print(\"Passed!\")",
+                options: ["==", ">=", "<=", ">"],
+                correct: 1,
+                explain: "The greater-than-or-equal-to operator (`>=`) ensures that scores of exactly 70 or higher trigger the passing message."
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "A swimming pool entry rule says you can enter if you are at least 10 years old AND have a safety wristband. What keyword combines these requirements?",
+                code: "if age >= 10 [ ? ] wristband == True:\n    print(\"Welcome to the deep end!\")",
+                options: ["or", "not", "plus", "and"],
+                correct: 3,
+                explain: "Use `and` because both conditions must be true at the same time to enter the pool!"
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "A pizza party is unlocked if you collect 10 tokens OR if it's Friday. What keyword fits this scenario?",
+                code: "if tokens == 10 [ ? ] day == \"Friday\":\n    print(\"Pizza Party Time!\")",
+                options: ["or", "and", "plus", "=="],
+                correct: 0,
+                explain: "Use `or` because meeting just one of the conditions is enough to start the party!"
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "We want to check if a student's team color is NOT equal to 'Red'. What operator represents this negative comparison?",
+                code: "if team_color [ ? ] \"Red\":\n    print(\"Go Blue or Green Team!\")",
+                options: ["==", "<", "!=", "not"],
+                correct: 2,
+                explain: "The exclamation mark paired with an equals sign (`!=`) checks if two values are not equal to each other."
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "You want to find out if the total cost of toys is less than or equal to your allowance of $20. What operator checks this rule?",
+                code: "if toy_cost [ ? ] 20:\n    print(\"I can buy these toys!\")",
+                options: ["<", "<=", ">=", "=="],
+                correct: 1,
+                explain: "The less-than-or-equal-to symbol (`<=`) checks if the cost is smaller than or exactly equal to your allowance."
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "We need a rule that handles cases where the primary if check fails. What keyword belongs on line 4?",
+                code: "homework = \"Incomplete\"\nif homework == \"Complete\":\n    print(\"Time for video games!\")\n[ ? ]:\n    print(\"Please finish your homework first!\")",
+                options: ["elif", "if_not", "else", "then"],
+                correct: 2,
+                explain: "The `else` keyword acts as a fallback plan, running whenever the initial `if` statement evaluates to false."
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "To see if your car is the fastest out of three distinct racers, what logic structural statement should be used?",
+                code: "# Story: Check if car_a beats car_b AND car_a beats car_c",
+                options: ["if car_a > car_b or car_a > car_c:", "if car_a > car_b and car_a > car_c:", "if car_a + car_b + car_c:", "if car_a == car_b:"],
+                correct: 1,
+                explain: "To be the fastest overall, car_a must beat car_b **and** simultaneously beat car_c!"
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "A store has three pricing levels based on membership tags. What keyword allows us to check a second, alternative rule?",
+                code: "if member == \"Gold\":\n    print(\"Free item!\")\n[ ? ] member == \"Silver\":\n    print(\"Half price item!\")",
+                options: ["else", "if_two", "or", "elif"],
+                correct: 4, 
+                options: ["else", "if_two", "or", "elif"],
+                correct: 3,
+                explain: "Use `elif` (short for else-if) to check an additional condition when the first `if` condition turns out to be false!"
+            },
+            {
+                level: "Level 2: Systems Logic 🧠",
+                q: "What message will print on the terminal window when this logic block is executed?",
+                code: "marbles = 5\nif marbles > 10:\n    print(\"Big Bag!\")\nelse:\n    print(\"Small Bag!\")",
+                options: ["Big Bag!", "Small Bag!", "Error", "Nothing prints"],
+                correct: 1,
+                explain: "Since 5 > 10 is false, the code skips the `if` block and jumps straight to the `else` path, printing 'Small Bag!'."
+            },
+
+            // LEVEL 3: FUNCTIONS WITH RETURNS (21 - 30)
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What value is returned and saved in the total variable when this program runs?",
+                code: "def double_value(number):\n    return number * 2\n\ntotal = double_value(5)\nprint(total)",
+                options: ["5", "2", "10", "number2"],
+                correct: 2,
+                explain: "The function takes 5, calculates 5 * 2 = 10, and returns that value. total saves it, and print(total) displays 10!"
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What string text will be outputted to the screen by this return function code?",
+                code: "def pick_team(color):\n    return \"Team \" + color\n\nmy_team = pick_team(\"Blue\")\nprint(my_team)",
+                options: ["Team Blue", "Blue", "color", "Team "],
+                correct: 0,
+                explain: "The function takes the text 'Blue', combines it with 'Team ', and returns 'Team Blue', which is then printed."
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "Look at the parameters and the return line. What value will print out?",
+                code: "def add_bonus(score):\n    return score + 10\n\nfinal_score = add_bonus(50)\nprint(final_score)",
+                options: ["50", "60", "10", "40"],
+                correct: 1,
+                explain: "The function takes 50, adds 10 to it ($50 + 10 = 60$), and returns 60 to be printed."
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What happens to a function execution block immediately after the return keyword triggers?",
+                code: "def simple_recipe():\n    return \"Done\"\n    print(\"Hello?\") # Line 3",
+                options: ["It prints 'Hello?' next", "It exits the function immediately, so line 3 never runs", "It throws an error", "It loops back to line 1"],
+                correct: 1,
+                explain: "The `return` keyword is like an exit door. As soon as it executes, the function stops immediately, meaning any code directly below it inside the block is skipped!"
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What will print out when we run this function with two number inputs?",
+                code: "def check_smaller(a, b):\n    if a < b:\n        return a\n    else:\n        return b\n\nresult = check_smaller(8, 12)\nprint(result)",
+                options: ["12", "a", "8", "b"],
+                correct: 2,
+                explain: "The code checks if 8 < 12, which is true! It immediately fires `return a`, sending 8 back out to be printed."
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "Look closely at this math formula script. What number is printed?",
+                code: "def multiply_pocket_money(allowance):\n    return allowance * 3\n\nfinal_pockets = multiply_pocket_money(4)\nprint(final_pockets)",
+                options: ["4", "12", "3", "7"],
+                correct: 1,
+                explain: "The number 4 goes into the function. The return statement calculates 4 * 3 = 12 and passes it back out to print!"
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What string value is returned and saved when this text processing function finishes?",
+                code: "def make_excited(word):\n    return word + \"!\"\n\ncheer = make_excited(\"Go\")\nprint(cheer)",
+                options: ["Go", "!", "word!", "Go!"],
+                correct: 3,
+                explain: "The function takes 'Go', attaches an exclamation mark to the end, and returns 'Go!'."
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "Spot the mistake! Why will this return statement block cause an issue in Python?",
+                code: "def find_sum(x, y):\nreturn x + y",
+                options: ["The return line is missing indentation", "The word def is wrong", "It is missing parentheses", "x and y are bad variables"],
+                correct: 0,
+                explain: "The `return` line must be indented (pushed right) to clearly show it belongs inside the `find_sum` function block!"
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What string value is returned and saved when this text processing function finishes?",
+                code: "def make_excited(word):\n    return word + \"!\"\n\ncheer = make_excited(\"Go\")\nprint(cheer)",
+                options: ["Go", "!", "word!", "Go!"],
+                correct: 3,
+                explain: "The function takes 'Go', attaches an exclamation mark to the end, and returns 'Go!'."
+            },
+            {
+                level: "Level 3: Return Functions ⚙️",
+                q: "What will print out if you call this function but pass zero into the parameter slot?",
+                code: "def test_zero(value):\n    return value + 100\n\noutput = test_zero(0)\nprint(output)",
+                options: ["0", "100", "value", "101"],
+                correct: 1,
+                explain: "The function takes 0, adds 100 to it ($0 + 100 = 100$), and returns 100 to be saved and printed."
+            }
+        ];
+
+        let activeQuestionIndex = 0;
+        let runningScore = 0;
+        let l1Score = 0; let l2Score = 0; let l3Score = 0;
+        
+        let countdownTimerInstance = null;
+        let secondsRemaining = 50;
+        let hasSelectedAnswer = false;
+
+        const homePageScreen = document.getElementById("screen-home");
+        const arenaPlayScreen = document.getElementById("screen-arena");
+        const finalScoreScreen = document.getElementById("screen-victory");
+
+        const scoreHUDTracker = document.getElementById("hud-score");
+        const questionNumTag = document.getElementById("quest-number-tag");
+        const questionLvlTag = document.getElementById("quest-level-tag");
+        const timerProgressBar = document.getElementById("dynamic-timer-fill");
+        
+        const textPayloadBox = document.getElementById("question-payload-text");
+        const scriptCodeBox = document.getElementById("snippet-code-box");
+        const targetChoicesGrid = document.getElementById("choices-grid-layout");
+        
+        const feedbackDrawerBox = document.getElementById("feedback-drawer");
+        const feedbackTitleText = document.getElementById("feedback-title");
+        const feedbackBodyText = document.getElementById("feedback-body");
+        const nextActionTriggerBtn = document.getElementById("next-action-trigger");
+
+        function switchActiveDisplayPage(targetScreenElement) {
+            homePageScreen.classList.remove("active");
+            arenaPlayScreen.classList.remove("active");
+            finalScoreScreen.classList.remove("active");
+            targetScreenElement.classList.add("active");
+        }
+
+        function launchQuizMatchGame() {
+            activeQuestionIndex = 0;
+            runningScore = 0;
+            l1Score = 0; l2Score = 0; l3Score = 0;
+            scoreHUDTracker.innerText = "⭐ Score: 0";
+            switchActiveDisplayPage(arenaPlayScreen);
+            populateQuestionInterfaceCard();
+        }
+
+        function populateQuestionInterfaceCard() {
+            hasSelectedAnswer = false;
+            feedbackDrawerBox.style.display = "none";
+            nextActionTriggerBtn.style.display = "none";
+            
+            const questObj = questDatabase[activeQuestionIndex];
+            
+            questionNumTag.innerText = `Question ${activeQuestionIndex + 1}/30`;
+            questionLvlTag.innerText = questObj.level;
+            textPayloadBox.innerText = questObj.q;
+            scriptCodeBox.innerText = questObj.code;
+
+            targetChoicesGrid.innerHTML = "";
+            questObj.options.forEach((optText, index) => {
+                const choiceBtn = document.createElement("button");
+                choiceBtn.className = "option-card";
+                choiceBtn.innerText = optText;
+                choiceBtn.onclick = () => registerSelectedChoiceAnswer(index, choiceBtn);
+                targetChoicesGrid.appendChild(choiceBtn);
+            });
+
+            initClockCountdownSequence();
+        }
+
+        function initClockCountdownSequence() {
+            clearInterval(countdownTimerInstance);
+            secondsRemaining = 50;
+            timerProgressBar.style.width = "100%";
+            
+            countdownTimerInstance = setInterval(() => {
+                secondsRemaining = secondsRemaining - 0.1;
+                let percentWidth = (secondsRemaining / 50) * 100;
+                timerProgressBar.style.width = `${percentWidth}%`;
+
+                if (secondsRemaining <= 0) {
+                    clearInterval(countdownTimerInstance);
+                    handleExpirationTimeout();
+                }
+            }, 100);
+        }
+
+        function trackLevelScorePoints() {
+            if (activeQuestionIndex < 10) {
+                l1Score++;
+            } else if (activeQuestionIndex < 20) {
+                l2Score++;
+            } else {
+                l3Score++;
+            }
+        }
+
+        function registerSelectedChoiceAnswer(selectedIndex, selectedButtonElement) {
+            if (hasSelectedAnswer) return;
+            hasSelectedAnswer = true;
+            clearInterval(countdownTimerInstance);
+
+            const currentQuest = questDatabase[activeQuestionIndex];
+            const childrenButtons = targetChoicesGrid.children;
+
+            if (selectedIndex === currentQuest.correct) {
+                selectedButtonElement.classList.add("correct-glow");
+                runningScore++;
+                trackLevelScorePoints();
+                scoreHUDTracker.innerText = `⭐ Score: ${runningScore}`;
+                feedbackTitleText.innerText = "🎯 Spot On! Excellent Job!";
+            } else {
+                selectedButtonElement.classList.add("wrong-glow");
+                childrenButtons[currentQuest.correct].classList.add("correct-glow");
+                feedbackTitleText.innerText = "💡 Let's understand the logic!";
+            }
+
+            revealExplanationDrawer(currentQuest.explain);
+        }
+
+        function handleExpirationTimeout() {
+            hasSelectedAnswer = true;
+            const currentQuest = questDatabase[activeQuestionIndex];
+            const childrenButtons = targetChoicesGrid.children;
+
+            childrenButtons[currentQuest.correct].classList.add("correct-glow");
+            feedbackTitleText.innerText = "⏰ Time's Up! Let's examine the logic:";
+            revealExplanationDrawer(currentQuest.explain);
+        }
+
+        function revealExplanationDrawer(explanationString) {
+            feedbackBodyText.innerText = explanationString;
+            feedbackDrawerBox.style.display = "block";
+            nextActionTriggerBtn.style.display = "inline-block";
+        }
+
+        function advanceToNextQuestion() {
+            activeQuestionIndex++;
+            if (activeQuestionIndex < questDatabase.length) {
+                populateQuestionInterfaceCard();
+            } else {
+                processGameCompletionVictory();
+            }
+        }
+
+        function processGameCompletionVictory() {
+            switchActiveDisplayPage(finalScoreScreen);
+            document.getElementById("final-score-display").innerText = `${runningScore}/30`;
+            
+            // Set values inside dashboard nodes
+            document.getElementById("breakdown-l1").innerText = `${l1Score} / 10`;
+            document.getElementById("breakdown-l2").innerText = `${l2Score} / 10`;
+            document.getElementById("breakdown-l3").innerText = `${l3Score} / 10`;
+            
+            const dynamicMotivationPara = document.getElementById("final-motivation-text");
+            
+            if (runningScore >= 25) {
+                dynamicMotivationPara.innerText = "🌟 Outstanding achievement! You solved those complex logic paths and return channels easily. Your programming future looks exceptionally bright!";
+            } else if (runningScore >= 15) {
+                dynamicMotivationPara.innerText = "🚀 Marvelous job! You tracked variables and function returns like an expert. Keep practicing, and you will be building your own apps in no time!";
+            } else {
+                dynamicMotivationPara.innerText = "👍 Nice try! Programming is all about experimenting and learning from mistakes. Keep practicing and your structural skills will continue to grow!";
+            }
+        }
+
+        function restartMatchFromScratch() {
+            switchActiveDisplayPage(homePageScreen);
+        }
+    </script>
+</body>
+</html>
+
+```
