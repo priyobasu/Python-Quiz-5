@@ -3,434 +3,1037 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Let's Revise Python!</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Press+Start+2P&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <title>Python OOP & Debugging Arena</title>
+    <!-- Pixel & Clean Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-yellow: #FEF08A;       
+            --yellow-accent: #FDE047;   
+            --yellow-dark: #EAB308;     
+            --border-dark: #1C1917;    
+            --color-correct: #4ADE80;  
+            --color-wrong: #F87171;    
+            --text-main: #1C1917;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
         body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: #ffe4e6;
-            overflow-x: hidden;
-        }
-        .handwritten {
-            font-family: 'Architects Daughter', cursive;
-        }
-        .pixel-font {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
-        }
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #fb7185;
-            image-rendering: pixelated;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
-        }
-        /* Pixelated Heart Shape */
-        .heart::before, .heart::after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: inherit;
-        }
-        .heart::before { top: -10px; left: 0; border-radius: 0; }
-        .heart::after { left: 10px; top: 0; border-radius: 0; }
-        
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
-
-        .score-circle {
-            border: 3px solid #be123c;
-            border-radius: 50% 45% 52% 48%;
+            background-color: var(--bg-yellow);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            display: inline-block;
-            transform: rotate(-5deg);
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .code-block {
+        /* --- BACKGROUND CANVAS: ANIMATED BEES --- */
+        #beeCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- MAIN INTERFACE CARD --- */
+        .quiz-card {
+            width: 100%;
+            max-width: 880px;
+            background: #FFFFFF;
+            border: 4px solid var(--border-dark);
+            border-radius: 20px;
+            box-shadow: 8px 8px 0px var(--border-dark);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hud-topbar {
+            background: var(--yellow-accent);
+            border-bottom: 4px solid var(--border-dark);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hud-badge {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        .game-view {
+            display: none;
+            padding: 30px;
+        }
+
+        .game-view.active {
+            display: block;
+        }
+
+        /* --- MINIMAL COVER SCREEN --- */
+        .home-layout {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .main-heading {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 28px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            line-height: 1.4;
+            text-shadow: 3px 3px 0px var(--yellow-dark);
+        }
+
+        .sub-heading {
+            font-size: 16px;
+            margin-bottom: 36px;
+            color: #713F12;
+            font-weight: 600;
+        }
+
+        .btn-gameplay {
+            background: var(--yellow-accent);
+            color: var(--text-main);
+            border: 3px solid var(--border-dark);
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--border-dark);
+            transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+        }
+
+        .btn-gameplay:hover {
+            background: var(--yellow-dark);
+        }
+
+        .btn-gameplay:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        /* --- ARENA SUBBAR & TIMER --- */
+        .arena-subbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-timer-bar {
+            width: 200px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            height: 24px;
+            overflow: hidden;
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .timer-progress-fill {
+            width: 100%;
+            height: 100%;
+            background: var(--yellow-dark);
+            transition: width 0.1s linear;
+        }
+
+        .level-headline {
+            font-weight: bold;
+            font-size: 14px;
+            color: #854D0E;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- QUESTION PROMPT FRAME --- */
+        .problem-description-card {
+            background-color: #FEFCE8;
+            border: 3px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 4px 4px 0px var(--border-dark);
+        }
+
+        .problem-prompt-text {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .python-syntax-box {
+            background: #1C1917;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 16px;
             font-family: 'Courier New', Courier, monospace;
-            background: #27272a;
-            color: #f4f4f5;
-            padding: 1rem;
-            border-radius: 0.5rem;
+            font-size: 14px;
+            color: #FEF08A; 
             white-space: pre;
+            overflow-x: auto;
+            margin-top: 14px;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        /* --- CHOICE BUTTONS GRID --- */
+        .choices-stack-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice-item-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            box-shadow: 4px 4px 0px var(--border-dark);
+            transition: transform 0.05s, box-shadow 0.05s;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .choice-item-btn:hover {
+            background: #FEFCE8;
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px var(--border-dark);
+        }
+
+        .choice-item-btn.flash-green { 
+            background-color: var(--color-correct) !important; 
+            font-weight: bold; 
+            color: #064E3B;
+        }
+
+        .choice-item-btn.flash-red { 
+            background-color: var(--color-wrong) !important; 
+            font-weight: bold; 
+            color: #7F1D1D;
+        }
+
+        /* --- INTERACTIVE MODULE: DRAG & DROP --- */
+        .drag-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 15px;
+        }
+
+        .drag-sources, .drop-targets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .draggable-item {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: grab;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .drop-target-box {
+            background: #FFFFFF;
+            border: 2px dashed var(--border-dark);
+            border-radius: 12px;
+            padding: 14px;
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .drop-target-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #854D0E;
+            text-transform: uppercase;
+        }
+
+        .drop-slot {
+            min-height: 48px;
+            background: #FEFCE8;
+            border: 1px solid #CA8A04;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 6px;
+            align-items: center;
+        }
+
+        /* --- EXPLANATION DRAWER --- */
+        .explanation-review-box {
+            display: none;
+            background: #F0FDF4;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        .explanation-label-tag {
+            font-weight: bold;
+            color: #166534;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .explanation-body-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #1F2937;
+        }
+
+        .footer-action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-submit-interactive {
+            background: var(--yellow-accent);
+            border: 2px solid var(--border-dark);
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 640px) {
+            .main-heading {
+                font-size: 20px;
+            }
+            .hud-topbar {
+                padding: 12px 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <!-- ANIMATED BEES BACKGROUND CANVAS -->
+    <canvas id="beeCanvas"></canvas>
 
-        const QUESTIONS = [
+    <div class="quiz-card">
+        <!-- HUD TOPBAR -->
+        <div class="hud-topbar">
+            <div id="hud-index-tracker" class="hud-badge">Question 1/20</div>
+            <div id="hud-score-tracker" class="hud-badge">⭐ Score: 0</div>
+        </div>
+
+        <!-- VIEW 1: COVER SCREEN -->
+        <div id="view-home" class="game-view active">
+            <div class="home-layout">
+                <h1 class="main-heading">Python OOP &amp; Debugging Arena</h1>
+                <p class="sub-heading">Test your knowledge on OOP concepts, loop tracing, and function debugging.<br>⏱️ 30 seconds per question.</p>
+                <button id="btn-start-quiz" class="btn-gameplay">Start Challenge 🚀</button>
+            </div>
+        </div>
+
+        <!-- VIEW 2: ARENA PLAYSPACE -->
+        <div id="view-arena" class="game-view">
+            <div class="arena-subbar">
+                <div id="arena-level-header" class="level-headline">Level 1: OOP Concepts</div>
+                <div class="progress-timer-bar">
+                    <div id="arena-timer-fill" class="timer-progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="arena-prompt-frame" class="problem-description-card">
+                <p id="arena-question-text" class="problem-prompt-text">Loading prompt...</p>
+                <div id="arena-syntax-terminal" class="python-syntax-box" style="display: none;"></div>
+                
+                <!-- CONTAINER FOR INTERACTIVE QUESTIONS -->
+                <div id="interactive-area" style="display: none;"></div>
+            </div>
+
+            <div id="arena-choices-stack" class="choices-stack-grid"></div>
+
+            <div id="arena-explanation-drawer" class="explanation-review-box">
+                <div class="explanation-label-tag">Explanation 💡</div>
+                <p id="explanation-body-text" class="explanation-body-text">Explanation details...</p>
+            </div>
+
+            <div class="footer-action-row">
+                <button id="btn-submit-custom" class="btn-submit-interactive" style="display: none;">Check Answer ✔️</button>
+                <button id="btn-next-step" class="btn-gameplay" style="display: none; font-size: 15px; padding: 10px 24px;">Next Question ➡️</button>
+            </div>
+        </div>
+
+        <!-- VIEW 3: REPORT CARD -->
+        <div id="view-report" class="game-view">
+            <div class="home-layout" style="padding: 20px 0px;">
+                <h2 class="main-heading" style="font-size: 22px; margin-bottom: 24px;">📊 PROGRESS REPORT CARD</h2>
+                
+                <div style="background: #FEFCE8; border: 3px solid var(--border-dark); border-radius: 14px; padding: 20px; max-width: 520px; margin: 0 auto 24px auto; text-align: left; box-shadow: 4px 4px 0px var(--border-dark);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: bold; font-size: 14px; border-bottom: 2px dashed var(--border-dark); padding-bottom: 6px;">
+                        <span>Section 1: OOP Concepts (Q1-10)</span>
+                        <span id="rep-l1-score" style="color: #854D0E;">0 / 10</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: bold; font-size: 14px; border-bottom: 2px dashed var(--border-dark); padding-bottom: 6px;">
+                        <span>Section 2: Debugging &amp; Logic (Q11-20)</span>
+                        <span id="rep-l2-score" style="color: #854D0E;">0 / 10</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; padding-top: 8px; color: #15803D; border-top: 2px solid var(--border-dark); margin-top: 8px;">
+                        <span>TOTAL SCORE</span>
+                        <span id="rep-grand-total">0 / 20</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; padding-top: 6px; color: #854D0E;">
+                        <span>PERCENTAGE</span>
+                        <span id="rep-percentage">0%</span>
+                    </div>
+                </div>
+
+                <p id="report-motivation-text" style="font-size: 15px; line-height: 1.6; font-weight: 600; margin-bottom: 24px; padding: 0 15px; color: #713F12;">Summary performance...</p>
+                <button id="btn-restart-quiz" class="btn-gameplay" style="font-size: 16px; padding: 12px 30px;">Try Again 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MASTER 20 QUESTION DATA REPOSITORY
+        const fullQuizChallengesRepo = [
+            // --- SECTION 1: OOP CONCEPTS (Q1 - Q10) ---
             {
-                id: 1,
-                type: 'multi',
-                text: "Click on the correct keywords for datatypes:",
-                options: [
-                    { text: "integer", isCorrect: true, reason: "In Python, integers are whole numbers like 5 or -10." },
-                    { text: "float", isCorrect: true, reason: "Floats are numbers with decimal points like 3.14." },
-                    { text: "string", isCorrect: true, reason: "Strings are bits of text inside quotes." },
-                    { text: "boolean", isCorrect: true, reason: "Booleans are simple True or False values." },
-                    { text: "decimal", isCorrect: false, reason: "While logical, 'decimal' isn't a basic keyword name like float." },
-                    { text: "alphabet", isCorrect: false, reason: "We use 'string' for text, not 'alphabet'." }
+                type: "drag_and_drop",
+                prompt: "Question 1: Drag each item and place it into its correct Class bucket.",
+                classes: ["Classroom", "Bike Showroom"],
+                items: [
+                    { id: "i1", text: "Student Alex", correctClass: "Classroom" },
+                    { id: "i2", text: "Yamaha R1", correctClass: "Bike Showroom" },
+                    { id: "i3", text: "Student Sarah", correctClass: "Classroom" },
+                    { id: "i4", text: "Ducati Panigale", correctClass: "Bike Showroom" }
                 ],
-                correctCount: 4
+                explanation: "A class acts as a general blueprint (like Classroom or Bike Showroom), while the specific real-life items created from it are objects (like Alex or a Ducati)."
             },
             {
-                id: 2,
-                type: 'multi',
-                text: "Click on the correct keywords for conditions:",
-                options: [
-                    { text: "if", isCorrect: true, reason: "Starts a basic logic check." },
-                    { text: "if-elif", isCorrect: true, reason: "Allows you to check a second option if the first was false." },
-                    { text: "if-elif-else", isCorrect: true, reason: "The full chain that handles all possibilities." },
-                    { text: "check", isCorrect: false, reason: "Python uses 'if', not 'check'." },
-                    { text: "when", isCorrect: false, reason: "'when' is used in other languages, but not Python conditions." },
-                    { text: "otherwise", isCorrect: false, reason: "Python uses 'else' instead of 'otherwise'." }
+                type: "drag_and_drop",
+                prompt: "Question 2: Drag each attribute and place it into its correct Class bucket.",
+                classes: ["Student", "Banking System"],
+                items: [
+                    { id: "a1", text: "Roll Number", correctClass: "Student" },
+                    { id: "a2", text: "Account Balance", correctClass: "Banking System" },
+                    { id: "a3", text: "CCA Activity", correctClass: "Student" },
+                    { id: "a4", text: "Account Password", correctClass: "Banking System" }
                 ],
-                correctCount: 3
+                explanation: "Attributes describe features or data stored inside a class. Student stores school details (Roll Number, CCA), while Banking System stores bank details (Balance, Password)."
             },
             {
-                id: 3,
-                type: 'multi',
-                text: "Click on the correct syntax for printing statements:",
-                options: [
-                    { text: 'print(a, " ", b)', isCorrect: true, reason: "Comma separation adds a space automatically." },
-                    { text: 'print(f"{a} {b}")', isCorrect: true, reason: "F-strings are a modern way to format text easily." },
-                    { text: 'print(a, "\\n", b)', isCorrect: true, reason: "Adding '\\n' creates a new line between the items." },
-                    { text: 'print a, b', isCorrect: false, reason: "Python 3 requires parentheses () for printing." },
-                    { text: 'echo(a, b)', isCorrect: false, reason: "'echo' is for shells, Python uses 'print'." },
-                    { text: 'display(a, b)', isCorrect: false, reason: "While it sounds right, 'display' isn't the standard print function." }
+                type: "mcq",
+                prompt: "Question 3: If you want to hide your object's internal properties so outsiders cannot change them directly, what feature should you use?",
+                choices: [
+                    "Encapsulation",
+                    "Polymorphism",
+                    "Inheritance",
+                    "Overriding"
                 ],
-                correctCount: 3
+                correctIdx: 0,
+                explanation: "Encapsulation keeps your data safe inside an object and prevents outside code from altering it directly."
             },
             {
-                id: 4,
-                type: 'multi',
-                text: "Click on the correct jumping statements:",
-                options: [
-                    { text: "break", isCorrect: true, reason: "Used to exit a loop completely." },
-                    { text: "continue", isCorrect: true, reason: "Used to skip to the next turn of the loop." },
-                    { text: "return", isCorrect: true, reason: "Used to exit a function and give back a value." },
-                    { text: "skip", isCorrect: false, reason: "Python uses 'continue', not 'skip'." },
-                    { text: "stop", isCorrect: false, reason: "Python uses 'break' to stop a loop." },
-                    { text: "exit", isCorrect: false, reason: "'exit()' closes the program, it's not a loop jump keyword." }
+                type: "mcq",
+                prompt: "Question 4: What are the two main types of attributes used to control variable visibility in Python classes?",
+                choices: [
+                    "Private and Public attributes",
+                    "Global and Local attributes",
+                    "Protected and Universal attributes",
+                    "Static and Dynamic attributes"
                 ],
-                correctCount: 3
+                correctIdx: 0,
+                explanation: "Public attributes can be accessed from anywhere, while Private attributes (starting with double underscores '__') are hidden from direct outside access."
             },
             {
-                id: 5,
-                type: 'multi',
-                text: "Click on the correct operations related to division:",
-                options: [
-                    { text: "/", isCorrect: true, reason: "Standard division that gives a decimal answer." },
-                    { text: "%", isCorrect: true, reason: "The Modulo operator finds the remainder." },
-                    { text: "//", isCorrect: true, reason: "Floor division that cuts off the decimal part." },
-                    { text: "\\", isCorrect: false, reason: "Backslashes are for special characters, not math." },
-                    { text: "div", isCorrect: false, reason: "Python uses symbols like / or // instead of 'div'." },
-                    { text: "mod", isCorrect: false, reason: "Python uses the % symbol for modulo." }
+                type: "mcq",
+                prompt: "Question 5: In a multilevel inheritance structure (Grandparent -> Parent -> Child), what is the middle class called?",
+                choices: [
+                    "Intermediate class",
+                    "Superclass",
+                    "Subclass",
+                    "Derived class"
                 ],
-                correctCount: 3
+                correctIdx: 0,
+                explanation: "The class that sits in the middle of a chain—inheriting from a parent above and passing to a child below—is called an intermediate class."
             },
             {
-                id: 6,
-                type: 'single',
-                text: "What is the final value of 'a'?",
-                code: "a = 3\na = a + 2\na = a % 2",
-                options: [
-                    { text: "1", isCorrect: true, reason: "3+2=5, and 5 divided by 2 leaves a remainder of 1." },
-                    { text: "5", isCorrect: false, reason: "You missed the last step where we find the remainder (%)." },
-                    { text: "0", isCorrect: false, reason: "5 is an odd number, so the remainder is 1, not 0." },
-                    { text: "2", isCorrect: false, reason: "Modulo finds the remainder, not how many times it fits." },
-                    { text: "3", isCorrect: false, reason: "The value changes after the addition and modulo steps." },
-                    { text: "1.5", isCorrect: false, reason: "Modulo % always gives the remainder as a whole number here." }
-                ]
+                type: "mcq",
+                prompt: "Question 6: Why do we use the 'self' keyword as the first parameter in class methods?",
+                choices: [
+                    "To connect the specific object's values to its class attributes.",
+                    "To load external Python libraries into the function.",
+                    "To change public variables into private variables automatically.",
+                    "To count how many objects have been created."
+                ],
+                correctIdx: 0,
+                explanation: "'self' points directly to the specific object currently using the method, keeping its unique values attached to it."
             },
             {
-                id: 7,
-                type: 'single',
-                text: "Mark True or False: A data structure can only hold 5 values at a time.",
-                options: [
-                    { text: "False", isCorrect: true, reason: "Data structures like lists can hold thousands or millions of items!" },
-                    { text: "True", isCorrect: false, reason: "Actually, Python lists and dictionaries can grow as large as your computer's memory allows." }
-                ]
+                type: "mcq",
+                prompt: "Question 7: What does Polymorphism mean in Python?",
+                choices: [
+                    "Using the same method name in different classes, but having each class run it in its own way.",
+                    "Creating multiple objects from a single class.",
+                    "Hiding code lines behind a function call.",
+                    "Preventing a child class from using parent methods."
+                ],
+                correctIdx: 0,
+                explanation: "Polymorphism means 'many forms'. It allows different objects to share the same method name (like .speak()) while producing different results (e.g. 'Woof' vs 'Meow')."
             },
             {
-                id: 8,
-                type: 'single',
-                text: "Mark True or False: You cannot change the values in a tuple.",
-                options: [
-                    { text: "True", isCorrect: true, reason: "Tuples are 'immutable', which is a fancy way of saying they are locked once created." },
-                    { text: "False", isCorrect: false, reason: "Tuples are fixed. If you want a list that can change, you should use a List [ ] instead." }
-                ]
+                type: "mcq",
+                prompt: "Question 8: In inheritance, when a child class creates its own custom version of a method that already exists in its parent class, what is this called?",
+                choices: [
+                    "Method Overriding",
+                    "Method Overloading",
+                    "Method Encapsulation",
+                    "Method Recursion"
+                ],
+                correctIdx: 0,
+                explanation: "Method Overriding happens when a child class replaces a parent's method with its own version so it can use its own custom code instead."
             },
             {
-                id: 9,
-                type: 'single',
-                text: "Mark True or False: 4**2 is 8.",
-                options: [
-                    { text: "False", isCorrect: true, reason: "** is the power operator, so 4**2 is 4 times 4, which is 16." },
-                    { text: "True", isCorrect: false, reason: "Don't confuse ** with multiplication! 4*2 is 8, but 4**2 is 16." }
-                ]
+                type: "mcq",
+                prompt: "Question 9: Which built-in method runs automatically whenever you create a new object from a class?",
+                choices: [
+                    "__init__()",
+                    "__start__()",
+                    "__create__()",
+                    "__build__()"
+                ],
+                correctIdx: 0,
+                explanation: "The __init__() method acts as the setup function (constructor) that automatically runs to give new objects their initial values."
             },
             {
-                id: 10,
-                type: 'single',
-                text: "Why does this code throw an error?",
-                code: "while = 4\nprint(while)",
-                options: [
-                    { text: "'while' is a reserved keyword", isCorrect: true, reason: "'while' is a command for loops, so Python won't let you use it as a variable name." },
-                    { text: "Missing quotes", isCorrect: false, reason: "The error is about the name 'while', not about strings." },
-                    { text: "Cannot assign numbers to names", isCorrect: false, reason: "We can assign numbers to names, just not to 'special' keywords." },
-                    { text: "Case sensitivity", isCorrect: false, reason: "While Python is case sensitive, 'while' is always a keyword in lowercase." },
-                    { text: "Syntax error in print", isCorrect: false, reason: "The print function itself is written correctly here." },
-                    { text: "Variables must be longer", isCorrect: false, reason: "Variable names can be just one letter long, but they can't be keywords." }
-                ]
+                type: "mcq",
+                prompt: "Question 10: What are two other common names used to refer to a superclass in inheritance?",
+                choices: [
+                    "Base class and Parent class",
+                    "Master class and Primary class",
+                    "Root class and Main class",
+                    "Header class and Core class"
+                ],
+                correctIdx: 0,
+                explanation: "A superclass is frequently called a Base class or Parent class because other classes inherit from it."
+            },
+
+            // --- SECTION 2: DEBUGGING, LOOPS & CONDITIONALS (Q11 - Q20) ---
+            {
+                type: "mcq",
+                prompt: "Question 11: Why does running this code cause an error?",
+                code: "def calculate_discount(price, rate):\n    return price * rate\n\nval = calculate_discount(100)",
+                choices: [
+                    "The function expects 2 inputs (price and rate), but only 1 value was passed.",
+                    "The return keyword must be enclosed in brackets.",
+                    "The variable name price is written in lowercase.",
+                    "Numbers cannot be multiplied inside functions."
+                ],
+                correctIdx: 0,
+                explanation: "The function header requires two values, but the call only supplied 100."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 12: Why does this function print None when executed?",
+                code: "def compute_square(num):\n    result = num * num\n\nans = compute_square(4)\nprint(ans)",
+                choices: [
+                    "The function is missing a 'return' statement to pass the calculated answer back.",
+                    "The variable result was written in capital letters.",
+                    "The number 4 must be converted into text first.",
+                    "The print statement is placed outside the function block."
+                ],
+                correctIdx: 0,
+                explanation: "In Python, functions that do not explicitly use the 'return' keyword will send back None by default."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 13: What causes an error when Python runs this function header?",
+                code: "def display_user(username)\n    print(\"User:\", username)\n\ndisplay_user(\"Alex\")",
+                choices: [
+                    "Missing a colon ':' at the end of the def line.",
+                    "The print statement is missing numbers.",
+                    "The argument Alex must be written without quotes.",
+                    "The function name display_user is too long."
+                ],
+                correctIdx: 0,
+                explanation: "Function definition lines (def) must always end with a colon ':'."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 14: What error happens when trying to print 'bonus' on the last line?",
+                code: "def calculate_bonus(score):\n    bonus = score * 10\n    return bonus\n\ncalculate_bonus(5)\nprint(bonus)",
+                choices: [
+                    "The variable 'bonus' was created inside the function, so it does not exist outside.",
+                    "You cannot multiply score by 10.",
+                    "The function name must be in capital letters.",
+                    "The return line must be at the top."
+                ],
+                correctIdx: 0,
+                explanation: "'bonus' is a local variable inside the function. Code outside the function cannot see or use it."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 15: What happens when calling this function twice in a row?",
+                code: "def add_item(item, box=[]):\n    box.append(item)\n    return box\n\nprint(add_item(\"A\"))\nprint(add_item(\"B\"))",
+                choices: [
+                    "It prints ['A'] first, then ['A', 'B'] because the default list is reused across calls.",
+                    "It prints ['A'] first, then ['B'] on the second call.",
+                    "It causes a syntax error on line 1.",
+                    "It deletes the list after the first call."
+                ],
+                correctIdx: 0,
+                explanation: "In Python, using a list as a default argument creates a single list that gets reused every time the function is called."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 16: Predict the output of this loop:",
+                code: "count = 1\nwhile count < 10:\n    count += 3\nprint(count)",
+                choices: [
+                    "10",
+                    "7",
+                    "9",
+                    "13"
+                ],
+                correctIdx: 0,
+                explanation: "count goes 1 -> 4 -> 7 -> 10. When it hits 10, '10 < 10' is False, so the loop ends and prints 10."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 17: Predict the output of this loop with a break statement:",
+                code: "for i in range(1, 6):\n    if i == 3:\n        break\n    print(i, end=\" \")",
+                choices: [
+                    "1 2",
+                    "1 2 3",
+                    "1 2 4 5",
+                    "3 4 5"
+                ],
+                correctIdx: 0,
+                explanation: "When i becomes 3, the break statement stops the loop immediately before 3 can be printed."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 18: Predict the output of this loop with a continue statement:",
+                code: "for x in range(1, 5):\n    if x == 2:\n        continue\n    print(x, end=\" \")",
+                choices: [
+                    "1 3 4",
+                    "1 2 3 4",
+                    "2 3 4",
+                    "1 3"
+                ],
+                correctIdx: 0,
+                explanation: "When x is 2, continue skips printing 2 and jumps straight to the next number (3)."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 19: Predict the output of this conditional statement:",
+                code: "score = 75\nif score >= 90:\n    grade = \"A\"\nelif score >= 70:\n    grade = \"B\"\nelse:\n    grade = \"C\"\nprint(grade)",
+                choices: [
+                    "B",
+                    "A",
+                    "C",
+                    "SyntaxError"
+                ],
+                correctIdx: 0,
+                explanation: "75 is not >= 90, but it is >= 70, so the elif block runs and assigns 'B'."
+            },
+            {
+                type: "mcq",
+                prompt: "Question 20: Predict the output of this code check:",
+                code: "num = 14\nif num % 2 == 0 and num % 3 == 0:\n    print(\"Divisible by both\")\nelif num % 2 == 0:\n    print(\"Even only\")\nelse:\n    print(\"Odd\")",
+                choices: [
+                    "Even only",
+                    "Divisible by both",
+                    "Odd",
+                    "None"
+                ],
+                correctIdx: 0,
+                explanation: "14 divides cleanly by 2, but not by 3. So it skips the first check and runs the elif check, printing 'Even only'."
             }
         ];
 
-        function PixelHeart() {
-            const style = {
-                left: Math.random() * 100 + 'vw',
-                animationDuration: (Math.random() * 10 + 5) + 's',
-                animationDelay: (Math.random() * 5) + 's'
-            };
-            return <div className="heart" style={{...style, animation: `float ${style.animationDuration} linear infinite`}}></div>;
+        let activeIndex = 0;
+        let runningScore = 0;
+        let l1Points = 0; 
+        let l2Points = 0; 
+
+        let clockIntervalRef = null;
+        let secondsRemaining = 30;
+        let phaseLocked = false;
+
+        // Interactive states
+        let dragAssignments = {};
+
+        // DOM Caches
+        const viewHome = document.getElementById("view-home");
+        const viewArena = document.getElementById("view-arena");
+        const viewReport = document.getElementById("view-report");
+
+        const hudIndexTracker = document.getElementById("hud-index-tracker");
+        const hudScoreTracker = document.getElementById("hud-score-tracker");
+        const arenaTimerFill = document.getElementById("arena-timer-fill");
+        
+        const arenaLevelHeader = document.getElementById("arena-level-header");
+        const arenaQuestionText = document.getElementById("arena-question-text");
+        const arenaSyntaxTerminal = document.getElementById("arena-syntax-terminal");
+        const interactiveArea = document.getElementById("interactive-area");
+        
+        const arenaChoicesStack = document.getElementById("arena-choices-stack");
+        const arenaExplanationDrawer = document.getElementById("arena-explanation-drawer");
+        const explanationBodyText = document.getElementById("explanation-body-text");
+        const btnNextStep = document.getElementById("btn-next-step");
+        const btnSubmitCustom = document.getElementById("btn-submit-custom");
+
+        // --- DYNAMIC SHUFFLE HELPER FOR MCQs ---
+        function shuffleQuestionChoices(question) {
+            if (question.choices && question.correctIdx !== undefined) {
+                const correctAnswerText = question.choices[question.correctIdx];
+                for (let i = question.choices.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [question.choices[i], question.choices[j]] = [question.choices[j], question.choices[i]];
+                }
+                question.correctIdx = question.choices.indexOf(correctAnswerText);
+            }
         }
 
-        function App() {
-            const [gameState, setGameState] = useState('home'); // home, quiz, result
-            const [currentQ, setCurrentQ] = useState(0);
-            const [score, setScore] = useState(0);
-            const [timer, setTimer] = useState(30);
-            const [selectedOptions, setSelectedOptions] = useState([]);
-            const [isSubmitted, setIsSubmitted] = useState(false);
-            const [hearts, setHearts] = useState([]);
+        // --- ANIMATED BEES BACKGROUND SYSTEM ---
+        const beeCanvas = document.getElementById("beeCanvas");
+        const beeCtx = beeCanvas.getContext("2d");
+        let beeArray = [];
 
-            useEffect(() => {
-                const newHearts = Array.from({ length: 15 }).map((_, i) => <PixelHeart key={i} />);
-                setHearts(newHearts);
-            }, []);
+        function resizeBeeCanvas() {
+            beeCanvas.width = window.innerWidth;
+            beeCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBeeCanvas);
+        resizeBeeCanvas();
 
-            useEffect(() => {
-                let interval;
-                if (gameState === 'quiz' && !isSubmitted && timer > 0) {
-                    interval = setInterval(() => {
-                        setTimer(prev => prev - 1);
-                    }, 1000);
-                } else if (timer === 0 && !isSubmitted) {
-                    handleSubmit();
-                }
-                return () => clearInterval(interval);
-            }, [gameState, timer, isSubmitted]);
-
-            const startQuiz = () => {
-                setGameState('quiz');
-                setCurrentQ(0);
-                setScore(0);
-                resetQuestionState();
-            };
-
-            const resetQuestionState = () => {
-                setTimer(30);
-                setSelectedOptions([]);
-                setIsSubmitted(false);
-            };
-
-            const toggleOption = (idx) => {
-                if (isSubmitted) return;
-                const question = QUESTIONS[currentQ];
-                if (question.type === 'single') {
-                    setSelectedOptions([idx]);
-                } else {
-                    setSelectedOptions(prev => 
-                        prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
-                    );
-                }
-            };
-
-            const handleSubmit = () => {
-                if (isSubmitted) return;
-                setIsSubmitted(true);
-                
-                const question = QUESTIONS[currentQ];
-                const correctIndices = question.options
-                    .map((opt, i) => opt.isCorrect ? i : null)
-                    .filter(i => i !== null);
-
-                let isCorrect = false;
-                if (question.type === 'single') {
-                    isCorrect = selectedOptions.length === 1 && correctIndices.includes(selectedOptions[0]);
-                } else {
-                    const sortedSelected = [...selectedOptions].sort();
-                    const sortedCorrect = [...correctIndices].sort();
-                    isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedCorrect);
-                }
-
-                if (isCorrect) setScore(prev => prev + 1);
-            };
-
-            const nextQuestion = () => {
-                if (currentQ < QUESTIONS.length - 1) {
-                    setCurrentQ(prev => prev + 1);
-                    resetQuestionState();
-                } else {
-                    setGameState('result');
-                }
-            };
-
-            const getQuote = () => {
-                if (score === 10) return "Master of Python! You're absolutely amazing!";
-                if (score >= 6) return "Great job! You really know your stuff. Keep it up!";
-                return "Good start! Coding is a journey, and you're doing great. Keep practicing!";
-            };
-
-            const shuffledOptions = useRef([]);
-            useEffect(() => {
-                if (gameState === 'quiz') {
-                    const optionsWithOriginalIndex = QUESTIONS[currentQ].options.map((opt, idx) => ({...opt, originalIdx: idx}));
-                    shuffledOptions.current = optionsWithOriginalIndex.sort(() => Math.random() - 0.5);
-                }
-            }, [currentQ, gameState]);
-
-            return (
-                <div className="min-h-screen relative flex items-center justify-center p-4">
-                    {hearts}
-                    
-                    <div className="relative z-10 w-full max-w-2xl bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8 border-4 border-pink-300">
-                        {gameState === 'home' && (
-                            <div className="text-center space-y-8">
-                                <h1 className="text-4xl font-bold text-pink-600">Let's Revise Python! 🐍</h1>
-                                <p className="text-lg text-gray-700">Ready to test your coding skills? You have 30 seconds per question!</p>
-                                <button 
-                                    onClick={startQuiz}
-                                    className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-lg text-xl"
-                                >
-                                    Start Learning!
-                                </button>
-                            </div>
-                        )}
-
-                        {gameState === 'quiz' && (
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <span className="bg-pink-100 text-pink-600 px-4 py-1 rounded-full font-bold">Question {currentQ + 1}/{QUESTIONS.length}</span>
-                                    <span className={`text-xl font-bold flex items-center gap-2 ${timer < 10 ? 'text-red-500 animate-pulse' : 'text-pink-500'}`}>
-                                        ⏱️ {timer}s
-                                    </span>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <h2 className="text-2xl font-semibold text-gray-800">{QUESTIONS[currentQ].text}</h2>
-                                    
-                                    {QUESTIONS[currentQ].code && (
-                                        <div className="code-block text-sm">
-                                            {QUESTIONS[currentQ].code}
-                                        </div>
-                                    )}
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        {shuffledOptions.current.map((option, i) => {
-                                            const isSelected = selectedOptions.includes(option.originalIdx);
-                                            let btnClass = "p-4 rounded-xl border-2 transition-all text-left flex flex-col ";
-                                            
-                                            if (isSubmitted) {
-                                                if (option.isCorrect) {
-                                                    btnClass += "border-green-500 bg-green-50 text-green-800";
-                                                } else if (isSelected && !option.isCorrect) {
-                                                    btnClass += "border-red-500 bg-red-50 text-red-800";
-                                                } else {
-                                                    btnClass += "border-gray-200 opacity-50";
-                                                }
-                                            } else {
-                                                btnClass += isSelected 
-                                                    ? "border-pink-500 bg-pink-100 text-pink-700 scale-[1.02]" 
-                                                    : "border-gray-200 hover:border-pink-300 bg-white";
-                                            }
-
-                                            return (
-                                                <button 
-                                                    key={i}
-                                                    onClick={() => toggleOption(option.originalIdx)}
-                                                    className={btnClass}
-                                                >
-                                                    <span className="font-bold">{option.text}</span>
-                                                    {isSubmitted && isSelected && (
-                                                        <span className="text-xs mt-2 italic font-medium">{option.reason}</span>
-                                                    )}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-end pt-4">
-                                    {!isSubmitted ? (
-                                        <button 
-                                            onClick={handleSubmit}
-                                            disabled={selectedOptions.length === 0}
-                                            className="bg-pink-500 hover:bg-pink-600 disabled:bg-gray-300 text-white font-bold py-2 px-8 rounded-xl transition-colors"
-                                        >
-                                            Submit
-                                        </button>
-                                    ) : (
-                                        <button 
-                                            onClick={nextQuestion}
-                                            className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-8 rounded-xl transition-colors"
-                                        >
-                                            {currentQ === QUESTIONS.length - 1 ? "Show Report Card" : "Next Question →"}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {gameState === 'result' && (
-                            <div className="text-center space-y-8 py-4">
-                                <h2 className="text-3xl font-bold text-pink-600">Your Python Report Card</h2>
-                                
-                                <div className="py-8">
-                                    <div className="score-circle">
-                                        <span className="handwritten text-6xl text-rose-700 font-bold">
-                                            {score} / {QUESTIONS.length}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="bg-pink-50 p-6 rounded-2xl border-2 border-dashed border-pink-300">
-                                    <p className="handwritten text-2xl text-pink-800">
-                                        "{getQuote()}"
-                                    </p>
-                                </div>
-
-                                <button 
-                                    onClick={() => setGameState('home')}
-                                    className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-10 rounded-full transition-transform hover:scale-105"
-                                >
-                                    Try Again!
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
+        for(let i = 0; i < 22; i++) {
+            beeArray.push({
+                x: Math.random() * beeCanvas.width,
+                y: Math.random() * beeCanvas.height,
+                vx: Math.random() * 2 - 1,
+                vy: Math.random() * 2 - 1,
+                size: Math.random() * 4 + 8
+            });
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function drawAnimatedBees() {
+            beeCtx.clearRect(0, 0, beeCanvas.width, beeCanvas.height);
+
+            beeArray.forEach(beeItem => {
+                beeItem.x += beeItem.vx + (Math.random() * 0.4 - 0.2);
+                beeItem.y += beeItem.vy + (Math.random() * 0.4 - 0.2);
+
+                if (beeItem.x < 0) beeItem.x = beeCanvas.width;
+                if (beeItem.x > beeCanvas.width) beeItem.x = 0;
+                if (beeItem.y < 0) beeItem.y = beeCanvas.height;
+                if (beeItem.y > beeCanvas.height) beeItem.y = 0;
+
+                beeCtx.save();
+                beeCtx.translate(beeItem.x, beeItem.y);
+
+                // Wings
+                beeCtx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                beeCtx.beginPath();
+                beeCtx.ellipse(-2, -beeItem.size/2, beeItem.size/3, beeItem.size/2, -Math.PI/4, 0, Math.PI*2);
+                beeCtx.ellipse(2, -beeItem.size/2, beeItem.size/3, beeItem.size/2, Math.PI/4, 0, Math.PI*2);
+                beeCtx.fill();
+
+                // Yellow Body Base
+                beeCtx.fillStyle = "#EAB308";
+                beeCtx.beginPath();
+                beeCtx.ellipse(0, 0, beeItem.size, beeItem.size/1.4, 0, 0, Math.PI*2);
+                beeCtx.fill();
+
+                // Black Stripes
+                beeCtx.fillStyle = "#1C1917";
+                beeCtx.fillRect(-beeItem.size/3, -beeItem.size/1.5, beeItem.size/3, beeItem.size*1.3);
+                beeCtx.fillRect(beeItem.size/4, -beeItem.size/1.5, beeItem.size/4, beeItem.size*1.3);
+
+                beeCtx.restore();
+            });
+
+            requestAnimationFrame(drawAnimatedBees);
+        }
+        drawAnimatedBees();
+
+        // --- GAMEPLAY FLOW CONTROLLER ---
+        function switchGameView(targetPanel) {
+            viewHome.classList.remove("active");
+            viewArena.classList.remove("active");
+            viewReport.classList.remove("active");
+            targetPanel.classList.add("active");
+        }
+
+        function initializeQuizArena() {
+            activeIndex = 0;
+            runningScore = 0;
+            l1Points = 0; 
+            l2Points = 0; 
+            hudScoreTracker.innerText = "⭐ Score: 0";
+            
+            fullQuizChallengesRepo.forEach(shuffleQuestionChoices);
+
+            switchGameView(viewArena);
+            displayActiveChallengeCard();
+        }
+
+        function displayActiveChallengeCard() {
+            phaseLocked = false;
+            arenaExplanationDrawer.style.display = "none";
+            btnNextStep.style.display = "none";
+            btnSubmitCustom.style.display = "none";
+            
+            arenaChoicesStack.innerHTML = "";
+            interactiveArea.innerHTML = "";
+            interactiveArea.style.display = "none";
+            arenaSyntaxTerminal.style.display = "none";
+
+            const currentObj = fullQuizChallengesRepo[activeIndex];
+            
+            hudIndexTracker.innerText = `Question ${activeIndex + 1}/20`;
+            arenaQuestionText.innerText = currentObj.prompt;
+
+            if (activeIndex < 10) {
+                arenaLevelHeader.innerText = "Level 1: OOP Concepts 🏗️";
+            } else {
+                arenaLevelHeader.innerText = "Level 2: Debugging & Control Logic ⚙️";
+            }
+
+            if (currentObj.code) {
+                arenaSyntaxTerminal.innerText = currentObj.code;
+                arenaSyntaxTerminal.style.display = "block";
+            }
+
+            if (currentObj.type === "drag_and_drop") {
+                renderDragAndDropModule(currentObj);
+            } else {
+                buildSelectionLayoutStack(currentObj);
+            }
+
+            triggerCountdownClock();
+        }
+
+        function triggerCountdownClock() {
+            clearInterval(clockIntervalRef);
+            secondsRemaining = 30;
+            arenaTimerFill.style.width = "100%";
+
+            clockIntervalRef = setInterval(() => {
+                secondsRemaining -= 0.1;
+                let pct = (secondsRemaining / 30) * 100;
+                arenaTimerFill.style.width = `${pct}%`;
+
+                if (secondsRemaining <= 0) {
+                    clearInterval(clockIntervalRef);
+                    processRoundTimeout();
+                }
+            }, 100);
+        }
+
+        /* --- DRAG & DROP MODULE --- */
+        function renderDragAndDropModule(obj) {
+            interactiveArea.style.display = "block";
+            btnSubmitCustom.style.display = "inline-block";
+            dragAssignments = {};
+
+            let html = `
+                <div class="drag-container">
+                    <div class="drag-sources" id="drag-source-pool">`;
+            
+            obj.items.forEach(item => {
+                html += `<div class="draggable-item" draggable="true" id="${item.id}" ondragstart="onDragStart(event)">${item.text}</div>`;
+            });
+
+            html += `</div><div class="drop-targets">`;
+
+            obj.classes.forEach(cls => {
+                html += `
+                    <div class="drop-target-box">
+                        <div class="drop-target-title">Class: ${cls}</div>
+                        <div class="drop-slot" data-class="${cls}" ondragover="onDragOver(event)" ondrop="onDropItem(event)"></div>
+                    </div>`;
+            });
+
+            html += `</div></div>`;
+            interactiveArea.innerHTML = html;
+
+            btnSubmitCustom.onclick = () => validateDragAndDrop(obj);
+        }
+
+        function onDragStart(ev) {
+            ev.dataTransfer.setData("text/plain", ev.target.id);
+        }
+
+        function onDragOver(ev) {
+            ev.preventDefault();
+        }
+
+        function onDropItem(ev) {
+            ev.preventDefault();
+            const itemId = ev.dataTransfer.getData("text/plain");
+            const draggedEl = document.getElementById(itemId);
+            const dropSlot = ev.target.closest('.drop-slot');
+            
+            if (dropSlot && draggedEl) {
+                dropSlot.appendChild(draggedEl);
+                dragAssignments[itemId] = dropSlot.getAttribute("data-class");
+            }
+        }
+
+        function validateDragAndDrop(obj) {
+            if (phaseLocked) return;
+            phaseLocked = true;
+            clearInterval(clockIntervalRef);
+
+            let allCorrect = true;
+            obj.items.forEach(item => {
+                if (dragAssignments[item.id] !== item.correctClass) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect && Object.keys(dragAssignments).length === obj.items.length) {
+                runningScore++;
+                tallyCategoryPerformanceMetrics();
+                hudScoreTracker.innerText = `⭐ Score: ${runningScore}`;
+            }
+
+            displayExplanationDrawer(obj.explanation);
+        }
+
+        /* --- STANDARD MCQ BUILDER --- */
+        function buildSelectionLayoutStack(dataObj) {
+            dataObj.choices.forEach((textStr, iKey) => {
+                const btn = document.createElement("button");
+                btn.className = "choice-item-btn";
+                btn.innerText = textStr;
+                btn.onclick = () => parseSelectionChoiceInput(iKey, btn);
+                arenaChoicesStack.appendChild(btn);
+            });
+        }
+
+        function parseSelectionChoiceInput(userClickedIdx, elementNodeRef) {
+            if (phaseLocked) return;
+            phaseLocked = true;
+            clearInterval(clockIntervalRef);
+
+            const questObj = fullQuizChallengesRepo[activeIndex];
+            const optionsArray = arenaChoicesStack.children;
+
+            if (userClickedIdx === questObj.correctIdx) {
+                elementNodeRef.classList.add("flash-green");
+                runningScore++;
+                tallyCategoryPerformanceMetrics();
+                hudScoreTracker.innerText = `⭐ Score: ${runningScore}`;
+            } else {
+                elementNodeRef.classList.add("flash-red");
+                if (optionsArray[questObj.correctIdx]) {
+                    optionsArray[questObj.correctIdx].classList.add("flash-green");
+                }
+            }
+
+            displayExplanationDrawer(questObj.explanation);
+        }
+
+        function tallyCategoryPerformanceMetrics() {
+            if (activeIndex < 10) {
+                l1Points++;
+            } else {
+                l2Points++;
+            }
+        }
+
+        function processRoundTimeout() {
+            phaseLocked = true;
+            const currentObj = fullQuizChallengesRepo[activeIndex];
+            const optionsArray = arenaChoicesStack.children;
+            
+            if (optionsArray[currentObj.correctIdx]) {
+                optionsArray[currentObj.correctIdx].classList.add("flash-green");
+            }
+            displayExplanationDrawer(currentObj.explanation);
+        }
+
+        function displayExplanationDrawer(summaryParagraphText) {
+            explanationBodyText.innerText = summaryParagraphText;
+            arenaExplanationDrawer.style.display = "block";
+            btnNextStep.style.display = "inline-block";
+            btnSubmitCustom.style.display = "none";
+        }
+
+        function advanceToNextQuestCard() {
+            activeIndex++;
+            if (activeIndex < fullQuizChallengesRepo.length) {
+                displayActiveChallengeCard();
+            } else {
+                compileFinalReportCardSummary();
+            }
+        }
+
+        function compileFinalReportCardSummary() {
+            switchGameView(viewReport);
+            document.getElementById("rep-l1-score").innerText = `${l1Points} / 10`;
+            document.getElementById("rep-l2-score").innerText = `${l2Points} / 10`;
+            document.getElementById("rep-grand-total").innerText = `${runningScore} / 20`;
+
+            const percentageVal = Math.round((runningScore / 20) * 100);
+            document.getElementById("rep-percentage").innerText = `${percentageVal}%`;
+
+            const noteElement = document.getElementById("report-motivation-text");
+            if (runningScore >= 17) {
+                noteElement.innerText = "Outstanding performance! You have mastered Python Object-Oriented Programming, Function Debugging, and Control Logic!";
+            } else if (runningScore >= 12) {
+                noteElement.innerText = "Good job! You have a solid grasp of core OOP concepts and Python debugging. Keep practicing to refine your skills!";
+            } else {
+                noteElement.innerText = "Keep practicing! Review inheritance, encapsulation, and loop tracing logic, then try again to boost your score.";
+            }
+        }
+
+        function returnToCoverSplash() {
+            switchGameView(viewHome);
+        }
+
+        // --- EVENT LISTENERS ---
+        document.getElementById("btn-start-quiz").addEventListener("click", initializeQuizArena);
+        document.getElementById("btn-next-step").addEventListener("click", advanceToNextQuestCard);
+        document.getElementById("btn-restart-quiz").addEventListener("click", returnToCoverSplash);
     </script>
 </body>
 </html>
