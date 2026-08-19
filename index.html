@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pygame & Python Senior Revision Quiz</title>
+  <title>Python Revision Workbench</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts for Typography & Handwritten Note -->
+  <!-- Google Fonts for Handwritten Report & Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #fef08a; /* Warm Yellow */
+      background-color: #dcfce7; /* Light Green */
       overflow-x: hidden;
     }
 
@@ -32,8 +32,8 @@
       font-family: 'Patrick Hand', cursive;
     }
 
-    /* Falling Tetris Background Canvas */
-    #tetrisCanvas {
+    /* Falling Canvas Background */
+    #fallingFlowersCanvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -41,7 +41,7 @@
       height: 100vh;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.35;
+      opacity: 0.85;
     }
 
     /* Custom Scrollbar */
@@ -49,51 +49,51 @@
       width: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: #fef08a;
+      background: #dcfce7;
     }
     ::-webkit-scrollbar-thumb {
-      background: #eab308;
+      background: #16a34a;
       border-radius: 4px;
     }
 
-    /* Notebook Paper Texture for Handwritten Report Card */
+    /* Notebook Paper Texture for Report Card */
     .notebook-paper {
-      background: #fffdf0;
-      background-image: linear-gradient(#f3e8ff 1px, transparent 1px);
+      background: #f0fdf4;
+      background-image: linear-gradient(#dcfce7 1px, transparent 1px);
       background-size: 100% 2.2rem;
-      box-shadow: 0 20px 40px rgba(161, 98, 7, 0.2);
-      border-left: 6px double #eab308;
+      box-shadow: 0 20px 40px rgba(22, 101, 52, 0.15);
+      border-left: 6px double #22c55e;
     }
 
-    /* Pulse Glow effect for score badge */
-    .glow-yellow {
-      box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+    /* Countdown Timer Animation Ring */
+    .timer-circle {
+      transition: stroke-dashoffset 1s linear;
     }
   </style>
 </head>
-<body class="min-h-screen text-slate-900 flex flex-col justify-between relative selection:bg-amber-300">
+<body class="min-h-screen text-slate-900 flex flex-col justify-between relative selection:bg-emerald-200">
 
-  <!-- Background Tetris Canvas Animation -->
-  <canvas id="tetrisCanvas"></canvas>
+  <!-- Falling Pink Flowers Canvas -->
+  <canvas id="fallingFlowersCanvas"></canvas>
 
   <!-- Top Navigation Header -->
-  <header class="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-slate-900 shadow-lg py-4 px-6 relative z-10 border-b-4 border-amber-600">
-    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-4">
+  <header class="bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-700 text-white shadow-md py-4 px-6 relative z-10 border-b-4 border-emerald-700">
+    <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="bg-slate-900 text-yellow-400 p-2.5 rounded-2xl text-2xl shadow-md border border-yellow-300">
-          🎮
+        <div class="bg-white text-emerald-700 p-2.5 rounded-2xl text-xl shadow-md font-code font-bold">
+          🐍
         </div>
         <div>
-          <h1 class="font-extrabold text-xl md:text-2xl tracking-tight text-slate-950 flex items-center gap-2">
-            Python & Pygame Revision
+          <h1 class="font-extrabold text-xl md:text-2xl tracking-tight text-white flex items-center gap-2">
+            PYTHON REVISION
           </h1>
-          <p class="text-xs font-bold text-slate-800 uppercase tracking-wider">Senior Coding Challenge</p>
+          <p class="text-xs font-bold text-emerald-100 uppercase tracking-wider"> 10 Challenges</p>
         </div>
       </div>
 
-      <!-- Header Score Badge -->
-      <div id="quizHeaderBadge" class="hidden items-center gap-3 bg-slate-900/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-amber-400/40 shadow-inner">
-        <div class="text-xs text-amber-300 font-semibold">
+      <!-- Live Score Display -->
+      <div id="quizHeaderBadge" class="hidden items-center gap-3 bg-emerald-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-emerald-400/40 shadow-inner">
+        <div class="text-xs text-emerald-300 font-semibold">
           <span>Current Score:</span>
           <span id="headerLiveScore" class="text-white block font-extrabold text-sm">0 / 10</span>
         </div>
@@ -101,67 +101,81 @@
     </div>
   </header>
 
-  <!-- Main Interactive Canvas Workspace -->
   <main class="max-w-3xl w-full mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center relative z-10">
 
     <!-- START SCREEN -->
-    <div id="startScreen" class="bg-white/95 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border-4 border-amber-400 text-center space-y-8">
+    <div id="startScreen" class="bg-white/95 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border-4 border-emerald-400 text-center space-y-8">
+      <div class="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto text-4xl shadow-inner border-2 border-pink-300">
+        🌸
+      </div>
       <div>
-        <h2 class="text-3xl md:text-5xl font-extrabold text-slate-950 tracking-tight uppercase">
-          PYGAME and PYTHON Basics revision
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight uppercase">
+          PYTHON REVISION
         </h2>
+        <p class="text-sm md:text-base font-semibold text-slate-600 mt-3 max-w-md mx-auto">
+          Welcome! Solve these 10 simple Python code challenges and test your programming basics!
+        </p>
       </div>
 
-      <button onclick="startQuiz()" class="w-full max-w-md py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black text-xl rounded-2xl shadow-lg shadow-amber-500/30 transform hover:-translate-y-0.5 transition duration-150 active:translate-y-0 border-2 border-amber-300">
-        🚀 Start Revision Quiz
+      <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 text-xs font-bold text-emerald-900 max-w-md mx-auto space-y-1">
+        <p>⏱️ You have <strong>30 seconds</strong> per question.</p>
+        <p>💡 Click an option to answer and view instant feedback!</p>
+      </div>
+
+      <button onclick="startQuiz()" class="w-full max-w-md py-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-xl rounded-2xl shadow-lg shadow-emerald-500/30 transform hover:-translate-y-0.5 transition duration-150 active:translate-y-0 border-2 border-emerald-300">
+        🚀 Start Quiz
       </button>
     </div>
 
     <!-- QUIZ CARD -->
-    <div id="quizScreen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-amber-400 flex-col space-y-6">
+    <div id="quizScreen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-emerald-400 flex-col space-y-6">
       
       <!-- Progress Bar & Category Header -->
-      <div class="flex items-center justify-between border-b-2 border-amber-100 pb-4">
+      <div class="flex items-center justify-between border-b-2 border-emerald-100 pb-4">
         <div>
-          <span id="questionCategoryTag" class="px-3.5 py-1 bg-amber-100 text-amber-900 font-extrabold text-xs rounded-full uppercase tracking-wider border border-amber-300">
-            Pygame Fundamentals
+          <span id="questionCategoryTag" class="px-3.5 py-1 bg-emerald-100 text-emerald-900 font-extrabold text-xs rounded-full uppercase tracking-wider border border-emerald-300">
+            Variables
           </span>
           <h3 id="questionProgressText" class="text-xs md:text-sm font-bold text-slate-500 mt-1.5">
             Question 1 of 10
           </h3>
         </div>
 
-        <div class="text-right">
-          <span class="text-xs font-bold text-amber-700 block uppercase">Section</span>
-          <span id="sectionIndicator" class="text-sm font-extrabold text-slate-900">1 / 2</span>
+        <!-- 30-Second Countdown Timer Circle -->
+        <div class="relative flex items-center justify-center w-14 h-14">
+          <svg class="w-full h-full transform -rotate-90">
+            <circle cx="28" cy="28" r="22" stroke="#bbf7d0" stroke-width="4" fill="transparent" />
+            <circle id="timerProgressCircle" cx="28" cy="28" r="22" stroke="#16a34a" stroke-width="4" fill="transparent" stroke-dasharray="140" stroke-dashoffset="0" class="timer-circle" />
+          </svg>
+          <span id="timerText" class="absolute font-black text-sm text-emerald-950">30</span>
         </div>
       </div>
 
-      <!-- Question Text & Code Snippet -->
+      <!-- Question Text & Black Syntax Box Container -->
       <div class="space-y-4">
         <h2 id="questionText" class="text-lg md:text-xl font-black text-slate-900 leading-snug">
-          Question prompt will appear here...
+          What will be printed on the screen?
         </h2>
 
-        <!-- Code Snippet Box (Hidden if not code question) -->
-        <div id="codeBlockContainer" class="hidden bg-slate-950 text-slate-100 p-4 md:p-5 rounded-2xl font-code text-xs md:text-sm shadow-inner border border-slate-800 relative">
+        <!-- Code Snippet Box -->
+        <div id="codeBlockContainer" class="bg-slate-950 text-emerald-400 p-4 rounded-2xl font-code text-xs md:text-sm shadow-inner border border-slate-800 relative">
           <div class="flex items-center gap-1.5 absolute top-3 right-4 opacity-50">
             <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
             <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
             <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
           </div>
-          <pre id="codeBlock" class="leading-relaxed mt-1"># Python code snippet</pre>
+          <pre id="codeBlock" class="leading-relaxed mt-1 text-emerald-300"># Code snippet</pre>
         </div>
       </div>
 
-      <!-- 4 Option Cards Grid -->
-      <div id="optionsContainer" class="grid grid-cols-1 gap-3.5 pt-1">
-        <!-- Dynamic option buttons inserted via JS -->
+      <!-- Option Buttons Container -->
+      <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+        <!-- Dynamic options injected via JS -->
       </div>
 
       <!-- Footer Control Bar -->
-      <div class="flex items-center justify-end pt-4 border-t-2 border-amber-100">
-        <button id="nextBtn" onclick="nextQuestion()" disabled class="px-6 py-3 bg-slate-200 text-slate-400 font-bold rounded-xl cursor-not-allowed transition flex items-center gap-2">
+      <div class="flex items-center justify-end pt-4 border-t-2 border-emerald-100">
+        <button id="nextBtn" onclick="nextQuestion()" disabled class="px-6 py-3 bg-slate-200 text-slate-400 font-bold text-sm rounded-xl cursor-not-allowed transition flex items-center gap-2">
           <span>Next Question</span>
           <span>➔</span>
         </button>
@@ -170,86 +184,57 @@
 
     <!-- REPORT CARD SCREEN -->
     <div id="reportCardScreen" class="hidden">
-      <div class="notebook-paper max-w-2xl mx-auto rounded-3xl p-6 md:p-10 relative overflow-hidden border-2 border-amber-300">
+      <div class="notebook-paper max-w-2xl mx-auto rounded-3xl p-6 md:p-10 relative overflow-hidden border-2 border-emerald-300">
         
         <!-- Official Teacher Grade Stamp -->
         <div class="absolute top-6 right-6 border-4 border-dashed border-red-600 rounded-full w-24 h-24 flex flex-col items-center justify-center transform rotate-12 bg-red-100/60 backdrop-blur-xs shadow-md">
           <span id="stampGrade" class="font-handwritten text-4xl font-extrabold text-red-600 leading-none">A+</span>
-          <span id="stampTitle" class="font-bold text-[9px] uppercase tracking-wider text-red-700 mt-0.5">EXPERT</span>
+          <span id="stampTitle" class="font-bold text-[9px] uppercase tracking-wider text-red-700 mt-0.5">PYTHON CHAMP</span>
         </div>
 
         <!-- Sheet Header -->
-        <div class="border-b-2 border-amber-400 pb-4 mb-6">
-          <div class="flex items-center gap-2 text-amber-800 font-extrabold text-xs uppercase tracking-widest">
-            <span>📝 Final Student Assessment</span>
+        <div class="border-b-2 border-emerald-400 pb-4 mb-6">
+          <div class="flex items-center gap-2 text-emerald-800 font-extrabold text-xs uppercase tracking-widest">
+            <span>📝 Final Assessment Summary</span>
           </div>
           <h2 class="font-handwritten text-4xl md:text-5xl font-bold text-slate-900 mt-1">
-            Python & Pygame Report Card
+            Python Revision Report
           </h2>
-          <p class="font-note text-base text-slate-600 mt-1">Senior Coding Track • Evaluation Summary</p>
+          <p class="font-note text-base text-slate-600 mt-1">Evaluation Note</p>
         </div>
 
-        <!-- Score Box -->
-        <div class="bg-amber-100/90 border-2 border-amber-300 rounded-2xl p-5 mb-6 flex items-center justify-between shadow-sm">
+        <!-- Handwritten Score Box -->
+        <div class="bg-emerald-100/90 border-2 border-emerald-300 rounded-2xl p-5 mb-6 flex items-center justify-between shadow-sm">
           <div>
-            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Score Output</span>
+            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Score Achieved</span>
             <div class="flex items-baseline gap-2 mt-1">
-              <span id="finalScoreHandwritten" class="font-handwritten text-5xl font-black text-amber-900">10</span>
-              <span class="font-handwritten text-3xl font-bold text-amber-700">/ 10</span>
+              <span id="finalScoreHandwritten" class="font-handwritten text-5xl font-black text-emerald-900">10</span>
+              <span class="font-handwritten text-3xl font-bold text-emerald-700">/ 10</span>
             </div>
           </div>
           <div class="text-right">
-            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Percentage Score</span>
-            <span id="finalPercent" class="font-handwritten text-4xl font-black text-amber-800">100%</span>
+            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Accuracy Rate</span>
+            <span id="finalPercent" class="font-handwritten text-4xl font-black text-emerald-800">100%</span>
           </div>
         </div>
 
-        <!-- Topic Wise Breakdown -->
-        <div class="space-y-4 mb-8">
-          <h3 class="font-note text-2xl font-bold text-slate-800 border-b border-slate-200 pb-1">
-            Topic Performance Breakdown:
-          </h3>
-
-          <!-- Section 1 Breakdown -->
-          <div>
-            <div class="flex justify-between text-xs font-bold mb-1 text-slate-700">
-              <span>Section 1: Pygame Core Concepts (Q1–Q5)</span>
-              <span id="scoreSec1">5 / 5</span>
-            </div>
-            <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
-              <div id="barSec1" class="bg-amber-500 h-full w-full transition-all duration-700"></div>
-            </div>
-          </div>
-
-          <!-- Section 2 Breakdown -->
-          <div>
-            <div class="flex justify-between text-xs font-bold mb-1 text-slate-700">
-              <span>Section 2: Variable Multi-Operations (Q6–Q10)</span>
-              <span id="scoreSec2">5 / 5</span>
-            </div>
-            <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
-              <div id="barSec2" class="bg-yellow-500 h-full w-full transition-all duration-700"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feedback Note -->
-        <div class="bg-amber-50/90 border border-amber-300 rounded-2xl p-5 mb-8 relative">
-          <div class="text-xs uppercase font-extrabold text-amber-800 mb-1 tracking-wider">
-            Instructor's Feedback:
+        <!-- Feedback Note Section -->
+        <div class="bg-emerald-50/90 border border-emerald-300 rounded-2xl p-5 mb-8 relative">
+          <div class="text-xs uppercase font-extrabold text-emerald-800 mb-1 tracking-wider">
+            Feedback:
           </div>
           <p id="handwrittenRemark" class="font-handwritten text-2xl text-slate-800 leading-snug">
-            "Outstanding performance! You have a solid grasp of Pygame initialization, rect bounding boxes, and Python arithmetic tracing."
+            "Awesome work! You have a great understanding of basic math, lists, loops, and function syntax!"
           </p>
-          <div class="text-right mt-3 font-handwritten text-xl font-bold text-amber-900">
-            — Tutor Priyadarshini 🎮
+          <div class="text-right mt-3 font-handwritten text-xl font-bold text-emerald-900">
+            — Tutor Priyadarshini 🌸
           </div>
         </div>
 
         <!-- Retake Button -->
         <div class="flex gap-3">
-          <button onclick="restartQuiz()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black text-base rounded-2xl shadow-md transition text-center border border-amber-300">
-            🔄 Retake Revision Quiz
+          <button onclick="restartQuiz()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-base rounded-2xl shadow-md transition text-center border border-emerald-300">
+            🔄 Retake Quiz
           </button>
         </div>
 
@@ -259,15 +244,12 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-slate-900 text-yellow-300 text-center py-3.5 text-xs relative z-10 border-t-2 border-amber-500">
-    <p>Python & Pygame Senior Revision Workbench • Yellow Tetris Theme</p>
+  <footer class="bg-slate-900 text-emerald-300 text-center py-3.5 text-xs relative z-10 border-t-2 border-emerald-500">
+    <p>Python Revision Workbench • Age 13 Learning Edition</p>
   </footer>
 
   <script>
-    // -------------------------------------------------------------
-    // TETRIS BACKGROUND CANVAS ANIMATION
-    // -------------------------------------------------------------
-    const canvas = document.getElementById('tetrisCanvas');
+    const canvas = document.getElementById('fallingFlowersCanvas');
     const ctx = canvas.getContext('2d');
 
     function resizeCanvas() {
@@ -277,406 +259,219 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Tetris Block Shapes (Matrix Definitions)
-    const TETROMINOES = [
-      // I
-      { shape: [[1, 1, 1, 1]], color: '#06b6d4' },
-      // J
-      { shape: [[1, 0, 0], [1, 1, 1]], color: '#3b82f6' },
-      // L
-      { shape: [[0, 0, 1], [1, 1, 1]], color: '#f97316' },
-      // O
-      { shape: [[1, 1], [1, 1]], color: '#eab308' },
-      // S
-      { shape: [[0, 1, 1], [1, 1, 0]], color: '#22c55e' },
-      // T
-      { shape: [[0, 1, 0], [1, 1, 1]], color: '#a855f7' },
-      // Z
-      { shape: [[1, 1, 0], [0, 1, 1]], color: '#ef4444' }
-    ];
-
-    // Falling Tetromino Class
-    class FallingBlock {
+    // Falling Pink Flower Class
+    class FallingFlower {
       constructor() {
         this.reset();
       }
 
       reset() {
-        const tetro = TETROMINOES[Math.floor(Math.random() * TETROMINOES.length)];
-        this.shape = tetro.shape;
-        this.color = tetro.color;
-        this.blockSize = Math.floor(Math.random() * 12) + 18; // 18px to 30px
-        this.x = Math.random() * (canvas.width - this.shape[0].length * this.blockSize);
-        this.y = -100 - Math.random() * 200;
+        this.x = Math.random() * canvas.width;
+        this.y = -20 - Math.random() * 100;
         this.speed = Math.random() * 1.5 + 0.8;
-        this.rotation = Math.floor(Math.random() * 4); // Random rotation index
+        this.size = Math.random() * 10 + 12; // Radius
+        this.angle = Math.random() * Math.PI * 2;
+        this.spinSpeed = (Math.random() - 0.5) * 0.03;
+        this.petals = 5;
+        // Pink flower color variations
+        const colors = ['#f472b6', '#ec4899', '#f43f5e', '#fb7185', '#f472b6'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.centerColor = '#fef08a'; // Light yellow center
       }
 
       update() {
         this.y += this.speed;
-        if (this.y > canvas.height + 100) {
+        this.angle += this.spinSpeed;
+        if (this.y > canvas.height + 40) {
           this.reset();
         }
       }
 
       draw() {
-        ctx.fillStyle = this.color;
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1.5;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
 
-        for (let r = 0; r < this.shape.length; r++) {
-          for (let c = 0; c < this.shape[r].length; c++) {
-            if (this.shape[r][c]) {
-              const px = this.x + c * this.blockSize;
-              const py = this.y + r * this.blockSize;
-              
-              // Draw rounded rect block
-              ctx.beginPath();
-              ctx.roundRect(px, py, this.blockSize - 2, this.blockSize - 2, 4);
-              ctx.fill();
-              ctx.stroke();
-            }
-          }
+        // Draw Petals
+        ctx.fillStyle = this.color;
+        for (let i = 0; i < this.petals; i++) {
+          ctx.beginPath();
+          const petalAngle = (i * 2 * Math.PI) / this.petals;
+          const px = Math.cos(petalAngle) * (this.size * 0.65);
+          const py = Math.sin(petalAngle) * (this.size * 0.65);
+          ctx.arc(px, py, this.size * 0.45, 0, Math.PI * 2);
+          ctx.fill();
         }
+
+        // Draw Center Disc
+        ctx.beginPath();
+        ctx.fillStyle = this.centerColor;
+        ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
       }
     }
 
-    // Spawn 22 falling tetris blocks
-    const fallingBlocks = Array.from({ length: 22 }, () => new FallingBlock());
+    const flowers = Array.from({ length: 30 }, () => new FallingFlower());
 
-    function animateTetris() {
+    function animateFlowers() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      fallingBlocks.forEach(b => {
-        b.update();
-        b.draw();
+      flowers.forEach(flower => {
+        flower.update();
+        flower.draw();
       });
-      requestAnimationFrame(animateTetris);
+      requestAnimationFrame(animateFlowers);
     }
-    animateTetris();
+    animateFlowers();
 
-
-    // -------------------------------------------------------------
-    // 10 SENIOR PYTHON & PYGAME REVISION QUESTIONS
-    // -------------------------------------------------------------
     const quizQuestions = [
-      // QUESTION 1 (Pygame Init)
+      // Q1: Predict Output (Variables & Simple Operations)
       {
         id: 1,
-        category: "Pygame Core Fundamentals",
-        section: "Section 1 of 2",
-        question: "How do you properly initialize all imported Pygame modules before calling any Pygame functions?",
-        code: null,
+        category: "Variables & Operators",
+        question: "What is the final value printed on the screen?",
+        code: "x = 5\nx = x + 3\nx = x * 2\nprint(x)",
         options: [
-          {
-            text: "pygame.start()",
-            isCorrect: false,
-            explanation: "Incorrect! 'pygame.start()' is not a valid Pygame command. The standard initialization function is pygame.init()."
-          },
-          {
-            text: "pygame.init()",
-            isCorrect: true,
-            explanation: "Correct! pygame.init() initializes all imported Pygame modules at the beginning of your code before creating windows or sprites!"
-          },
-          {
-            text: "pygame.setup()",
-            isCorrect: false,
-            explanation: "Incorrect! 'pygame.setup()' does not exist in the Pygame library; initialization is done via pygame.init()."
-          },
-          {
-            text: "pygame.launch()",
-            isCorrect: false,
-            explanation: "Incorrect! Pygame does not have a 'launch()' function. Always use pygame.init() to prep modules."
-          }
+          { text: "10", isCorrect: false, explanation: "Wrong! Remember x increases to 8 first before multiplying by 2." },
+          { text: "13", isCorrect: false, explanation: "Wrong! 5 + 3 is 8, and doubling 8 gives 16." },
+          { text: "16", isCorrect: true, explanation: "Correct! First x becomes 5+3 = 8. Then 8 * 2 = 16!" },
+          { text: "8", isCorrect: false, explanation: "Wrong! Don't forget the last step where x is multiplied by 2." }
         ]
       },
 
-      // QUESTION 2 (Window & Caption Syntax)
+      // Q2: Predict Output (Variables & Modulo)
       {
         id: 2,
-        category: "Pygame Core Fundamentals",
-        section: "Section 1 of 2",
-        question: "What does this code syntax accomplish when executed in a Pygame script?",
-        code: "screen = pygame.display.set_mode((800, 600))\npygame.display.set_caption('My Pygame')",
+        category: "Variables & Modulo",
+        question: "What is the final result of this variable calculation?",
+        code: "a = 15\na = a - 5\nb = a % 3\nprint(b)",
         options: [
-          {
-            text: "Initializes an 800x600 pixel display window and sets its title bar caption text to 'My Pygame'.",
-            isCorrect: true,
-            explanation: "Correct! set_mode((800, 600)) creates an 800 by 600 resolution canvas, and set_caption('My Pygame') sets the window title bar text!"
-          },
-          {
-            text: "Creates an 800x600 sprite surface object and draws a caption text box inside the game canvas.",
-            isCorrect: false,
-            explanation: "Incorrect! set_mode creates the main display window surface, while set_caption sets the OS title bar, not an in-game text sprite."
-          },
-          {
-            text: "Sets the game frame rate cap to 800 FPS and creates 600 text caption objects.",
-            isCorrect: false,
-            explanation: "Incorrect! Frame rates are controlled by pygame.time.Clock(), not set_mode or set_caption."
-          },
-          {
-            text: "Opens a full-screen display mode and locks mouse cursor movement to (800, 600).",
-            isCorrect: false,
-            explanation: "Incorrect! set_mode((800, 600)) creates a standard windowed mode with width 800 and height 600."
-          }
+          { text: "0", isCorrect: false, explanation: "Wrong! 10 divided by 3 is 3 with 1 left over, so the remainder is 1, not 0." },
+          { text: "1", isCorrect: true, explanation: "Correct! a becomes 10 (15 - 5). 10 divided by 3 leaves a remainder of 1!" },
+          { text: "3", isCorrect: false, explanation: "Wrong! The % sign gives the remainder leftover, not the number 3." },
+          { text: "2", isCorrect: false, explanation: "Wrong! 3 * 3 = 9. So 10 - 9 = 1." }
         ]
       },
 
-      // QUESTION 3 (Sprite Rect Bounding Box)
+      // Q3: Predict Output (Variables & Floor Division)
       {
         id: 3,
-        category: "Pygame Core Fundamentals",
-        section: "Section 1 of 2",
-        question: "Why do we add a rectangular bounding box around a sprite image using `.get_rect()` in Pygame?",
-        code: "player_surf = pygame.image.load('player.png')\nplayer_rect = player_surf.get_rect(topleft=(100, 100))",
+        category: "Variables & Floor Division",
+        question: "What value will be printed after these operations?",
+        code: "num = 20\nnum = num + 4\nresult = num // 5\nprint(result)",
         options: [
-          {
-            text: "To compress the image file size to run at higher FPS.",
-            isCorrect: false,
-            explanation: "Incorrect! Getting a Rect object does not affect image compression or file size."
-          },
-          {
-            text: "To change the color tint and transparency of the sprite.",
-            isCorrect: false,
-            explanation: "Incorrect! Image coloring and alpha are handled by Surface methods, not the Rect bounding box."
-          },
-          {
-            text: "To treat the image as a bounding box for positioning, movement, and collision detection like .colliderect().",
-            isCorrect: true,
-            explanation: "Correct! A Rect wraps the image in a mathematical bounding box, enabling easy coordinate tracking (x, y, center) and collision logic!"
-          },
-          {
-            text: "To prevent the sprite from rotating when drawn on screen.",
-            isCorrect: false,
-            explanation: "Incorrect! Rects do not lock image rotation; they provide positional boundaries for collisions."
-          }
+          { text: "4", isCorrect: true, explanation: "Correct! num becomes 24. Floor division // strips decimals, so 24 // 5 gives 4!" },
+          { text: "4.8", isCorrect: false, explanation: "Wrong! Double slash // gives the whole number only (4), leaving out the decimal part." },
+          { text: "5", isCorrect: false, explanation: "Wrong! 5 * 5 is 25, which is bigger than 24. So 24 // 5 is 4." },
+          { text: "24", isCorrect: false, explanation: "Wrong! Don't forget the division by 5 step at the end!" }
         ]
       },
 
-      // QUESTION 4 (Game Loop & Blit)
+      // Q4: Predict Output (Simple for Loop)
       {
         id: 4,
-        category: "Pygame Core Fundamentals",
-        section: "Section 1 of 2",
-        question: "Why do we need a main game loop in Pygame, and what is the role of `.blit()` inside it?",
-        code: "while running:\n    # Event checking & logic\n    screen.blit(bg_surface, (0, 0))\n    pygame.display.update()",
+        category: "For Loops",
+        question: "What will total equal after this for loop finishes?",
+        code: "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
         options: [
-          {
-            text: "The loop stops CPU usage, and .blit() changes font colors.",
-            isCorrect: false,
-            explanation: "Incorrect! The game loop keeps the code active, and .blit() draws surfaces, not fonts."
-          },
-          {
-            text: "We don't know when the player will exit, so the loop keeps the game active while .blit() copies image surfaces onto the screen and refreshes the display.",
-            isCorrect: true,
-            explanation: "Correct! The game loop runs infinitely until the user quits, and .blit() (Block Transfer) copies image surfaces onto the screen to refresh the display!"
-          },
-          {
-            text: "The loop automatically runs at 60 FPS, and .blit() deletes hidden objects.",
-            isCorrect: false,
-            explanation: "Incorrect! Frame rates require pygame.time.Clock(), and .blit() draws surfaces rather than deleting them."
-          },
-          {
-            text: "The loop compiles Python into C++, and .blit() clears background audio.",
-            isCorrect: false,
-            explanation: "Incorrect! Pygame remains pure Python runtime; .blit() is specifically for drawing graphic surfaces."
-          }
+          { text: "10", isCorrect: false, explanation: "Wrong! range(1, 4) stops right before 4, so 4 is not added." },
+          { text: "4", isCorrect: false, explanation: "Wrong! The loop adds 1 + 2 + 3 = 6." },
+          { text: "3", isCorrect: false, explanation: "Wrong! Total adds all numbers in the loop together, not just the last turn." },
+          { text: "6", isCorrect: true, explanation: "Correct! range(1, 4) gives numbers 1, 2, and 3. Adding them up: 1 + 2 + 3 = 6!" }
         ]
       },
 
-      // QUESTION 5 (Canvas Origin Coordinates)
+      // Q5: Predict Output (For Loop with Step)
       {
         id: 5,
-        category: "Pygame Core Fundamentals",
-        section: "Section 1 of 2",
-        question: "Where is the `(0, 0)` origin coordinate located on a Pygame display canvas?",
-        code: null,
+        category: "For Loops",
+        question: "What is the final printed output of this count loop?",
+        code: "count = 0\nfor x in [2, 4, 6]:\n    count = count + x\nprint(count)",
         options: [
-          {
-            text: "At the exact center of the game screen.",
-            isCorrect: false,
-            explanation: "Incorrect! The center coordinate would be (width // 2, height // 2)."
-          },
-          {
-            text: "At the bottom-left corner of the window.",
-            isCorrect: false,
-            explanation: "Incorrect! Unlike standard Cartesian math graphs, Y increases downward in computer graphics."
-          },
-          {
-            text: "At the top-right corner of the window.",
-            isCorrect: false,
-            explanation: "Incorrect! Top-right would be (width, 0)."
-          },
-          {
-            text: "At the top-left corner of the display window.",
-            isCorrect: true,
-            explanation: "Correct! Computer graphics coordinate systems start at (0, 0) in the TOP-LEFT corner! X grows right, Y grows down."
-          }
+          { text: "6", isCorrect: false, explanation: "Wrong! 6 is only the last item in the list, but count adds all 3 numbers." },
+          { text: "12", isCorrect: true, explanation: "Correct! The loop adds 2 + 4 + 6 together to get 12!" },
+          { text: "3", isCorrect: false, explanation: "Wrong! 3 is how many items are in the list, but we are adding their values!" },
+          { text: "10", isCorrect: false, explanation: "Wrong! 2 + 4 + 6 = 12." }
         ]
       },
 
-      // QUESTION 6 (Variable Multi-Ops: Modulo & Tuple Assignment)
+      // Q6: Predict Output (List Append)
       {
         id: 6,
-        category: "Variable Operations & Tracing",
-        section: "Section 2 of 2",
-        question: "What are the final values of variables x and y after executing this snippet?",
-        code: "x = 14\ny = 5\nx, y = x % y * 3, x // y + 2\nx += y",
+        category: "Lists",
+        question: "What will the list look like after calling append?",
+        code: "fruits = ['apple', 'banana']\nfruits.append('cherry')\nprint(fruits)",
         options: [
-          {
-            text: "x = 16, y = 4",
-            isCorrect: true,
-            explanation: "Correct! Step 1: 14 % 5 = 4; 4 * 3 = 12. Step 2: 14 // 5 = 2; 2 + 2 = 4. Tuple swap sets x=12, y=4. Step 3: x += y -> 12 + 4 = 16."
-          },
-          {
-            text: "x = 14, y = 5",
-            isCorrect: false,
-            explanation: "Incorrect! The original values (14, 5) are modified by modulo, floor division, and addition."
-          },
-          {
-            text: "x = 12, y = 2",
-            isCorrect: false,
-            explanation: "Incorrect! You forgot to add 2 to y (x//y + 2 = 4) and omitted the final x += y line."
-          },
-          {
-            text: "x = 18, y = 4",
-            isCorrect: false,
-            explanation: "Incorrect! 14 % 5 is 4 (not 6), so x becomes 4 * 3 = 12, then 12 + 4 = 16."
-          }
+          { text: "['apple', 'banana', 'cherry']", isCorrect: true, explanation: "Correct! .append() adds the new item 'cherry' to the end of the list!" },
+          { text: "['cherry', 'apple', 'banana']", isCorrect: false, explanation: "Wrong! .append() puts items at the end of the list, not the beginning." },
+          { text: "['cherry']", isCorrect: false, explanation: "Wrong! .append() keeps existing items and attaches the new item to the end." },
+          { text: "['apple', 'banana']", isCorrect: false, explanation: "Wrong! The new item 'cherry' was added to the list." }
         ]
       },
 
-      // QUESTION 7 (Variable Multi-Ops: Exponents & Floor Division)
+      // Q7: Predict Output (List Index Reassignment)
       {
         id: 7,
-        category: "Variable Operations & Tracing",
-        section: "Section 2 of 2",
-        question: "What are the final values of a, b, and c?",
-        code: "a = 3\nb = 4\nc = a ** b // 10\na, b = c * 2, b ** 2 - c",
+        category: "Lists & Indexing",
+        question: "What is printed after changing a value using its list index?",
+        code: "numbers = [10, 20, 30]\nnumbers[1] = 50\nprint(numbers)",
         options: [
-          {
-            text: "a = 8, b = 16, c = 8",
-            isCorrect: false,
-            explanation: "Incorrect! You swapped the target values for a and b."
-          },
-          {
-            text: "a = 16, b = 8, c = 8",
-            isCorrect: true,
-            explanation: "Correct! Step 1: 3 ** 4 = 81. 81 // 10 = 8 (c = 8). Step 2: a = 8 * 2 = 16. Step 3: b = (4**2) - 8 = 16 - 8 = 8."
-          },
-          {
-            text: "a = 24, b = 12, c = 6",
-            isCorrect: false,
-            explanation: "Incorrect! Remember 3 ** 4 evaluates to 81, so 81 // 10 yields c = 8."
-          },
-          {
-            text: "a = 12, b = 8, c = 4",
-            isCorrect: false,
-            explanation: "Incorrect! Exponentiation (3**4 = 81) happens before floor division."
-          }
+          { text: "[50, 20, 30]", isCorrect: false, explanation: "Wrong! Index 0 is the first number (10). Index 1 is the second number." },
+          { text: "[10, 20, 50]", isCorrect: false, explanation: "Wrong! Index 2 would change the third number (30), but we changed index 1." },
+          { text: "[10, 50, 30]", isCorrect: true, explanation: "Correct! In Python indexing starts at 0, so index 1 is the second number (20), which becomes 50!" },
+          { text: "[10, 20, 30, 50]", isCorrect: false, explanation: "Wrong! Using numbers[1] = 50 replaces the item at index 1 instead of adding a new one." }
         ]
       },
 
-      // QUESTION 8 (Variable Multi-Ops: Modulo & Swapping)
+      // Q8: Function Error Identification (Missing Colon)
       {
         id: 8,
-        category: "Variable Operations & Tracing",
-        section: "Section 2 of 2",
-        question: "What are the final values of variables p and q after executing the swap?",
-        code: "p = 25\nq = 7\np = p - (q * 3)\nq = (p + q) ** 2 % 10\np, q = q, p",
+        category: "Functions & Syntax Errors",
+        question: "Why will this function give an error when you try to run it?",
+        code: "def say_hello()\n    print('Hello world!')\n\nsay_hello()",
         options: [
-          {
-            text: "p = 4, q = 1",
-            isCorrect: false,
-            explanation: "Incorrect! You forgot that the last line 'p, q = q, p' swaps the two values."
-          },
-          {
-            text: "p = 4, q = 7",
-            isCorrect: false,
-            explanation: "Incorrect! q is updated by (4 + 7)**2 % 10 = 121 % 10 = 1 before the swap."
-          },
-          {
-            text: "p = 1, q = 4",
-            isCorrect: true,
-            explanation: "Correct! Step 1: p = 25 - 21 = 4. Step 2: (4 + 7)**2 = 121; 121 % 10 = 1 (q = 1). Step 3: p, q = q, p swaps them to p=1, q=4!"
-          },
-          {
-            text: "p = 7, q = 25",
-            isCorrect: false,
-            explanation: "Incorrect! The variables undergo calculations before the final tuple swap."
-          }
+          { text: "Function names cannot have underscores", isCorrect: false, explanation: "Wrong! Underscores like say_hello are totally valid in Python names." },
+          { text: "The print message needs double quotes only", isCorrect: false, explanation: "Wrong! Single quotes 'Hello world!' work completely fine in Python." },
+          { text: "You cannot call a function at the end", isCorrect: false, explanation: "Wrong! Calling say_hello() is how we run the function." },
+          { text: "Missing colon (:) at the end of def say_hello()", isCorrect: true, explanation: "Correct! In Python, function header lines must end with a colon (:)." }
         ]
       },
 
-      // QUESTION 9 (Compound Reassignment Operators)
+      // Q9: Function Error Identification (Indentation Error)
       {
         id: 9,
-        category: "Variable Operations & Tracing",
-        section: "Section 2 of 2",
-        question: "What are the final values of m and n?",
-        code: "m = 18\nn = 4\nm //= n\nn *= m + 1\nm = n % (m * 2)",
+        category: "Functions & Indentation Errors",
+        question: "What is wrong with the syntax inside this function?",
+        code: "def add_five(x):\nresult = x + 5\nreturn result",
         options: [
-          {
-            text: "m = 4, n = 20",
-            isCorrect: true,
-            explanation: "Correct! Step 1: m = 18 // 4 = 4. Step 2: n = 4 * (4 + 1) = 20. Step 3: m = 20 % (4 * 2) = 20 % 8 = 4."
-          },
-          {
-            text: "m = 2, n = 18",
-            isCorrect: false,
-            explanation: "Incorrect! Floor division 18 // 4 truncates to 4 (not 4.5 or 2)."
-          },
-          {
-            text: "m = 0, n = 20",
-            isCorrect: false,
-            explanation: "Incorrect! 20 divided by 8 leaves a remainder of 4 (20 = 8*2 + 4)."
-          },
-          {
-            text: "m = 4, n = 16",
-            isCorrect: false,
-            explanation: "Incorrect! n *= m + 1 calculates 4 * (4 + 1) = 20, not 4 * 4 = 16."
-          }
+          { text: "You are not allowed to use variable x", isCorrect: false, explanation: "Wrong! x is passed into the function as a parameter." },
+          { text: "The code inside the function is missing indentation (spaces)", isCorrect: true, explanation: "Correct! The lines inside a function must be indented (pushed right with spaces)." },
+          { text: "Return statement is not allowed inside functions", isCorrect: false, explanation: "Wrong! Return statements are standard inside functions." },
+          { text: "5 cannot be added to x", isCorrect: false, explanation: "Wrong! Adding 5 to a number is valid math." }
         ]
       },
 
-      // QUESTION 10 (Sequential Complex Operations)
+      // Q10: Predict Output (Simple Function Call)
       {
         id: 10,
-        category: "Variable Operations & Tracing",
-        section: "Section 2 of 2",
-        question: "Trace the operations carefully. What are the final values of u, v, and w?",
-        code: "u = 5\nv = 2\nw = u ** v + u % v\nu, v = w - u, w // v\nw = u + v",
+        category: "Functions",
+        question: "What will be printed when this function is called?",
+        code: "def double_num(n):\n    return n * 2\n\nans = double_num(4)\nprint(ans)",
         options: [
-          {
-            text: "u = 26, v = 13, w = 39",
-            isCorrect: false,
-            explanation: "Incorrect! u is updated by w - u (26 - 5 = 21, not 26)."
-          },
-          {
-            text: "u = 21, v = 13, w = 34",
-            isCorrect: true,
-            explanation: "Correct! Step 1: w = 5**2 + 5%2 = 25 + 1 = 26. Step 2: u = 26 - 5 = 21; v = 26 // 2 = 13. Step 3: w = 21 + 13 = 34!"
-          },
-          {
-            text: "u = 25, v = 12, w = 37",
-            isCorrect: false,
-            explanation: "Incorrect! 5 % 2 = 1, so w begins at 25 + 1 = 26."
-          },
-          {
-            text: "u = 20, v = 10, w = 30",
-            isCorrect: false,
-            explanation: "Incorrect! 26 // 2 yields v = 13, making final w = 21 + 13 = 34."
-          }
+          { text: "4", isCorrect: false, explanation: "Wrong! The function multiplies 4 by 2." },
+          { text: "16", isCorrect: false, explanation: "Wrong! 4 * 2 is 8, not 16." },
+          { text: "8", isCorrect: true, explanation: "Correct! The function receives 4, doubles it (4 * 2 = 8), and returns 8!" },
+          { text: "None", isCorrect: false, explanation: "Wrong! The function has a return line, so it returns 8." }
         ]
       }
     ];
 
-    // -------------------------------------------------------------
-    // QUIZ STATE MANAGEMENT
-    // -------------------------------------------------------------
     let currentQuestionIndex = 0;
     let score = 0;
-    let sec1Score = 0; // Q1-Q5
-    let sec2Score = 0; // Q6-Q10
+    let timerInterval = null;
+    let timeLeft = 30;
+    let isAnswered = false;
 
     // DOM Elements
     const startScreen = document.getElementById('startScreen');
@@ -687,14 +482,15 @@
 
     const questionCategoryTag = document.getElementById('questionCategoryTag');
     const questionProgressText = document.getElementById('questionProgressText');
-    const sectionIndicator = document.getElementById('sectionIndicator');
     const questionText = document.getElementById('questionText');
     const codeBlockContainer = document.getElementById('codeBlockContainer');
     const codeBlock = document.getElementById('codeBlock');
     const optionsContainer = document.getElementById('optionsContainer');
     const nextBtn = document.getElementById('nextBtn');
 
-    // START QUIZ
+    const timerText = document.getElementById('timerText');
+    const timerProgressCircle = document.getElementById('timerProgressCircle');
+
     function startQuiz() {
       startScreen.classList.add('hidden');
       quizScreen.classList.remove('hidden');
@@ -704,48 +500,42 @@
 
       currentQuestionIndex = 0;
       score = 0;
-      sec1Score = 0;
-      sec2Score = 0;
 
       loadQuestion();
     }
 
-    // LOAD QUESTION
     function loadQuestion() {
+      clearInterval(timerInterval);
+      isAnswered = false;
+
       const q = quizQuestions[currentQuestionIndex];
 
-      // Update Tags & Titles
+      // Update Tags & Header
       questionCategoryTag.innerText = q.category;
-      sectionIndicator.innerText = q.section;
       questionProgressText.innerText = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
       headerLiveScore.innerText = `${score} / ${quizQuestions.length}`;
 
       questionText.innerText = q.question;
+      codeBlock.innerText = q.code;
 
-      // Handle Code Block visibility
-      if (q.code) {
-        codeBlock.innerText = q.code;
-        codeBlockContainer.classList.remove('hidden');
-      } else {
-        codeBlockContainer.classList.add('hidden');
-      }
-
-      // Reset Options
-      optionsContainer.innerHTML = '';
+      // Reset Buttons
       nextBtn.disabled = true;
-      nextBtn.className = "px-6 py-3 bg-slate-200 text-slate-400 font-bold rounded-xl cursor-not-allowed transition flex items-center gap-2";
+      nextBtn.className = "px-6 py-3 bg-slate-200 text-slate-400 font-bold text-sm rounded-xl cursor-not-allowed transition flex items-center gap-2";
 
-      // Render 4 Options
+      // Render Options Grid
+      optionsContainer.innerHTML = '';
+
       q.options.forEach((opt, idx) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'space-y-2';
+        const optionWrapper = document.createElement('div');
+        optionWrapper.className = 'space-y-2';
 
         const btn = document.createElement('button');
         btn.id = `opt-btn-${idx}`;
-        btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-amber-400 hover:bg-amber-50/60 text-slate-800 font-semibold text-sm md:text-base transition-all duration-200 flex items-start gap-3 shadow-xs';
-        
+        btn.type = 'button';
+        btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-400 hover:bg-emerald-50/60 text-slate-800 font-bold text-sm md:text-base transition-all duration-200 flex items-start gap-3 shadow-xs';
+
         btn.innerHTML = `
-          <span class="w-6 h-6 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-xs text-slate-700 shrink-0 mt-0.5">
+          <span id="opt-badge-${idx}" class="w-6 h-6 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-xs text-slate-700 shrink-0 mt-0.5">
             ${String.fromCharCode(65 + idx)}
           </span>
           <span class="flex-1">${escapeHtml(opt.text)}</span>
@@ -753,59 +543,91 @@
 
         btn.onclick = () => selectOption(idx);
 
-        // Explanation Box (Hidden initially)
+        // Explanation Box
         const expBox = document.createElement('div');
         expBox.id = `exp-box-${idx}`;
-        expBox.className = 'hidden p-3.5 rounded-xl text-xs md:text-sm font-medium leading-relaxed border shadow-xs';
+        expBox.className = 'hidden p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border shadow-xs';
 
-        wrapper.appendChild(btn);
-        wrapper.appendChild(expBox);
-        optionsContainer.appendChild(wrapper);
+        optionWrapper.appendChild(btn);
+        optionWrapper.appendChild(expBox);
+        optionsContainer.appendChild(optionWrapper);
       });
+
+      startTimer();
     }
 
-    // SELECT OPTION HANDLER
+    function startTimer() {
+      timeLeft = 30;
+      timerText.innerText = timeLeft;
+      updateTimerCircle();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerText.innerText = timeLeft;
+        updateTimerCircle();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          autoTimeOut();
+        }
+      }, 1000);
+    }
+
+    function updateTimerCircle() {
+      const circumference = 140; // 2 * pi * 22
+      const offset = circumference - (timeLeft / 30) * circumference;
+      timerProgressCircle.style.strokeDashoffset = offset;
+
+      if (timeLeft <= 8) {
+        timerProgressCircle.style.stroke = '#ef4444'; // Red alert
+        timerText.className = 'absolute font-black text-sm text-red-600 animate-pulse';
+      } else {
+        timerProgressCircle.style.stroke = '#16a34a';
+        timerText.className = 'absolute font-black text-sm text-emerald-950';
+      }
+    }
+
     function selectOption(selectedIndex) {
+      if (isAnswered) return;
+      isAnswered = true;
+      clearInterval(timerInterval);
+
       const q = quizQuestions[currentQuestionIndex];
 
-      // Disable all option buttons
-      for (let i = 0; i < 4; i++) {
-        const btn = document.getElementById(`opt-btn-${i}`);
-        if (btn) btn.disabled = true;
-      }
+      // Disable option buttons
+      q.options.forEach((_, idx) => {
+        const btn = document.getElementById(`opt-btn-${idx}`);
+        btn.disabled = true;
+      });
 
       const selectedOpt = q.options[selectedIndex];
 
-      // Update Scores
       if (selectedOpt.isCorrect) {
         score++;
-        if (currentQuestionIndex < 5) sec1Score++;
-        else sec2Score++;
+        headerLiveScore.innerText = `${score} / ${quizQuestions.length}`;
       }
 
-      headerLiveScore.innerText = `${score} / ${quizQuestions.length}`;
-
-      // Highlight options and reveal explanations
+      // Highlight options in Red/Green & Reveal Explanations
       q.options.forEach((opt, idx) => {
         const btn = document.getElementById(`opt-btn-${idx}`);
         const expBox = document.getElementById(`exp-box-${idx}`);
 
         if (idx === selectedIndex) {
           if (opt.isCorrect) {
-            // SELECTED CORRECT (GREEN)
+            // Correctly selected (GREEN)
             btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-emerald-300';
-            expBox.className = 'p-3.5 rounded-xl text-xs md:text-sm font-medium leading-relaxed border bg-emerald-100 border-emerald-300 text-emerald-950 block mt-1';
-            expBox.innerHTML = `<strong>✅ Correct!</strong> ${opt.explanation}`;
+            expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100 border-emerald-300 text-emerald-950 block';
+            expBox.innerHTML = `<strong>✅ Correct Choice!</strong> ${opt.explanation}`;
           } else {
-            // SELECTED INCORRECT (RED)
+            // Incorrectly selected (RED)
             btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-red-500 bg-red-50 text-red-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-red-300';
-            expBox.className = 'p-3.5 rounded-xl text-xs md:text-sm font-medium leading-relaxed border bg-red-100 border-red-300 text-red-950 block mt-1';
-            expBox.innerHTML = `<strong>❌ Incorrect!</strong> ${opt.explanation}`;
+            expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-red-100 border-red-300 text-red-950 block';
+            expBox.innerHTML = `<strong>❌ Wrong Choice!</strong> ${opt.explanation}`;
           }
         } else if (opt.isCorrect) {
-          // HIGHLIGHT CORRECT ANSWER IN GREEN IF USER PICKED WRONG
-          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 opacity-95 ring-1 ring-emerald-400';
-          expBox.className = 'p-3.5 rounded-xl text-xs md:text-sm font-medium leading-relaxed border bg-emerald-100/80 border-emerald-300 text-emerald-950 block mt-1';
+          // Missed correct option (HIGHLIGHT GREEN BORDER)
+          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/70 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 opacity-95 ring-1 ring-emerald-300';
+          expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100/80 border-emerald-300 text-emerald-950 block';
           expBox.innerHTML = `<strong>💡 Correct Answer:</strong> ${opt.explanation}`;
         } else {
           btn.classList.add('opacity-40');
@@ -814,13 +636,36 @@
 
       // Enable Next Button
       nextBtn.disabled = false;
-      nextBtn.className = "px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-extrabold rounded-xl shadow-md transition cursor-pointer flex items-center gap-2 transform hover:scale-105 border border-amber-300";
+      nextBtn.className = "px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-sm rounded-xl shadow-md transition cursor-pointer flex items-center gap-2 border border-emerald-300 transform hover:scale-105";
+
       if (currentQuestionIndex === quizQuestions.length - 1) {
-        nextBtn.querySelector('span:first-child').innerText = "View Handwritten Report";
+        nextBtn.querySelector('span:first-child').innerText = "View Final Report";
       }
     }
 
-    // NEXT QUESTION OR SHOW REPORT
+    function autoTimeOut() {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const q = quizQuestions[currentQuestionIndex];
+      q.options.forEach((opt, idx) => {
+        const btn = document.getElementById(`opt-btn-${idx}`);
+        const expBox = document.getElementById(`exp-box-${idx}`);
+        btn.disabled = true;
+
+        if (opt.isCorrect) {
+          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-emerald-300';
+          expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100 border-emerald-300 text-emerald-950 block';
+          expBox.innerHTML = `<strong>⏳ Time's Up!</strong> ${opt.explanation}`;
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      });
+
+      nextBtn.disabled = false;
+      nextBtn.className = "px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-sm rounded-xl shadow-md transition cursor-pointer flex items-center gap-2 border border-emerald-300 transform hover:scale-105";
+    }
+
     function nextQuestion() {
       if (currentQuestionIndex < quizQuestions.length - 1) {
         currentQuestionIndex++;
@@ -830,7 +675,6 @@
       }
     }
 
-    // GENERATE HANDWRITTEN REPORT CARD
     function showReportCard() {
       quizScreen.classList.add('hidden');
       quizHeaderBadge.classList.add('hidden');
@@ -841,51 +685,46 @@
       document.getElementById('finalScoreHandwritten').innerText = score;
       document.getElementById('finalPercent').innerText = `${percent}%`;
 
-      // Section Scores
-      document.getElementById('scoreSec1').innerText = `${sec1Score} / 5`;
-      document.getElementById('scoreSec2').innerText = `${sec2Score} / 5`;
-
-      document.getElementById('barSec1').style.width = `${(sec1Score / 5) * 100}%`;
-      document.getElementById('barSec2').style.width = `${(sec2Score / 5) * 100}%`;
-
-      // Grade & Handwritten Remarks
+      // Assign Grade & Remarks
       const stampGrade = document.getElementById('stampGrade');
       const stampTitle = document.getElementById('stampTitle');
       const handwrittenRemark = document.getElementById('handwrittenRemark');
 
-      if (score >= 9) {
+      if (score === 10) {
         stampGrade.innerText = "A+";
-        stampTitle.innerText = "PYGAME MASTER";
-        handwrittenRemark.innerText = `"Exceptional work! You demonstrated complete command over Pygame window setups, rect collision boxes, coordinate logic, and multi-variable arithmetic."`;
-      } else if (score >= 7) {
+        stampTitle.innerText = "PYTHON CHAMP";
+        handwrittenRemark.innerText = `"Outstanding job! You scored a perfect 10/10! You have completely mastered Python variables, math, lists, and function rules!"`;
+      } else if (score >= 8) {
         stampGrade.innerText = "A";
-        stampTitle.innerText = "SENIOR CODER";
-        handwrittenRemark.innerText = `"Great job! You possess strong Python tracing skills. Review canvas coordinate origins and tuple swapping for absolute perfection."`;
-      } else if (score >= 5) {
+        stampTitle.innerText = "STAR CODER";
+        handwrittenRemark.innerText = `"Great work! You scored ${score}/10! You really understand variable reassignment, for loops, and list methods!"`;
+      } else if (score >= 6) {
+        stampGrade.innerText = "B+";
+        stampTitle.innerText = "BUILDER";
+        handwrittenRemark.innerText = `"Good effort! You scored ${score}/10. Keep practicing list index positions and function indentation rules!"`;
+      } else if (score >= 4) {
         stampGrade.innerText = "B";
-        stampTitle.innerText = "DEVELOPER";
-        handwrittenRemark.innerText = `"Solid effort! Good grasp of Pygame basics. Make sure to practice floor division (//) and modulo (%) order of operations."`;
+        stampTitle.innerText = "LEARNER";
+        handwrittenRemark.innerText = `"Nice try! Review modulo (%) remainders, floor division (//), and function colons to boost your score!"`;
       } else {
         stampGrade.innerText = "C";
-        stampTitle.innerText = "LEARNER";
-        handwrittenRemark.innerText = `"Keep practicing! Review Pygame's init requirements, .blit() surface rendering, and step-by-step variable evaluation."`;
+        stampTitle.innerText = "BEGINNER";
+        handwrittenRemark.innerText = `"Keep practicing! Remember that list index positions start at 0, and functions need colons at the end of their header line."`;
       }
     }
 
-    // RESTART QUIZ
     function restartQuiz() {
       reportCardScreen.classList.add('hidden');
       startQuiz();
     }
 
-    // HELPER: ESCAPE HTML
+    // Helper: Escape HTML string
     function escapeHtml(text) {
       return text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/"/g, "&#039;");
     }
   </script>
 </body>
