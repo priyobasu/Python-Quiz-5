@@ -1,256 +1,628 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Revision Workbench</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts for Handwritten Report & Code -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Systems & Logic Quest 💻</title>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #dcfce7; /* Light Green */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #ffffff;
+      color: #09090b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
       overflow-x: hidden;
     }
 
-    .font-code {
-      font-family: 'Fira Code', monospace;
-    }
-
-    .font-handwritten {
-      font-family: 'Caveat', cursive;
-    }
-
-    .font-note {
-      font-family: 'Patrick Hand', cursive;
-    }
-
-    /* Falling Canvas Background */
-    #fallingFlowersCanvas {
+    /* Falling Black Tetris Canvas */
+    #tetrisCanvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      opacity: 0.85;
+      z-index: 0;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #dcfce7;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #16a34a;
-      border-radius: 4px;
+    .app-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 760px;
     }
 
-    /* Notebook Paper Texture for Report Card */
-    .notebook-paper {
-      background: #f0fdf4;
-      background-image: linear-gradient(#dcfce7 1px, transparent 1px);
-      background-size: 100% 2.2rem;
-      box-shadow: 0 20px 40px rgba(22, 101, 52, 0.15);
-      border-left: 6px double #22c55e;
+    /* Main Quiz Card (White on White Minimalist Aesthetic) */
+    .card {
+      background: #ffffff;
+      border: 2px solid #09090b;
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+      transition: all 0.25s ease;
     }
 
-    /* Countdown Timer Animation Ring */
-    .timer-circle {
-      transition: stroke-dashoffset 1s linear;
+    /* Home Landing Page */
+    .home-screen {
+      text-align: center;
+    }
+
+    .title-tag {
+      display: inline-block;
+      background: #09090b;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 50px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .home-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #09090b;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .home-subtitle {
+      font-size: 1.05rem;
+      color: #52525b;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .info-card {
+      background: #fafafa;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .info-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #09090b;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-card p {
+      font-size: 0.85rem;
+      color: #71717a;
+      line-height: 1.4;
+    }
+
+    .btn-start {
+      background: #09090b;
+      color: #ffffff;
+      border: 2px solid #09090b;
+      padding: 16px 42px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-start:hover {
+      background: #ffffff;
+      color: #09090b;
+      transform: translateY(-2px);
+    }
+
+    /* Quiz Header & Progress */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .badge {
+      background: #f4f4f5;
+      color: #18181b;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid #e4e4e7;
+    }
+
+    .timer-badge {
+      background: #09090b;
+      color: #ffffff;
+      font-weight: 700;
+      border-color: #09090b;
+      transition: background 0.3s ease;
+    }
+
+    .timer-badge.warning {
+      background: #dc2626;
+      border-color: #dc2626;
+    }
+
+    .btn-home-small {
+      background: #ffffff;
+      color: #52525b;
+      border: 1px solid #d4d4d8;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-home-small:hover {
+      background: #f4f4f5;
+      color: #09090b;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #f4f4f5;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      border: 1px solid #e4e4e7;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #09090b;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Question Container */
+    .scenario-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #71717a;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #09090b;
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+
+    .code-box {
+      background: #09090b;
+      color: #f4f4f5;
+      font-family: 'Fira Code', monospace;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      white-space: pre;
+      border: 1px solid #27272a;
+    }
+
+    /* Options */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background: #ffffff;
+      border: 1.5px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #18181b;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      outline: none;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #09090b;
+      background: #fafafa;
+      transform: translateY(-1px);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background: #f0fdf4 !important;
+      border-color: #16a34a !important;
+      color: #15803d !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background: #fef2f2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+    }
+
+    /* Explanations */
+    .explanation-box {
+      background: #f8fafc;
+      border: 1.5px solid #09090b;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 16px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .explanation-box.wrong-theme {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+
+    .explanation-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-text {
+      font-size: 0.92rem;
+      color: #3f3f46;
+      line-height: 1.5;
+    }
+
+    .explanation-wrong-reason {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #fca5a5;
+      color: #9f1239;
+      font-size: 0.88rem;
+    }
+
+    /* Navigation Controls */
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn-next {
+      background: #09090b;
+      color: #ffffff;
+      border: 2px solid #09090b;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-next:hover {
+      background: #ffffff;
+      color: #09090b;
+    }
+
+    /* Results Screen */
+    .result-screen {
+      text-align: center;
+      display: none;
+    }
+
+    .score-badge {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #09090b;
+      margin: 12px 0;
+      letter-spacing: -0.03em;
+    }
+
+    .score-summary {
+      font-size: 1.1rem;
+      color: #52525b;
+      margin-bottom: 24px;
+    }
+
+    .btn-restart {
+      background: #09090b;
+      color: #ffffff;
+      border: 2px solid #09090b;
+      padding: 14px 36px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-restart:hover {
+      background: #ffffff;
+      color: #09090b;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 24px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .home-title { font-size: 1.7rem; }
     }
   </style>
 </head>
-<body class="min-h-screen text-slate-900 flex flex-col justify-between relative selection:bg-emerald-200">
+<body>
 
-  <!-- Falling Pink Flowers Canvas -->
-  <canvas id="fallingFlowersCanvas"></canvas>
+  <!-- Canvas background for falling black Tetris shapes -->
+  <canvas id="tetrisCanvas"></canvas>
 
-  <!-- Top Navigation Header -->
-  <header class="bg-gradient-to-r from-emerald-600 via-green-500 to-emerald-700 text-white shadow-md py-4 px-6 relative z-10 border-b-4 border-emerald-700">
-    <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="bg-white text-emerald-700 p-2.5 rounded-2xl text-xl shadow-md font-code font-bold">
-          🐍
-        </div>
-        <div>
-          <h1 class="font-extrabold text-xl md:text-2xl tracking-tight text-white flex items-center gap-2">
-            PYTHON REVISION
-          </h1>
-          <p class="text-xs font-bold text-emerald-100 uppercase tracking-wider"> 10 Challenges</p>
-        </div>
-      </div>
+  <div class="app-container">
+    <div class="card">
 
-      <!-- Live Score Display -->
-      <div id="quizHeaderBadge" class="hidden items-center gap-3 bg-emerald-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-emerald-400/40 shadow-inner">
-        <div class="text-xs text-emerald-300 font-semibold">
-          <span>Current Score:</span>
-          <span id="headerLiveScore" class="text-white block font-extrabold text-sm">0 / 10</span>
-        </div>
-      </div>
-    </div>
-  </header>
+      <!-- Landing Home Screen -->
+      <div class="home-screen" id="homeScreen">
+        <span class="title-tag">Intermediate Level</span>
+        <h1 class="home-title">Python Systems & Logic Quest</h1>
+        <p class="home-subtitle">Test your practical programming skills</p>
 
-  <main class="max-w-3xl w-full mx-auto p-4 md:p-6 flex-1 flex flex-col justify-center relative z-10">
+       
 
-    <!-- START SCREEN -->
-    <div id="startScreen" class="bg-white/95 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border-4 border-emerald-400 text-center space-y-8">
-      <div class="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto text-4xl shadow-inner border-2 border-pink-300">
-        🌸
-      </div>
-      <div>
-        <h2 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight uppercase">
-          PYTHON REVISION
-        </h2>
-        <p class="text-sm md:text-base font-semibold text-slate-600 mt-3 max-w-md mx-auto">
-          Welcome! Solve these 10 simple Python code challenges and test your programming basics!
-        </p>
-      </div>
-
-      <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 text-xs font-bold text-emerald-900 max-w-md mx-auto space-y-1">
-        <p>⏱️ You have <strong>30 seconds</strong> per question.</p>
-        <p>💡 Click an option to answer and view instant feedback!</p>
-      </div>
-
-      <button onclick="startQuiz()" class="w-full max-w-md py-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-xl rounded-2xl shadow-lg shadow-emerald-500/30 transform hover:-translate-y-0.5 transition duration-150 active:translate-y-0 border-2 border-emerald-300">
-        🚀 Start Quiz
-      </button>
-    </div>
-
-    <!-- QUIZ CARD -->
-    <div id="quizScreen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-emerald-400 flex-col space-y-6">
-      
-      <!-- Progress Bar & Category Header -->
-      <div class="flex items-center justify-between border-b-2 border-emerald-100 pb-4">
-        <div>
-          <span id="questionCategoryTag" class="px-3.5 py-1 bg-emerald-100 text-emerald-900 font-extrabold text-xs rounded-full uppercase tracking-wider border border-emerald-300">
-            Variables
-          </span>
-          <h3 id="questionProgressText" class="text-xs md:text-sm font-bold text-slate-500 mt-1.5">
-            Question 1 of 10
-          </h3>
+        <div style="margin-bottom: 28px; font-size: 0.9rem; color: #71717a;">
+          ⚡ <strong>Rules:</strong> 10 Questions • ⏱️ <strong>30 Seconds</strong> per question • Instant simplified explanations.
         </div>
 
-        <!-- 30-Second Countdown Timer Circle -->
-        <div class="relative flex items-center justify-center w-14 h-14">
-          <svg class="w-full h-full transform -rotate-90">
-            <circle cx="28" cy="28" r="22" stroke="#bbf7d0" stroke-width="4" fill="transparent" />
-            <circle id="timerProgressCircle" cx="28" cy="28" r="22" stroke="#16a34a" stroke-width="4" fill="transparent" stroke-dasharray="140" stroke-dashoffset="0" class="timer-circle" />
-          </svg>
-          <span id="timerText" class="absolute font-black text-sm text-emerald-950">30</span>
-        </div>
-      </div>
-
-      <!-- Question Text & Black Syntax Box Container -->
-      <div class="space-y-4">
-        <h2 id="questionText" class="text-lg md:text-xl font-black text-slate-900 leading-snug">
-          What will be printed on the screen?
-        </h2>
-
-        <!-- Code Snippet Box -->
-        <div id="codeBlockContainer" class="bg-slate-950 text-emerald-400 p-4 rounded-2xl font-code text-xs md:text-sm shadow-inner border border-slate-800 relative">
-          <div class="flex items-center gap-1.5 absolute top-3 right-4 opacity-50">
-            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-          </div>
-          <pre id="codeBlock" class="leading-relaxed mt-1 text-emerald-300"># Code snippet</pre>
-        </div>
-      </div>
-
-      <!-- Option Buttons Container -->
-      <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
-        <!-- Dynamic options injected via JS -->
-      </div>
-
-      <!-- Footer Control Bar -->
-      <div class="flex items-center justify-end pt-4 border-t-2 border-emerald-100">
-        <button id="nextBtn" onclick="nextQuestion()" disabled class="px-6 py-3 bg-slate-200 text-slate-400 font-bold text-sm rounded-xl cursor-not-allowed transition flex items-center gap-2">
-          <span>Next Question</span>
-          <span>➔</span>
+        <button class="btn-start" onclick="startQuiz()">
+          🚀 Start Challenge
         </button>
       </div>
-    </div>
 
-    <!-- REPORT CARD SCREEN -->
-    <div id="reportCardScreen" class="hidden">
-      <div class="notebook-paper max-w-2xl mx-auto rounded-3xl p-6 md:p-10 relative overflow-hidden border-2 border-emerald-300">
-        
-        <!-- Official Teacher Grade Stamp -->
-        <div class="absolute top-6 right-6 border-4 border-dashed border-red-600 rounded-full w-24 h-24 flex flex-col items-center justify-center transform rotate-12 bg-red-100/60 backdrop-blur-xs shadow-md">
-          <span id="stampGrade" class="font-handwritten text-4xl font-extrabold text-red-600 leading-none">A+</span>
-          <span id="stampTitle" class="font-bold text-[9px] uppercase tracking-wider text-red-700 mt-0.5">PYTHON CHAMP</span>
-        </div>
-
-        <!-- Sheet Header -->
-        <div class="border-b-2 border-emerald-400 pb-4 mb-6">
-          <div class="flex items-center gap-2 text-emerald-800 font-extrabold text-xs uppercase tracking-widest">
-            <span>📝 Final Assessment Summary</span>
-          </div>
-          <h2 class="font-handwritten text-4xl md:text-5xl font-bold text-slate-900 mt-1">
-            Python Revision Report
-          </h2>
-          <p class="font-note text-base text-slate-600 mt-1">Evaluation Note</p>
-        </div>
-
-        <!-- Handwritten Score Box -->
-        <div class="bg-emerald-100/90 border-2 border-emerald-300 rounded-2xl p-5 mb-6 flex items-center justify-between shadow-sm">
-          <div>
-            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Score Achieved</span>
-            <div class="flex items-baseline gap-2 mt-1">
-              <span id="finalScoreHandwritten" class="font-handwritten text-5xl font-black text-emerald-900">10</span>
-              <span class="font-handwritten text-3xl font-bold text-emerald-700">/ 10</span>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="font-note text-slate-700 text-sm font-bold uppercase tracking-wider block">Accuracy Rate</span>
-            <span id="finalPercent" class="font-handwritten text-4xl font-black text-emerald-800">100%</span>
-          </div>
-        </div>
-
-        <!-- Feedback Note Section -->
-        <div class="bg-emerald-50/90 border border-emerald-300 rounded-2xl p-5 mb-8 relative">
-          <div class="text-xs uppercase font-extrabold text-emerald-800 mb-1 tracking-wider">
-            Feedback:
-          </div>
-          <p id="handwrittenRemark" class="font-handwritten text-2xl text-slate-800 leading-snug">
-            "Awesome work! You have a great understanding of basic math, lists, loops, and function syntax!"
-          </p>
-          <div class="text-right mt-3 font-handwritten text-xl font-bold text-emerald-900">
-            — Tutor Priyadarshini 🌸
-          </div>
-        </div>
-
-        <!-- Retake Button -->
-        <div class="flex gap-3">
-          <button onclick="restartQuiz()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-base rounded-2xl shadow-md transition text-center border border-emerald-300">
-            🔄 Retake Quiz
-          </button>
-        </div>
-
+      <!-- Quiz Header -->
+      <div class="quiz-header" id="quizHeader" style="display: none;">
+        <span class="badge" id="sectionBadge">Part 1: Logic</span>
+        <span class="badge" id="qCounter">Q 1 / 10</span>
+        <span class="badge timer-badge" id="timerBadge">⏱️ 30s</span>
+        <button class="btn-home-small" onclick="showHomeScreen()">🏠 Home</button>
       </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-bg" id="progressBarBg" style="display: none;">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+
+      <!-- Question Container -->
+      <div id="questionContainer" style="display: none;">
+        <div class="scenario-tag" id="scenarioTag">SCENARIO</div>
+        <h2 class="question-title" id="questionText">Loading question...</h2>
+        <div id="codeContainer"></div>
+        <div class="options-grid" id="optionsGrid"></div>
+        <div id="explanationContainer"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls" id="controlsContainer" style="display: none;">
+        <button class="btn-next" id="nextBtn" style="display: none;" onclick="handleNextQuestion()">
+          Next Question ➔
+        </button>
+      </div>
+
+      <!-- Results Screen -->
+      <div class="result-screen" id="resultScreen">
+        <h2>🎉 Challenge Completed!</h2>
+        <div class="score-badge" id="finalScore">0 / 10</div>
+        <p class="score-summary" id="scoreSummary">Great job completing the intermediate Python challenge!</p>
+
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+          <button class="btn-restart" onclick="startQuiz()">🔄 Retake Quiz</button>
+          <button class="btn-restart" style="background: #ffffff; color: #09090b;" onclick="showHomeScreen()">🏠 Home</button>
+        </div>
+      </div>
+
     </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-slate-900 text-emerald-300 text-center py-3.5 text-xs relative z-10 border-t-2 border-emerald-500">
-    <p>Python Revision Workbench • Age 13 Learning Edition</p>
-  </footer>
+  </div>
 
   <script>
-    const canvas = document.getElementById('fallingFlowersCanvas');
+    // --- QUESTION DATASET (10 Intermediate Questions) ---
+    const questionsData = [
+      // PART 1: SYSTEM LOGIC SCENARIOS (Q1 - Q5)
+      {
+        id: 1,
+        section: "Part 1: System Logic",
+        type: "SCENARIO: LOGIN AUTHENTICATION",
+        question: "1. A user enters their password 'SecretPass123' with incorrect casing like 'secretpass123'. You want to grant access regardless of letter casing. Which Python logic correctly handles this?",
+        options: [
+          { text: "Convert both the stored password and the user input to .lower() before comparing with '=='", isCorrect: true },
+          { text: "Use a 'for' loop to check if every letter is in the alphabet", isCorrect: false, error: "Looping through characters doesn't compare the actual password string value!" },
+          { text: "Compare the strings directly with '==' without modifying letter case", isCorrect: false, error: "Python string comparisons are case-sensitive, so 'Secret' == 'secret' evaluates to False." },
+          { text: "Convert the input password into an integer using int()", isCorrect: false, error: "Passwords with letters cannot be converted into numbers using int() and will raise a ValueError." }
+        ],
+        explanation: "Python string equality check '==' is strictly case-sensitive. Converting both the stored password and input password to lowercase using .lower() ensures letters match regardless of upper or lower case!"
+      },
+      {
+        id: 2,
+        section: "Part 1: System Logic",
+        question: "2. You want to allow a user maximum 3 failed password attempts. If they fail 3 times, lock the system. What control flow logic should you implement?",
+        options: [
+          { text: "A while loop tracking 'attempts < 3', incrementing 'attempts' on failed entries, and triggering a lockout if 'attempts == 3'", isCorrect: true },
+          { text: "A single 'if-else' statement that asks for the password three times on one line", isCorrect: false, error: "An 'if' statement only runs a check once, it cannot repeat user prompts automatically." },
+          { text: "A 'for' loop counting up to 100 with a 'pass' keyword", isCorrect: false, error: "Counting to 100 doesn't track 3 failed login attempts." },
+          { text: "A recursive function that reboots the server every time a wrong letter is typed", isCorrect: false, error: "Rebooting the server on a single typo is unnecessary and bad system architecture!" }
+        ],
+        explanation: "A 'while' loop continues prompting as long as 'attempts < 3'. Increasing an attempt counter by 1 on each failed password allows you to break out and trigger account lock when attempts reaches 3."
+      },
+      {
+        id: 3,
+        section: "Part 1: System Logic",
+        question: "3. You are building a signup page for a game. You need to check if the user's password is long enough (at least 8 characters). What simple Python code checks the length of the password string?",
+        options: [
+          { text: "if len(password) >= 8:", isCorrect: true },
+          { text: "if password == 8:", isCorrect: false, error: "This checks if the password text itself equals the number 8, not how long the word is!" },
+          { text: "if count(password) > 8:", isCorrect: false, error: "'count()' is for finding specific letters; 'len()' measures total length!" },
+          { text: "if password.size() >= 8:", isCorrect: false, error: "Python strings use len(password) to check length, not .size()!" }
+        ],
+        explanation: "In Python, len(password) counts how many characters/letters are inside a string. Using 'len(password) >= 8' checks if it has 8 or more characters!"
+      },
+      {
+        id: 4,
+        section: "Part 1: System Logic",
+        question: "4. You are making a chat feature for a game. You have a list of blocked words: blocked = ['spam', 'scam', 'rude']. When a player sends a word, how do you check if their word is inside that blocked list?",
+        options: [
+          { text: "if word in blocked:", isCorrect: true },
+          { text: "if word == blocked:", isCorrect: false, error: "This checks if a single word is identical to the whole list of words!" },
+          { text: "if blocked.has(word):", isCorrect: false, error: "Python uses the friendly 'in' keyword to check lists, not '.has()'!" },
+          { text: "for word in blocked == True:", isCorrect: false, error: "This is invalid Python syntax." }
+        ],
+        explanation: "The 'in' keyword in Python is a clean, friendly way to check if an item exists inside a list! 'if word in blocked:' evaluates to True if the word is found."
+      },
+      {
+        id: 5,
+        section: "Part 1: System Logic",
+        question: "5. In a mini-game, a player gets 10 seconds to guess a secret code. You start with 'seconds = 10'. You want a loop to keep running as long as there is time left, taking away 1 second each turn. Which loop does this?",
+        options: [
+          { text: "while seconds > 0: inside which you do 'seconds = seconds - 1'", isCorrect: true },
+          { text: "if seconds == 10: inside which you do 'seconds = 0'", isCorrect: false, error: "An 'if' statement only runs once, so it won't step down second-by-second!" },
+          { text: "for seconds in 10:", isCorrect: false, error: "You cannot loop directly over a single number like 10 in Python!" },
+          { text: "while seconds = 0:", isCorrect: false, error: "A single '=' sets a variable, but loops need a comparison operator like '>'!" }
+        ],
+        explanation: "A 'while seconds > 0:' loop keeps repeating as long as time remains above zero. Subtracting 1 ('seconds = seconds - 1') counts down step-by-step until time runs out!"
+      },
+
+      // PART 2: CODE OUTPUT & ERROR PREDICTION (Q6 - Q10)
+      {
+        id: 6,
+        section: "Part 2: Output & Errors",
+        type: "CODE TRACE: RETURN VALUES",
+        question: "6. Predict the output of this Python code snippet:",
+        code: `def calculate_discount(price):\n    return price * 0.80\n\nprice = 100\ncalculate_discount(price)\nprint(price)`,
+        options: [
+          { text: "100", isCorrect: true },
+          { text: "80.0", isCorrect: false, error: "The function returned 80.0, but the return value was not assigned back to 'price'!" },
+          { text: "80", isCorrect: false, error: "The returned value was lost because it was never saved to a variable." },
+          { text: "TypeError", isCorrect: false, error: "There is no type error in this code." }
+        ],
+        explanation: "The function calculates and returns 80.0, but when calling 'calculate_discount(price)', the return value is lost because it wasn't assigned to a variable (e.g. price = calculate_discount(price)). The original variable 'price' remains 100."
+      },
+      {
+        id: 7,
+        section: "Part 2: Output & Errors",
+        type: "CODE TRACE: VOID FUNCTIONS",
+        question: "7. What gets printed when running this script?",
+        code: `def update_status(user):\n    print(f"User {user} is online")\n\nstatus = update_status("Alex")\nprint(status)`,
+        options: [
+          { text: "User Alex is online\nNone", isCorrect: true },
+          { text: "User Alex is online\nAlex", isCorrect: false, error: "The function doesn't return 'Alex', so 'status' won't hold 'Alex'." },
+          { text: "User Alex is online", isCorrect: false, error: "Line 5 explicitly prints 'status', which outputs 'None'." },
+          { text: "AttributeError", isCorrect: false, error: "This is valid Python syntax." }
+        ],
+        explanation: "'update_status' prints a message inside the function, but it has no 'return' statement. Functions without a return statement automatically hand back 'None'. Assigning its call to 'status' stores 'None'!"
+      },
+      {
+        id: 8,
+        section: "Part 2: Output & Errors",
+        type: "CODE TRACE: LIST MUTATION",
+        question: "8. What is the output of this list update loop?",
+        code: `server_ports = [80, 443, 8080]\nfor i in range(len(server_ports)):\n    server_ports[i] = server_ports[i] + 1\n\nprint(server_ports)`,
+        options: [
+          { text: "[81, 444, 8081]", isCorrect: true },
+          { text: "[80, 443, 8080]", isCorrect: false, error: "The loop updates each item directly using index assignment." },
+          { text: "[80, 443, 8080, 1]", isCorrect: false, error: "This code modifies existing items, it does not append new items." },
+          { text: "IndexError: list index out of range", isCorrect: false, error: "range(len(server_ports)) generates indexes 0, 1, 2 which are valid." }
+        ],
+        explanation: "range(len(server_ports)) produces index numbers 0, 1, and 2. The loop accesses each item by its index and adds 1 directly to each port number."
+      },
+      {
+        id: 9,
+        section: "Part 2: Output & Errors",
+        type: "CODE TRACE: MUTABLE DEFAULT ARGUMENTS",
+        question: "9. What will be printed by the following code?",
+        code: `def log_access(user, log=[]):\n    log.append(user)\n    return log\n\nprint(log_access("UserA"))\nprint(log_access("UserB"))`,
+        options: [
+          { text: "['UserA']\n['UserA', 'UserB']", isCorrect: true },
+          { text: "['UserA']\n['UserB']", isCorrect: false, error: "Default list arguments are created once, so 'log' keeps previous items!" },
+          { text: "['UserA', 'UserB']\n['UserA', 'UserB']", isCorrect: false, error: "The first print statement only has 'UserA' stored at that moment." },
+          { text: "SyntaxError", isCorrect: false, error: "Defining log=[] in default arguments is valid Python syntax." }
+        ],
+        explanation: "In Python, default arguments like 'log=[]' are created only once when the function is defined. Subsequent calls reuse that exact same list in memory, accumulating items across calls!"
+      },
+      {
+        id: 10,
+        section: "Part 2: Output & Errors",
+        type: "CODE TRACE: VARIABLE SCOPE",
+        question: "10. What will be printed when running this scope test?",
+        code: `auth_token = "ABC123XYZ"\n\ndef clear_token():\n    auth_token = None\n    print("Token cleared")\n\nclear_token()\nprint(auth_token)`,
+        options: [
+          { text: "Token cleared\nABC123XYZ", isCorrect: true },
+          { text: "Token cleared\nNone", isCorrect: false, error: "auth_token = None inside the function creates a local variable, leaving global auth_token untouched!" },
+          { text: "Token cleared", isCorrect: false, error: "The final line print(auth_token) still executes." },
+          { text: "UnboundLocalError", isCorrect: false, error: "Reassigning inside the function creates a new local variable without crashing." }
+        ],
+        explanation: "Writing 'auth_token = None' inside clear_token() creates a NEW local variable named 'auth_token' inside the function. The global 'auth_token' outside remains 'ABC123XYZ'!"
+      }
+    ];
+
+    // --- STATE VARIABLES ---
+    let currentQIndex = 0;
+    let score = 0;
+    let timerSeconds = 30;
+    let timerInterval = null;
+    let answeredCurrent = false;
+    let activeOptions = [];
+
+    // --- TETRIS CANVAS ANIMATION (Black Blocks Falling) ---
+    const canvas = document.getElementById('tetrisCanvas');
     const ctx = canvas.getContext('2d');
+    let tetrisPieces = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -259,473 +631,283 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Falling Pink Flower Class
-    class FallingFlower {
+    // Standard Tetris piece shapes (matrix grids)
+    const shapes = [
+      [[1, 1, 1, 1]], // I
+      [[1, 1], [1, 1]], // O
+      [[0, 1, 0], [1, 1, 1]], // T
+      [[1, 0, 0], [1, 1, 1]], // L
+      [[0, 0, 1], [1, 1, 1]], // J
+      [[0, 1, 1], [1, 1, 0]], // S
+      [[1, 1, 0], [0, 1, 1]]  // Z
+    ];
+
+    class FallingTetromino {
       constructor() {
         this.reset();
+        this.y = Math.random() * canvas.height;
       }
 
       reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = -20 - Math.random() * 100;
-        this.speed = Math.random() * 1.5 + 0.8;
-        this.size = Math.random() * 10 + 12; // Radius
-        this.angle = Math.random() * Math.PI * 2;
-        this.spinSpeed = (Math.random() - 0.5) * 0.03;
-        this.petals = 5;
-        // Pink flower color variations
-        const colors = ['#f472b6', '#ec4899', '#f43f5e', '#fb7185', '#f472b6'];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.centerColor = '#fef08a'; // Light yellow center
+        this.x = Math.random() * (canvas.width - 60);
+        this.y = -60;
+        this.shape = shapes[Math.floor(Math.random() * shapes.length)];
+        this.blockSize = Math.floor(Math.random() * 8) + 14; // 14px to 22px
+        this.speedY = Math.random() * 1.2 + 0.6;
+        this.opacity = Math.random() * 0.12 + 0.08; // subtle minimalist dark grey/black
       }
 
       update() {
-        this.y += this.speed;
-        this.angle += this.spinSpeed;
-        if (this.y > canvas.height + 40) {
+        this.y += this.speedY;
+        if (this.y > canvas.height + 80) {
           this.reset();
         }
       }
 
       draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
+        ctx.fillStyle = `#000000`;
+        ctx.globalAlpha = this.opacity;
 
-        // Draw Petals
-        ctx.fillStyle = this.color;
-        for (let i = 0; i < this.petals; i++) {
-          ctx.beginPath();
-          const petalAngle = (i * 2 * Math.PI) / this.petals;
-          const px = Math.cos(petalAngle) * (this.size * 0.65);
-          const py = Math.sin(petalAngle) * (this.size * 0.65);
-          ctx.arc(px, py, this.size * 0.45, 0, Math.PI * 2);
-          ctx.fill();
+        for (let r = 0; r < this.shape.length; r++) {
+          for (let c = 0; c < this.shape[r].length; c++) {
+            if (this.shape[r][c]) {
+              const px = this.x + c * this.blockSize;
+              const py = this.y + r * this.blockSize;
+              ctx.fillRect(px, py, this.blockSize - 1, this.blockSize - 1);
+            }
+          }
         }
-
-        // Draw Center Disc
-        ctx.beginPath();
-        ctx.fillStyle = this.centerColor;
-        ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
+        ctx.globalAlpha = 1.0;
       }
     }
 
-    const flowers = Array.from({ length: 30 }, () => new FallingFlower());
+    for (let i = 0; i < 28; i++) {
+      tetrisPieces.push(new FallingTetromino());
+    }
 
-    function animateFlowers() {
+    function animateTetris() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      flowers.forEach(flower => {
-        flower.update();
-        flower.draw();
+      tetrisPieces.forEach(p => {
+        p.update();
+        p.draw();
       });
-      requestAnimationFrame(animateFlowers);
+      requestAnimationFrame(animateTetris);
     }
-    animateFlowers();
+    animateTetris();
 
-    const quizQuestions = [
-      // Q1: Predict Output (Variables & Simple Operations)
-      {
-        id: 1,
-        category: "Variables & Operators",
-        question: "What is the final value printed on the screen?",
-        code: "x = 5\nx = x + 3\nx = x * 2\nprint(x)",
-        options: [
-          { text: "10", isCorrect: false, explanation: "Wrong! Remember x increases to 8 first before multiplying by 2." },
-          { text: "13", isCorrect: false, explanation: "Wrong! 5 + 3 is 8, and doubling 8 gives 16." },
-          { text: "16", isCorrect: true, explanation: "Correct! First x becomes 5+3 = 8. Then 8 * 2 = 16!" },
-          { text: "8", isCorrect: false, explanation: "Wrong! Don't forget the last step where x is multiplied by 2." }
-        ]
-      },
-
-      // Q2: Predict Output (Variables & Modulo)
-      {
-        id: 2,
-        category: "Variables & Modulo",
-        question: "What is the final result of this variable calculation?",
-        code: "a = 15\na = a - 5\nb = a % 3\nprint(b)",
-        options: [
-          { text: "0", isCorrect: false, explanation: "Wrong! 10 divided by 3 is 3 with 1 left over, so the remainder is 1, not 0." },
-          { text: "1", isCorrect: true, explanation: "Correct! a becomes 10 (15 - 5). 10 divided by 3 leaves a remainder of 1!" },
-          { text: "3", isCorrect: false, explanation: "Wrong! The % sign gives the remainder leftover, not the number 3." },
-          { text: "2", isCorrect: false, explanation: "Wrong! 3 * 3 = 9. So 10 - 9 = 1." }
-        ]
-      },
-
-      // Q3: Predict Output (Variables & Floor Division)
-      {
-        id: 3,
-        category: "Variables & Floor Division",
-        question: "What value will be printed after these operations?",
-        code: "num = 20\nnum = num + 4\nresult = num // 5\nprint(result)",
-        options: [
-          { text: "4", isCorrect: true, explanation: "Correct! num becomes 24. Floor division // strips decimals, so 24 // 5 gives 4!" },
-          { text: "4.8", isCorrect: false, explanation: "Wrong! Double slash // gives the whole number only (4), leaving out the decimal part." },
-          { text: "5", isCorrect: false, explanation: "Wrong! 5 * 5 is 25, which is bigger than 24. So 24 // 5 is 4." },
-          { text: "24", isCorrect: false, explanation: "Wrong! Don't forget the division by 5 step at the end!" }
-        ]
-      },
-
-      // Q4: Predict Output (Simple for Loop)
-      {
-        id: 4,
-        category: "For Loops",
-        question: "What will total equal after this for loop finishes?",
-        code: "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
-        options: [
-          { text: "10", isCorrect: false, explanation: "Wrong! range(1, 4) stops right before 4, so 4 is not added." },
-          { text: "4", isCorrect: false, explanation: "Wrong! The loop adds 1 + 2 + 3 = 6." },
-          { text: "3", isCorrect: false, explanation: "Wrong! Total adds all numbers in the loop together, not just the last turn." },
-          { text: "6", isCorrect: true, explanation: "Correct! range(1, 4) gives numbers 1, 2, and 3. Adding them up: 1 + 2 + 3 = 6!" }
-        ]
-      },
-
-      // Q5: Predict Output (For Loop with Step)
-      {
-        id: 5,
-        category: "For Loops",
-        question: "What is the final printed output of this count loop?",
-        code: "count = 0\nfor x in [2, 4, 6]:\n    count = count + x\nprint(count)",
-        options: [
-          { text: "6", isCorrect: false, explanation: "Wrong! 6 is only the last item in the list, but count adds all 3 numbers." },
-          { text: "12", isCorrect: true, explanation: "Correct! The loop adds 2 + 4 + 6 together to get 12!" },
-          { text: "3", isCorrect: false, explanation: "Wrong! 3 is how many items are in the list, but we are adding their values!" },
-          { text: "10", isCorrect: false, explanation: "Wrong! 2 + 4 + 6 = 12." }
-        ]
-      },
-
-      // Q6: Predict Output (List Append)
-      {
-        id: 6,
-        category: "Lists",
-        question: "What will the list look like after calling append?",
-        code: "fruits = ['apple', 'banana']\nfruits.append('cherry')\nprint(fruits)",
-        options: [
-          { text: "['apple', 'banana', 'cherry']", isCorrect: true, explanation: "Correct! .append() adds the new item 'cherry' to the end of the list!" },
-          { text: "['cherry', 'apple', 'banana']", isCorrect: false, explanation: "Wrong! .append() puts items at the end of the list, not the beginning." },
-          { text: "['cherry']", isCorrect: false, explanation: "Wrong! .append() keeps existing items and attaches the new item to the end." },
-          { text: "['apple', 'banana']", isCorrect: false, explanation: "Wrong! The new item 'cherry' was added to the list." }
-        ]
-      },
-
-      // Q7: Predict Output (List Index Reassignment)
-      {
-        id: 7,
-        category: "Lists & Indexing",
-        question: "What is printed after changing a value using its list index?",
-        code: "numbers = [10, 20, 30]\nnumbers[1] = 50\nprint(numbers)",
-        options: [
-          { text: "[50, 20, 30]", isCorrect: false, explanation: "Wrong! Index 0 is the first number (10). Index 1 is the second number." },
-          { text: "[10, 20, 50]", isCorrect: false, explanation: "Wrong! Index 2 would change the third number (30), but we changed index 1." },
-          { text: "[10, 50, 30]", isCorrect: true, explanation: "Correct! In Python indexing starts at 0, so index 1 is the second number (20), which becomes 50!" },
-          { text: "[10, 20, 30, 50]", isCorrect: false, explanation: "Wrong! Using numbers[1] = 50 replaces the item at index 1 instead of adding a new one." }
-        ]
-      },
-
-      // Q8: Function Error Identification (Missing Colon)
-      {
-        id: 8,
-        category: "Functions & Syntax Errors",
-        question: "Why will this function give an error when you try to run it?",
-        code: "def say_hello()\n    print('Hello world!')\n\nsay_hello()",
-        options: [
-          { text: "Function names cannot have underscores", isCorrect: false, explanation: "Wrong! Underscores like say_hello are totally valid in Python names." },
-          { text: "The print message needs double quotes only", isCorrect: false, explanation: "Wrong! Single quotes 'Hello world!' work completely fine in Python." },
-          { text: "You cannot call a function at the end", isCorrect: false, explanation: "Wrong! Calling say_hello() is how we run the function." },
-          { text: "Missing colon (:) at the end of def say_hello()", isCorrect: true, explanation: "Correct! In Python, function header lines must end with a colon (:)." }
-        ]
-      },
-
-      // Q9: Function Error Identification (Indentation Error)
-      {
-        id: 9,
-        category: "Functions & Indentation Errors",
-        question: "What is wrong with the syntax inside this function?",
-        code: "def add_five(x):\nresult = x + 5\nreturn result",
-        options: [
-          { text: "You are not allowed to use variable x", isCorrect: false, explanation: "Wrong! x is passed into the function as a parameter." },
-          { text: "The code inside the function is missing indentation (spaces)", isCorrect: true, explanation: "Correct! The lines inside a function must be indented (pushed right with spaces)." },
-          { text: "Return statement is not allowed inside functions", isCorrect: false, explanation: "Wrong! Return statements are standard inside functions." },
-          { text: "5 cannot be added to x", isCorrect: false, explanation: "Wrong! Adding 5 to a number is valid math." }
-        ]
-      },
-
-      // Q10: Predict Output (Simple Function Call)
-      {
-        id: 10,
-        category: "Functions",
-        question: "What will be printed when this function is called?",
-        code: "def double_num(n):\n    return n * 2\n\nans = double_num(4)\nprint(ans)",
-        options: [
-          { text: "4", isCorrect: false, explanation: "Wrong! The function multiplies 4 by 2." },
-          { text: "16", isCorrect: false, explanation: "Wrong! 4 * 2 is 8, not 16." },
-          { text: "8", isCorrect: true, explanation: "Correct! The function receives 4, doubles it (4 * 2 = 8), and returns 8!" },
-          { text: "None", isCorrect: false, explanation: "Wrong! The function has a return line, so it returns 8." }
-        ]
-      }
-    ];
-
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let timerInterval = null;
-    let timeLeft = 30;
-    let isAnswered = false;
-
-    // DOM Elements
-    const startScreen = document.getElementById('startScreen');
-    const quizScreen = document.getElementById('quizScreen');
-    const reportCardScreen = document.getElementById('reportCardScreen');
-    const quizHeaderBadge = document.getElementById('quizHeaderBadge');
-    const headerLiveScore = document.getElementById('headerLiveScore');
-
-    const questionCategoryTag = document.getElementById('questionCategoryTag');
-    const questionProgressText = document.getElementById('questionProgressText');
-    const questionText = document.getElementById('questionText');
-    const codeBlockContainer = document.getElementById('codeBlockContainer');
-    const codeBlock = document.getElementById('codeBlock');
-    const optionsContainer = document.getElementById('optionsContainer');
-    const nextBtn = document.getElementById('nextBtn');
-
-    const timerText = document.getElementById('timerText');
-    const timerProgressCircle = document.getElementById('timerProgressCircle');
-
-    function startQuiz() {
-      startScreen.classList.add('hidden');
-      quizScreen.classList.remove('hidden');
-      quizScreen.classList.add('flex');
-      quizHeaderBadge.classList.remove('hidden');
-      quizHeaderBadge.classList.add('flex');
-
-      currentQuestionIndex = 0;
-      score = 0;
-
-      loadQuestion();
-    }
+    // --- QUIZ LOGIC ---
 
     function loadQuestion() {
+      answeredCurrent = false;
       clearInterval(timerInterval);
-      isAnswered = false;
+      timerSeconds = 30;
+      updateTimerDisplay();
 
-      const q = quizQuestions[currentQuestionIndex];
+      const q = questionsData[currentQIndex];
 
-      // Update Tags & Header
-      questionCategoryTag.innerText = q.category;
-      questionProgressText.innerText = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
-      headerLiveScore.innerText = `${score} / ${quizQuestions.length}`;
+      document.getElementById('sectionBadge').innerText = q.section;
+      document.getElementById('qCounter').innerText = `Q ${currentQIndex + 1} / 10`;
+      
+      const progressPercent = ((currentQIndex) / 10) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
-      questionText.innerText = q.question;
-      codeBlock.innerText = q.code;
+      document.getElementById('scenarioTag').innerText = q.type || "QUESTION";
+      document.getElementById('questionText').innerText = q.question;
 
-      // Reset Buttons
-      nextBtn.disabled = true;
-      nextBtn.className = "px-6 py-3 bg-slate-200 text-slate-400 font-bold text-sm rounded-xl cursor-not-allowed transition flex items-center gap-2";
+      const codeContainer = document.getElementById('codeContainer');
+      if (q.code) {
+        codeContainer.innerHTML = `<pre class="code-box"><code>${escapeHTML(q.code)}</code></pre>`;
+      } else {
+        codeContainer.innerHTML = '';
+      }
 
-      // Render Options Grid
-      optionsContainer.innerHTML = '';
+      // Shuffle options dynamically at runtime so correct answers are scattered
+      activeOptions = [...q.options].sort(() => Math.random() - 0.5);
 
-      q.options.forEach((opt, idx) => {
-        const optionWrapper = document.createElement('div');
-        optionWrapper.className = 'space-y-2';
+      const optionsGrid = document.getElementById('optionsGrid');
+      optionsGrid.innerHTML = '';
 
+      activeOptions.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.id = `opt-btn-${idx}`;
-        btn.type = 'button';
-        btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-400 hover:bg-emerald-50/60 text-slate-800 font-bold text-sm md:text-base transition-all duration-200 flex items-start gap-3 shadow-xs';
-
-        btn.innerHTML = `
-          <span id="opt-badge-${idx}" class="w-6 h-6 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-xs text-slate-700 shrink-0 mt-0.5">
-            ${String.fromCharCode(65 + idx)}
-          </span>
-          <span class="flex-1">${escapeHtml(opt.text)}</span>
-        `;
-
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span>${escapeHTML(opt.text)}</span> <span class="status-icon"></span>`;
         btn.onclick = () => selectOption(idx);
-
-        // Explanation Box
-        const expBox = document.createElement('div');
-        expBox.id = `exp-box-${idx}`;
-        expBox.className = 'hidden p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border shadow-xs';
-
-        optionWrapper.appendChild(btn);
-        optionWrapper.appendChild(expBox);
-        optionsContainer.appendChild(optionWrapper);
+        optionsGrid.appendChild(btn);
       });
 
-      startTimer();
-    }
+      document.getElementById('explanationContainer').innerHTML = '';
+      document.getElementById('nextBtn').style.display = 'none';
 
-    function startTimer() {
-      timeLeft = 30;
-      timerText.innerText = timeLeft;
-      updateTimerCircle();
-
+      // 30-Second Countdown Timer
       timerInterval = setInterval(() => {
-        timeLeft--;
-        timerText.innerText = timeLeft;
-        updateTimerCircle();
-
-        if (timeLeft <= 0) {
+        timerSeconds--;
+        updateTimerDisplay();
+        if (timerSeconds <= 0) {
           clearInterval(timerInterval);
-          autoTimeOut();
+          handleTimeOut();
         }
       }, 1000);
     }
 
-    function updateTimerCircle() {
-      const circumference = 140; // 2 * pi * 22
-      const offset = circumference - (timeLeft / 30) * circumference;
-      timerProgressCircle.style.strokeDashoffset = offset;
-
-      if (timeLeft <= 8) {
-        timerProgressCircle.style.stroke = '#ef4444'; // Red alert
-        timerText.className = 'absolute font-black text-sm text-red-600 animate-pulse';
+    function updateTimerDisplay() {
+      const badge = document.getElementById('timerBadge');
+      badge.innerText = `⏱️ ${timerSeconds}s`;
+      if (timerSeconds <= 8) {
+        badge.classList.add('warning');
       } else {
-        timerProgressCircle.style.stroke = '#16a34a';
-        timerText.className = 'absolute font-black text-sm text-emerald-950';
+        badge.classList.remove('warning');
       }
     }
 
     function selectOption(selectedIndex) {
-      if (isAnswered) return;
-      isAnswered = true;
+      if (answeredCurrent) return;
+      answeredCurrent = true;
       clearInterval(timerInterval);
 
-      const q = quizQuestions[currentQuestionIndex];
+      const q = questionsData[currentQIndex];
+      const selectedOpt = activeOptions[selectedIndex];
+      const optionButtons = document.querySelectorAll('.option-btn');
 
-      // Disable option buttons
-      q.options.forEach((_, idx) => {
-        const btn = document.getElementById(`opt-btn-${idx}`);
-        btn.disabled = true;
-      });
+      optionButtons.forEach(btn => btn.disabled = true);
 
-      const selectedOpt = q.options[selectedIndex];
+      const isCorrect = selectedOpt.isCorrect;
 
-      if (selectedOpt.isCorrect) {
+      if (isCorrect) {
         score++;
-        headerLiveScore.innerText = `${score} / ${quizQuestions.length}`;
-      }
+        optionButtons[selectedIndex].classList.add('correct');
+        optionButtons[selectedIndex].querySelector('.status-icon').innerText = '✅';
+      } else {
+        optionButtons[selectedIndex].classList.add('incorrect');
+        optionButtons[selectedIndex].querySelector('.status-icon').innerText = '❌';
 
-      // Highlight options in Red/Green & Reveal Explanations
-      q.options.forEach((opt, idx) => {
-        const btn = document.getElementById(`opt-btn-${idx}`);
-        const expBox = document.getElementById(`exp-box-${idx}`);
-
-        if (idx === selectedIndex) {
+        activeOptions.forEach((opt, i) => {
           if (opt.isCorrect) {
-            // Correctly selected (GREEN)
-            btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-emerald-300';
-            expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100 border-emerald-300 text-emerald-950 block';
-            expBox.innerHTML = `<strong>✅ Correct Choice!</strong> ${opt.explanation}`;
-          } else {
-            // Incorrectly selected (RED)
-            btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-red-500 bg-red-50 text-red-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-red-300';
-            expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-red-100 border-red-300 text-red-950 block';
-            expBox.innerHTML = `<strong>❌ Wrong Choice!</strong> ${opt.explanation}`;
+            optionButtons[i].classList.add('correct');
+            optionButtons[i].querySelector('.status-icon').innerText = '💡 Correct';
           }
-        } else if (opt.isCorrect) {
-          // Missed correct option (HIGHLIGHT GREEN BORDER)
-          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/70 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 opacity-95 ring-1 ring-emerald-300';
-          expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100/80 border-emerald-300 text-emerald-950 block';
-          expBox.innerHTML = `<strong>💡 Correct Answer:</strong> ${opt.explanation}`;
-        } else {
-          btn.classList.add('opacity-40');
+        });
+      }
+
+      showExplanation(isCorrect, selectedOpt);
+      document.getElementById('nextBtn').style.display = 'inline-flex';
+    }
+
+    function handleTimeOut() {
+      if (answeredCurrent) return;
+      answeredCurrent = true;
+
+      const q = questionsData[currentQIndex];
+      const optionButtons = document.querySelectorAll('.option-btn');
+
+      optionButtons.forEach(btn => btn.disabled = true);
+
+      activeOptions.forEach((opt, i) => {
+        if (opt.isCorrect) {
+          optionButtons[i].classList.add('correct');
+          optionButtons[i].querySelector('.status-icon').innerText = '💡 Correct';
         }
       });
 
-      // Enable Next Button
-      nextBtn.disabled = false;
-      nextBtn.className = "px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-sm rounded-xl shadow-md transition cursor-pointer flex items-center gap-2 border border-emerald-300 transform hover:scale-105";
+      const expContainer = document.getElementById('explanationContainer');
+      expContainer.innerHTML = `
+        <div class="explanation-box wrong-theme">
+          <div class="explanation-title">⏰ Time's Up!</div>
+          <div class="explanation-text"><strong>Correct Explanation:</strong> ${q.explanation}</div>
+        </div>
+      `;
 
-      if (currentQuestionIndex === quizQuestions.length - 1) {
-        nextBtn.querySelector('span:first-child').innerText = "View Final Report";
+      document.getElementById('nextBtn').style.display = 'inline-flex';
+    }
+
+    function showExplanation(isCorrect, selectedOpt) {
+      const q = questionsData[currentQIndex];
+      const expContainer = document.getElementById('explanationContainer');
+
+      if (isCorrect) {
+        expContainer.innerHTML = `
+          <div class="explanation-box">
+            <div class="explanation-title" style="color: #16a34a;">🎉 Correct Logic!</div>
+            <div class="explanation-text">${q.explanation}</div>
+          </div>
+        `;
+      } else {
+        expContainer.innerHTML = `
+          <div class="explanation-box wrong-theme">
+            <div class="explanation-title" style="color: #dc2626;">❌ Not Quite! Here is why:</div>
+            <div class="explanation-wrong-reason">
+              <strong>Why your choice was wrong:</strong> ${selectedOpt.error || "That logic doesn't match standard Python behavior."}
+            </div>
+            <div class="explanation-text" style="margin-top: 8px;">
+              <strong>💡 Correct Logic Explanation:</strong> ${q.explanation}
+            </div>
+          </div>
+        `;
       }
     }
 
-    function autoTimeOut() {
-      if (isAnswered) return;
-      isAnswered = true;
-
-      const q = quizQuestions[currentQuestionIndex];
-      q.options.forEach((opt, idx) => {
-        const btn = document.getElementById(`opt-btn-${idx}`);
-        const expBox = document.getElementById(`exp-box-${idx}`);
-        btn.disabled = true;
-
-        if (opt.isCorrect) {
-          btn.className = 'w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 font-bold text-sm md:text-base flex items-start gap-3 shadow-md ring-2 ring-emerald-300';
-          expBox.className = 'p-3 rounded-xl text-xs md:text-sm font-semibold leading-relaxed border bg-emerald-100 border-emerald-300 text-emerald-950 block';
-          expBox.innerHTML = `<strong>⏳ Time's Up!</strong> ${opt.explanation}`;
-        } else {
-          btn.classList.add('opacity-40');
-        }
-      });
-
-      nextBtn.disabled = false;
-      nextBtn.className = "px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black text-sm rounded-xl shadow-md transition cursor-pointer flex items-center gap-2 border border-emerald-300 transform hover:scale-105";
-    }
-
-    function nextQuestion() {
-      if (currentQuestionIndex < quizQuestions.length - 1) {
-        currentQuestionIndex++;
+    function handleNextQuestion() {
+      currentQIndex++;
+      if (currentQIndex < questionsData.length) {
         loadQuestion();
       } else {
-        showReportCard();
+        showResults();
       }
     }
 
-    function showReportCard() {
-      quizScreen.classList.add('hidden');
-      quizHeaderBadge.classList.add('hidden');
-      reportCardScreen.classList.remove('hidden');
+    function showResults() {
+      document.getElementById('questionContainer').style.display = 'none';
+      document.getElementById('quizHeader').style.display = 'none';
+      document.getElementById('progressBarBg').style.display = 'none';
+      document.getElementById('controlsContainer').style.display = 'none';
 
-      const percent = ((score / quizQuestions.length) * 100).toFixed(0);
+      const resultScreen = document.getElementById('resultScreen');
+      resultScreen.style.display = 'block';
 
-      document.getElementById('finalScoreHandwritten').innerText = score;
-      document.getElementById('finalPercent').innerText = `${percent}%`;
+      document.getElementById('finalScore').innerText = `${score} / 10`;
 
-      // Assign Grade & Remarks
-      const stampGrade = document.getElementById('stampGrade');
-      const stampTitle = document.getElementById('stampTitle');
-      const handwrittenRemark = document.getElementById('handwrittenRemark');
-
-      if (score === 10) {
-        stampGrade.innerText = "A+";
-        stampTitle.innerText = "PYTHON CHAMP";
-        handwrittenRemark.innerText = `"Outstanding job! You scored a perfect 10/10! You have completely mastered Python variables, math, lists, and function rules!"`;
-      } else if (score >= 8) {
-        stampGrade.innerText = "A";
-        stampTitle.innerText = "STAR CODER";
-        handwrittenRemark.innerText = `"Great work! You scored ${score}/10! You really understand variable reassignment, for loops, and list methods!"`;
-      } else if (score >= 6) {
-        stampGrade.innerText = "B+";
-        stampTitle.innerText = "BUILDER";
-        handwrittenRemark.innerText = `"Good effort! You scored ${score}/10. Keep practicing list index positions and function indentation rules!"`;
-      } else if (score >= 4) {
-        stampGrade.innerText = "B";
-        stampTitle.innerText = "LEARNER";
-        handwrittenRemark.innerText = `"Nice try! Review modulo (%) remainders, floor division (//), and function colons to boost your score!"`;
+      let summaryMsg = "";
+      if (score >= 9) {
+        summaryMsg = "🏆 Outstanding! You possess strong intermediate Python systems logic!";
+      } else if (score >= 7) {
+        summaryMsg = "🚀 Great job! You have a solid grasp of control flow and output tracing.";
+      } else if (score >= 5) {
+        summaryMsg = "👍 Good effort! Review function returns and scope rules to sharpen your skills.";
       } else {
-        stampGrade.innerText = "C";
-        stampTitle.innerText = "BEGINNER";
-        handwrittenRemark.innerText = `"Keep practicing! Remember that list index positions start at 0, and functions need colons at the end of their header line."`;
+        summaryMsg = "💪 Keep practicing! Python logic gets easier the more code you write and trace.";
       }
+      document.getElementById('scoreSummary').innerText = summaryMsg;
     }
 
-    function restartQuiz() {
-      reportCardScreen.classList.add('hidden');
-      startQuiz();
+    function showHomeScreen() {
+      clearInterval(timerInterval);
+      document.getElementById('homeScreen').style.display = 'block';
+      document.getElementById('quizHeader').style.display = 'none';
+      document.getElementById('progressBarBg').style.display = 'none';
+      document.getElementById('questionContainer').style.display = 'none';
+      document.getElementById('controlsContainer').style.display = 'none';
+      document.getElementById('resultScreen').style.display = 'none';
     }
 
-    // Helper: Escape HTML string
-    function escapeHtml(text) {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&#039;");
+    function startQuiz() {
+      currentQIndex = 0;
+      score = 0;
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('quizHeader').style.display = 'flex';
+      document.getElementById('progressBarBg').style.display = 'block';
+      document.getElementById('questionContainer').style.display = 'block';
+      document.getElementById('controlsContainer').style.display = 'flex';
+      document.getElementById('resultScreen').style.display = 'none';
+      loadQuestion();
     }
+
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Default to home page view
+    showHomeScreen();
   </script>
 </body>
 </html>
+
+
