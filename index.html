@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     * {
       box-sizing: border-box;
@@ -142,7 +143,6 @@
       transform: translateY(-2px);
     }
 
-    /* Quiz Header & Progress */
     .quiz-header {
       display: flex;
       justify-content: space-between;
@@ -209,7 +209,6 @@
       transition: width 0.3s ease;
     }
 
-    /* Question Container */
     .scenario-tag {
       font-size: 0.75rem;
       font-weight: 700;
@@ -220,7 +219,7 @@
     }
 
     .question-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #09090b;
       margin-bottom: 16px;
@@ -241,7 +240,6 @@
       border: 1px solid #27272a;
     }
 
-    /* Options */
     .options-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -289,7 +287,6 @@
       color: #b91c1c !important;
     }
 
-    /* Explanations */
     .explanation-box {
       background: #f8fafc;
       border: 1.5px solid #09090b;
@@ -327,7 +324,6 @@
       font-size: 0.88rem;
     }
 
-    /* Navigation Controls */
     .controls {
       display: flex;
       justify-content: flex-end;
@@ -354,7 +350,6 @@
       color: #09090b;
     }
 
-    /* Results Screen */
     .result-screen {
       text-align: center;
       display: none;
@@ -413,14 +408,23 @@
 
       <!-- Landing Home Screen -->
       <div class="home-screen" id="homeScreen">
-        <span class="title-tag">Intermediate Level</span>
+        <span class="title-tag">Beginner Friendly</span>
         <h1 class="home-title">Python Systems & Logic Quest</h1>
-        <p class="home-subtitle">Test your practical programming skills</p>
+        <p class="home-subtitle">Explore story-based scenarios, real-life login rules, and code output predictions without complex jargon!</p>
 
-       
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>🔒 Part 1: System Logic (Q1-Q5)</h4>
+            <p>Solve real scenarios using simple conditions, loops, numbers, and list checks.</p>
+          </div>
+          <div class="info-card">
+            <h4>🔮 Part 2: Predict Output (Q6-Q10)</h4>
+            <p>Trace code step-by-step to see what gets printed on screen or catch missing inputs.</p>
+          </div>
+        </div>
 
         <div style="margin-bottom: 28px; font-size: 0.9rem; color: #71717a;">
-          ⚡ <strong>Rules:</strong> 10 Questions • ⏱️ <strong>30 Seconds</strong> per question • Instant simplified explanations.
+          ⚡ <strong>Rules:</strong> 10 Questions • ⏱️ <strong>30 Seconds</strong> per question • Simple friendly explanations.
         </div>
 
         <button class="btn-start" onclick="startQuiz()">
@@ -459,12 +463,12 @@
 
       <!-- Results Screen -->
       <div class="result-screen" id="resultScreen">
-        <h2>🎉 Challenge Completed!</h2>
+        <h2>🎉 Quest Completed!</h2>
         <div class="score-badge" id="finalScore">0 / 10</div>
-        <p class="score-summary" id="scoreSummary">Great job completing the intermediate Python challenge!</p>
+        <p class="score-summary" id="scoreSummary">Great job completing the beginner Python challenge!</p>
 
         <div style="display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
-          <button class="btn-restart" onclick="startQuiz()">🔄 Retake Quiz</button>
+          <button class="btn-restart" onclick="startQuiz()">🔄 Retake Quest</button>
           <button class="btn-restart" style="background: #ffffff; color: #09090b;" onclick="showHomeScreen()">🏠 Home</button>
         </div>
       </div>
@@ -473,25 +477,26 @@
   </div>
 
   <script>
-    // --- QUESTION DATASET (10 Intermediate Questions) ---
+    // --- QUESTION DATASET (10 Beginner-Friendly Questions) ---
     const questionsData = [
-      // PART 1: SYSTEM LOGIC SCENARIOS (Q1 - Q5)
+      // PART 1: SYSTEM & GAME LOGIC SCENARIOS (Q1 - Q5)
       {
         id: 1,
         section: "Part 1: System Logic",
-        type: "SCENARIO: LOGIN AUTHENTICATION",
-        question: "1. A user enters their password 'SecretPass123' with incorrect casing like 'secretpass123'. You want to grant access regardless of letter casing. Which Python logic correctly handles this?",
+        type: "SCENARIO: EMAIL LOGIN",
+        question: "1. You are building an email login screen. You want to check if the password typed by the user matches the correct secret password saved in your system. What basic Python logic checks this?",
         options: [
-          { text: "Convert both the stored password and the user input to .lower() before comparing with '=='", isCorrect: true },
-          { text: "Use a 'for' loop to check if every letter is in the alphabet", isCorrect: false, error: "Looping through characters doesn't compare the actual password string value!" },
-          { text: "Compare the strings directly with '==' without modifying letter case", isCorrect: false, error: "Python string comparisons are case-sensitive, so 'Secret' == 'secret' evaluates to False." },
-          { text: "Convert the input password into an integer using int()", isCorrect: false, error: "Passwords with letters cannot be converted into numbers using int() and will raise a ValueError." }
+          { text: "if user_input == secret_password:", isCorrect: true },
+          { text: "if user_input = secret_password:", isCorrect: false, error: "A single '=' sets a variable, but checking if two things are equal requires double '=='!" },
+          { text: "while user_input == secret_password:", isCorrect: false, error: "A 'while' loop repeats code endlessly, but an 'if' statement is used for a single login check." },
+          { text: "if user_input + secret_password:", isCorrect: false, error: "Using '+' adds text together instead of comparing if they match!" }
         ],
-        explanation: "Python string equality check '==' is strictly case-sensitive. Converting both the stored password and input password to lowercase using .lower() ensures letters match regardless of upper or lower case!"
+        explanation: "In Python, double equals '==' checks if two values are identical! Using 'if user_input == secret_password:' lets the user log in when both passwords match."
       },
       {
         id: 2,
         section: "Part 1: System Logic",
+        type: "SCENARIO: ACCOUNT LOCKOUT",
         question: "2. You want to allow a user maximum 3 failed password attempts. If they fail 3 times, lock the system. What control flow logic should you implement?",
         options: [
           { text: "A while loop tracking 'attempts < 3', incrementing 'attempts' on failed entries, and triggering a lockout if 'attempts == 3'", isCorrect: true },
@@ -504,19 +509,21 @@
       {
         id: 3,
         section: "Part 1: System Logic",
-        question: "3. You are building a signup page for a game. You need to check if the user's password is long enough (at least 8 characters). What simple Python code checks the length of the password string?",
+        type: "SCENARIO: GAME REGISTRATION AGE CHECK",
+        question: "3. To register for a online multiplayer game, a player must be at least 13 years old. You have their age stored in a variable 'player_age'. Which simple code checks if they are allowed to play?",
         options: [
-          { text: "if len(password) >= 8:", isCorrect: true },
-          { text: "if password == 8:", isCorrect: false, error: "This checks if the password text itself equals the number 8, not how long the word is!" },
-          { text: "if count(password) > 8:", isCorrect: false, error: "'count()' is for finding specific letters; 'len()' measures total length!" },
-          { text: "if password.size() >= 8:", isCorrect: false, error: "Python strings use len(password) to check length, not .size()!" }
+          { text: "if player_age >= 13:", isCorrect: true },
+          { text: "if player_age == 13:", isCorrect: false, error: "This only lets 13-year-olds play, blocking anyone who is 14, 15, or older!" },
+          { text: "if player_age < 13:", isCorrect: false, error: "This allows younger players under 13, which is the opposite of the rule!" },
+          { text: "while player_age > 13:", isCorrect: false, error: "A 'while' loop repeats code endlessly; an 'if' check is needed here." }
         ],
-        explanation: "In Python, len(password) counts how many characters/letters are inside a string. Using 'len(password) >= 8' checks if it has 8 or more characters!"
+        explanation: "The '>=' symbol means 'greater than or equal to'. 'if player_age >= 13:' grants access to anyone who is 13 or older!"
       },
       {
         id: 4,
         section: "Part 1: System Logic",
-        question: "4. You are making a chat feature for a game. You have a list of blocked words: blocked = ['spam', 'scam', 'rude']. When a player sends a word, how do you check if their word is inside that blocked list?",
+        type: "SCENARIO: CHAT SAFETY FILTER",
+        question: "4. You are building a chat feature for a game. You have a list of blocked words: blocked = ['spam', 'scam', 'rude']. When a player sends a word, how do you check if their word is inside that blocked list?",
         options: [
           { text: "if word in blocked:", isCorrect: true },
           { text: "if word == blocked:", isCorrect: false, error: "This checks if a single word is identical to the whole list of words!" },
@@ -528,6 +535,7 @@
       {
         id: 5,
         section: "Part 1: System Logic",
+        type: "SCENARIO: MINI-GAME COUNTDOWN TIMER",
         question: "5. In a mini-game, a player gets 10 seconds to guess a secret code. You start with 'seconds = 10'. You want a loop to keep running as long as there is time left, taking away 1 second each turn. Which loop does this?",
         options: [
           { text: "while seconds > 0: inside which you do 'seconds = seconds - 1'", isCorrect: true },
@@ -541,73 +549,73 @@
       // PART 2: CODE OUTPUT & ERROR PREDICTION (Q6 - Q10)
       {
         id: 6,
-        section: "Part 2: Output & Errors",
+        section: "Part 2: Predict Output",
         type: "CODE TRACE: RETURN VALUES",
-        question: "6. Predict the output of this Python code snippet:",
-        code: `def calculate_discount(price):\n    return price * 0.80\n\nprice = 100\ncalculate_discount(price)\nprint(price)`,
+        question: "6. Predict what will be printed on screen when running this function code:",
+        code: `def double_points(score):\n    return score * 2\n\nplayer_score = 50\ndouble_points(player_score)\nprint(player_score)`,
         options: [
-          { text: "100", isCorrect: true },
-          { text: "80.0", isCorrect: false, error: "The function returned 80.0, but the return value was not assigned back to 'price'!" },
-          { text: "80", isCorrect: false, error: "The returned value was lost because it was never saved to a variable." },
-          { text: "TypeError", isCorrect: false, error: "There is no type error in this code." }
+          { text: "50", isCorrect: true },
+          { text: "100", isCorrect: false, error: "The function returned 100, but we forgot to save it back into 'player_score = double_points(...) '!" },
+          { text: "0", isCorrect: false, error: "player_score started at 50 and was not reset to 0." },
+          { text: "Error", isCorrect: false, error: "The code is completely valid Python and will run without crashing." }
         ],
-        explanation: "The function calculates and returns 80.0, but when calling 'calculate_discount(price)', the return value is lost because it wasn't assigned to a variable (e.g. price = calculate_discount(price)). The original variable 'price' remains 100."
+        explanation: "The function calculates 100 and returns it, but line 5 calls 'double_points(player_score)' without storing the answer back into the variable! So 'player_score' remains 50."
       },
       {
         id: 7,
-        section: "Part 2: Output & Errors",
-        type: "CODE TRACE: VOID FUNCTIONS",
+        section: "Part 2: Predict Output",
+        type: "CODE TRACE: PRINT VS RETURN",
         question: "7. What gets printed when running this script?",
-        code: `def update_status(user):\n    print(f"User {user} is online")\n\nstatus = update_status("Alex")\nprint(status)`,
+        code: `def show_greeting(name):\n    print("Hello", name)\n\nresult = show_greeting("Alex")\nprint(result)`,
         options: [
-          { text: "User Alex is online\nNone", isCorrect: true },
-          { text: "User Alex is online\nAlex", isCorrect: false, error: "The function doesn't return 'Alex', so 'status' won't hold 'Alex'." },
-          { text: "User Alex is online", isCorrect: false, error: "Line 5 explicitly prints 'status', which outputs 'None'." },
-          { text: "AttributeError", isCorrect: false, error: "This is valid Python syntax." }
+          { text: "Hello Alex\nNone", isCorrect: true },
+          { text: "Hello Alex\nAlex", isCorrect: false, error: "The function doesn't have a 'return name' statement, so 'result' won't be 'Alex'." },
+          { text: "Hello Alex", isCorrect: false, error: "Line 5 explicitly prints 'result', which outputs 'None'." },
+          { text: "Alex", isCorrect: false, error: "The function prints 'Hello Alex', not just 'Alex'." }
         ],
-        explanation: "'update_status' prints a message inside the function, but it has no 'return' statement. Functions without a return statement automatically hand back 'None'. Assigning its call to 'status' stores 'None'!"
+        explanation: "The function prints 'Hello Alex' when called. But because it has no 'return' statement, Python automatically hands back 'None'. Printing 'result' displays 'None'!"
       },
       {
         id: 8,
-        section: "Part 2: Output & Errors",
-        type: "CODE TRACE: LIST MUTATION",
-        question: "8. What is the output of this list update loop?",
-        code: `server_ports = [80, 443, 8080]\nfor i in range(len(server_ports)):\n    server_ports[i] = server_ports[i] + 1\n\nprint(server_ports)`,
+        section: "Part 2: Predict Output",
+        type: "CODE TRACE: LOOP COIN TOTAL",
+        question: "8. What total value will be printed after adding coins in a loop?",
+        code: `total_coins = 0\nfor coin in [5, 10, 15]:\n    total_coins = total_coins + coin\n\nprint(total_coins)`,
         options: [
-          { text: "[81, 444, 8081]", isCorrect: true },
-          { text: "[80, 443, 8080]", isCorrect: false, error: "The loop updates each item directly using index assignment." },
-          { text: "[80, 443, 8080, 1]", isCorrect: false, error: "This code modifies existing items, it does not append new items." },
-          { text: "IndexError: list index out of range", isCorrect: false, error: "range(len(server_ports)) generates indexes 0, 1, 2 which are valid." }
+          { text: "30", isCorrect: true },
+          { text: "15", isCorrect: false, error: "15 is just the last coin, but the loop accumulates all of them together!" },
+          { text: "0", isCorrect: false, error: "total_coins grows as each coin is added inside the loop." },
+          { text: "[5, 10, 15]", isCorrect: false, error: "total_coins holds the calculated total sum, not the list itself." }
         ],
-        explanation: "range(len(server_ports)) produces index numbers 0, 1, and 2. The loop accesses each item by its index and adds 1 directly to each port number."
+        explanation: "The loop iterates through each coin: 0 + 5 = 5; then 5 + 10 = 15; then 15 + 15 = 30. The final total printed is 30!"
       },
       {
         id: 9,
-        section: "Part 2: Output & Errors",
-        type: "CODE TRACE: MUTABLE DEFAULT ARGUMENTS",
-        question: "9. What will be printed by the following code?",
-        code: `def log_access(user, log=[]):\n    log.append(user)\n    return log\n\nprint(log_access("UserA"))\nprint(log_access("UserB"))`,
+        section: "Part 2: Predict Output",
+        type: "CODE ERROR TRACING",
+        question: "9. What error occurs when calling this function?",
+        code: `def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10)`,
         options: [
-          { text: "['UserA']\n['UserA', 'UserB']", isCorrect: true },
-          { text: "['UserA']\n['UserB']", isCorrect: false, error: "Default list arguments are created once, so 'log' keeps previous items!" },
-          { text: "['UserA', 'UserB']\n['UserA', 'UserB']", isCorrect: false, error: "The first print statement only has 'UserA' stored at that moment." },
-          { text: "SyntaxError", isCorrect: false, error: "Defining log=[] in default arguments is valid Python syntax." }
+          { text: "TypeError: missing 1 required argument 'width'", isCorrect: true },
+          { text: "ZeroDivisionError", isCorrect: false, error: "There is no division in this code!" },
+          { text: "SyntaxError", isCorrect: false, error: "The function definition syntax is completely correct." },
+          { text: "No error, room will equal 10", isCorrect: false, error: "Functions need all requested arguments to calculate a result." }
         ],
-        explanation: "In Python, default arguments like 'log=[]' are created only once when the function is defined. Subsequent calls reuse that exact same list in memory, accumulating items across calls!"
+        explanation: "'calculate_area' expects TWO numbers (length and width), but only ONE number (10) was provided in the function call!"
       },
       {
         id: 10,
-        section: "Part 2: Output & Errors",
+        section: "Part 2: Predict Output",
         type: "CODE TRACE: VARIABLE SCOPE",
-        question: "10. What will be printed when running this scope test?",
-        code: `auth_token = "ABC123XYZ"\n\ndef clear_token():\n    auth_token = None\n    print("Token cleared")\n\nclear_token()\nprint(auth_token)`,
+        question: "10. What value is printed for health at the end of this script?",
+        code: `health = 100\n\ndef heal_player():\n    health = 150\n    print("Healed!")\n\nheal_player()\nprint(health)`,
         options: [
-          { text: "Token cleared\nABC123XYZ", isCorrect: true },
-          { text: "Token cleared\nNone", isCorrect: false, error: "auth_token = None inside the function creates a local variable, leaving global auth_token untouched!" },
-          { text: "Token cleared", isCorrect: false, error: "The final line print(auth_token) still executes." },
-          { text: "UnboundLocalError", isCorrect: false, error: "Reassigning inside the function creates a new local variable without crashing." }
+          { text: "Healed!\n100", isCorrect: true },
+          { text: "Healed!\n150", isCorrect: false, error: "Changing health = 150 inside the function creates a local variable and leaves the main outer health untouched!" },
+          { text: "100", isCorrect: false, error: "heal_player() prints 'Healed!' first when executed." },
+          { text: "150", isCorrect: false, error: "Outer health remains 100." }
         ],
-        explanation: "Writing 'auth_token = None' inside clear_token() creates a NEW local variable named 'auth_token' inside the function. The global 'auth_token' outside remains 'ABC123XYZ'!"
+        explanation: "'Healed!' is printed when heal_player() runs. Setting 'health = 150' inside the function creates a temporary local variable. The main 'health' variable outside stays 100!"
       }
     ];
 
@@ -631,7 +639,6 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Standard Tetris piece shapes (matrix grids)
     const shapes = [
       [[1, 1, 1, 1]], // I
       [[1, 1], [1, 1]], // O
@@ -652,9 +659,9 @@
         this.x = Math.random() * (canvas.width - 60);
         this.y = -60;
         this.shape = shapes[Math.floor(Math.random() * shapes.length)];
-        this.blockSize = Math.floor(Math.random() * 8) + 14; // 14px to 22px
+        this.blockSize = Math.floor(Math.random() * 8) + 14;
         this.speedY = Math.random() * 1.2 + 0.6;
-        this.opacity = Math.random() * 0.12 + 0.08; // subtle minimalist dark grey/black
+        this.opacity = Math.random() * 0.12 + 0.08;
       }
 
       update() {
@@ -695,7 +702,7 @@
     }
     animateTetris();
 
-    // --- QUIZ LOGIC ---
+    // --- QUIZ FUNCTIONS ---
 
     function loadQuestion() {
       answeredCurrent = false;
@@ -835,7 +842,7 @@
           <div class="explanation-box wrong-theme">
             <div class="explanation-title" style="color: #dc2626;">❌ Not Quite! Here is why:</div>
             <div class="explanation-wrong-reason">
-              <strong>Why your choice was wrong:</strong> ${selectedOpt.error || "That logic doesn't match standard Python behavior."}
+              <strong>Why your choice was wrong:</strong> ${selectedOpt.error || "That choice doesn't match standard Python rules."}
             </div>
             <div class="explanation-text" style="margin-top: 8px;">
               <strong>💡 Correct Logic Explanation:</strong> ${q.explanation}
@@ -867,13 +874,13 @@
 
       let summaryMsg = "";
       if (score >= 9) {
-        summaryMsg = "🏆 Outstanding! You possess strong intermediate Python systems logic!";
+        summaryMsg = "🏆 Outstanding! You possess fantastic Python coding logic!";
       } else if (score >= 7) {
-        summaryMsg = "🚀 Great job! You have a solid grasp of control flow and output tracing.";
+        summaryMsg = "🚀 Great job! You have a solid understanding of loops and return values.";
       } else if (score >= 5) {
-        summaryMsg = "👍 Good effort! Review function returns and scope rules to sharpen your skills.";
+        summaryMsg = "👍 Good effort! Practice tracing code step-by-step to sharpen your skills.";
       } else {
-        summaryMsg = "💪 Keep practicing! Python logic gets easier the more code you write and trace.";
+        summaryMsg = "💪 Keep practicing! Python logic gets easier the more code you write.";
       }
       document.getElementById('scoreSummary').innerText = summaryMsg;
     }
@@ -909,5 +916,3 @@
   </script>
 </body>
 </html>
-
-
