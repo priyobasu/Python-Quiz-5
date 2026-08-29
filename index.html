@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python Systems & Logic Quest 💻</title>
-  <!-- Google Fonts -->
+  <title>Python Revision Quiz 🌸</title>
+  <!-- Loading external fonts and Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -17,21 +18,21 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #ffffff;
-      color: #09090b;
+      font-family: 'Fredoka', cursive, sans-serif;
+      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #eab308 100%);
       min-height: 100vh;
+      color: #1e293b;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 20px;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* Falling Black Tetris Canvas */
-    #tetrisCanvas {
+    /* Falling Flowers Canvas */
+    #flowerCanvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -45,216 +46,89 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 760px;
+      max-width: 820px;
     }
 
-    /* Main Quiz Card (White on White Minimalist Aesthetic) */
+    /* Quiz Card */
     .card {
       background: #ffffff;
-      border: 2px solid #09090b;
-      border-radius: 16px;
-      padding: 36px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-      transition: all 0.25s ease;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 4px solid #ca8a04;
+      transition: all 0.3s ease;
     }
 
-    /* Home Landing Page */
-    .home-screen {
-      text-align: center;
-    }
-
-    .title-tag {
-      display: inline-block;
-      background: #09090b;
-      color: #ffffff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 12px;
+    .badge {
+      background: #fef9c3;
+      color: #854d0e;
+      padding: 8px 16px;
       border-radius: 50px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .home-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #09090b;
-      margin-bottom: 12px;
-      letter-spacing: -0.02em;
-    }
-
-    .home-subtitle {
-      font-size: 1.05rem;
-      color: #52525b;
-      margin-bottom: 28px;
-      line-height: 1.5;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
-      text-align: left;
-    }
-
-    .info-card {
-      background: #fafafa;
-      border: 1px solid #e4e4e7;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .info-card h4 {
       font-size: 0.95rem;
-      font-weight: 700;
-      color: #09090b;
-      margin-bottom: 4px;
-      display: flex;
+      font-weight: 600;
+      border: 2px solid #eab308;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .info-card p {
-      font-size: 0.85rem;
-      color: #71717a;
-      line-height: 1.4;
-    }
-
-    .btn-start {
-      background: #09090b;
-      color: #ffffff;
-      border: 2px solid #09090b;
-      padding: 16px 42px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-start:hover {
-      background: #ffffff;
-      color: #09090b;
-      transform: translateY(-2px);
-    }
-
-    .quiz-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .badge {
-      background: #f4f4f5;
-      color: #18181b;
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: 1px solid #e4e4e7;
-    }
-
     .timer-badge {
-      background: #09090b;
-      color: #ffffff;
-      font-weight: 700;
-      border-color: #09090b;
-      transition: background 0.3s ease;
-    }
-
-    .timer-badge.warning {
-      background: #dc2626;
-      border-color: #dc2626;
-    }
-
-    .btn-home-small {
-      background: #ffffff;
-      color: #52525b;
-      border: 1px solid #d4d4d8;
-      padding: 6px 12px;
-      border-radius: 50px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-home-small:hover {
-      background: #f4f4f5;
-      color: #09090b;
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #ef4444;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
     }
 
     .progress-bar-bg {
       width: 100%;
-      height: 8px;
-      background: #f4f4f5;
-      border-radius: 10px;
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 20px;
       overflow: hidden;
       margin-bottom: 24px;
-      border: 1px solid #e4e4e7;
+      border: 2px solid #cbd5e1;
     }
 
     .progress-bar-fill {
       height: 100%;
-      background: #09090b;
+      background: linear-gradient(90deg, #10b981, #059669);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.4s ease;
     }
 
-    .scenario-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #71717a;
-      margin-bottom: 8px;
-    }
-
-    .question-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #09090b;
-      margin-bottom: 16px;
-      line-height: 1.45;
-    }
-
+    /* Code Box */
     .code-box {
-      background: #09090b;
-      color: #f4f4f5;
+      background: #0f172a;
+      color: #f8fafc;
       font-family: 'Fira Code', monospace;
       padding: 16px 20px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      line-height: 1.55;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      line-height: 1.6;
       margin-bottom: 20px;
       overflow-x: auto;
+      border-left: 6px solid #eab308;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
       white-space: pre;
-      border: 1px solid #27272a;
     }
 
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+    /* Option Item Card */
+    .option-item {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
     }
 
     .option-btn {
-      background: #ffffff;
-      border: 1.5px solid #e4e4e7;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 0.95rem;
+      background: #f8fafc;
+      border: 3px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 1.05rem;
+      font-family: 'Fredoka', sans-serif;
       font-weight: 500;
-      color: #18181b;
+      color: #334155;
       text-align: left;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -262,182 +136,171 @@
       align-items: center;
       justify-content: space-between;
       outline: none;
+      user-select: none;
+      width: 100%;
     }
 
     .option-btn:hover:not(:disabled) {
-      border-color: #09090b;
-      background: #fafafa;
-      transform: translateY(-1px);
+      background: #f1f5f9;
+      border-color: #ca8a04;
+      transform: translateY(-2px);
+    }
+
+    .option-btn.selected {
+      background: #fef9c3 !important;
+      border-color: #ca8a04 !important;
+      color: #854d0e !important;
+      font-weight: 600;
+    }
+
+    .option-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      font-weight: 600;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .option-btn.incorrect {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .option-btn.missed {
+      background: #fef3c7 !important;
+      border-color: #f59e0b !important;
+      color: #92400e !important;
+      font-weight: 600;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     .option-btn:disabled {
       cursor: default;
     }
 
-    .option-btn.correct {
-      background: #f0fdf4 !important;
-      border-color: #16a34a !important;
-      color: #15803d !important;
-      font-weight: 600;
-    }
-
-    .option-btn.incorrect {
-      background: #fef2f2 !important;
-      border-color: #ef4444 !important;
-      color: #b91c1c !important;
-    }
-
-    .explanation-box {
-      background: #f8fafc;
-      border: 1.5px solid #09090b;
-      border-radius: 12px;
-      padding: 18px;
-      margin-top: 16px;
+    /* Explanation Box Directly Under Button */
+    .btn-explanation {
+      display: none;
+      padding: 12px 16px;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.45;
       animation: fadeIn 0.25s ease-in-out;
     }
 
-    .explanation-box.wrong-theme {
+    .btn-explanation.correct-exp {
+      background: #f0fdf4;
+      border: 3px solid #22c55e;
+      border-top: none;
+      color: #14532d;
+    }
+
+    .btn-explanation.incorrect-exp {
       background: #fef2f2;
-      border-color: #ef4444;
+      border: 3px solid #ef4444;
+      border-top: none;
+      color: #7f1d1d;
     }
 
-    .explanation-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .btn-explanation.missed-exp {
+      background: #fffbeb;
+      border: 3px solid #f59e0b;
+      border-top: none;
+      color: #78350f;
     }
 
-    .explanation-text {
-      font-size: 0.92rem;
-      color: #3f3f46;
-      line-height: 1.5;
+    /* Handwritten Note Styling */
+    .handwritten-note {
+      background: #fffde7;
+      background-image: linear-gradient(#e1f5fe 1px, transparent 1px);
+      background-size: 100% 28px;
+      border: 2px solid #fbc02d;
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin: 24px 0;
+      text-align: left;
+      box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.08), -2px -2px 0px #fff;
+      transform: rotate(-1deg);
+      position: relative;
     }
 
-    .explanation-wrong-reason {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed #fca5a5;
-      color: #9f1239;
-      font-size: 0.88rem;
+    .handwritten-note::before {
+      content: '📌';
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.8rem;
     }
 
-    .controls {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 20px;
+    .note-content {
+      font-family: 'Caveat', cursive;
+      font-size: 1.65rem;
+      color: #1a237e;
+      line-height: 1.45;
     }
 
-    .btn-next {
-      background: #09090b;
-      color: #ffffff;
-      border: 2px solid #09090b;
-      padding: 12px 28px;
+    .btn-action {
+      background: linear-gradient(135deg, #ca8a04, #a16207);
+      color: white;
+      border: none;
+      padding: 14px 36px;
       border-radius: 50px;
-      font-size: 0.95rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 14px rgba(202, 138, 4, 0.4);
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .btn-next:hover {
-      background: #ffffff;
-      color: #09090b;
-    }
-
-    .result-screen {
-      text-align: center;
-      display: none;
-    }
-
-    .score-badge {
-      font-size: 3.2rem;
-      font-weight: 800;
-      color: #09090b;
-      margin: 12px 0;
-      letter-spacing: -0.03em;
-    }
-
-    .score-summary {
-      font-size: 1.1rem;
-      color: #52525b;
-      margin-bottom: 24px;
-    }
-
-    .btn-restart {
-      background: #09090b;
-      color: #ffffff;
-      border: 2px solid #09090b;
-      padding: 14px 36px;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-restart:hover {
-      background: #ffffff;
-      color: #09090b;
+    .btn-action:hover {
+      transform: scale(1.04);
+      background: linear-gradient(135deg, #a16207, #854d0e);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 600px) {
-      .card { padding: 24px; }
-      .info-grid { grid-template-columns: 1fr; }
-      .home-title { font-size: 1.7rem; }
+    @media (max-width: 640px) {
+      .card { padding: 20px; }
+      .note-content { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Canvas background for falling black Tetris shapes -->
-  <canvas id="tetrisCanvas"></canvas>
+  <!-- Falling Flowers Canvas -->
+  <canvas id="flowerCanvas"></canvas>
 
   <div class="app-container">
-    <div class="card">
+    <div class="card" id="quizCard">
 
-      <!-- Landing Home Screen -->
-      <div class="home-screen" id="homeScreen">
-        <span class="title-tag">Beginner Friendly</span>
-        <h1 class="home-title">Python Systems & Logic Quest</h1>
-        <p class="home-subtitle">Explore story-based scenarios, real-life login rules, and code output predictions without complex jargon!</p>
-
-        <div class="info-grid">
-          <div class="info-card">
-            <h4>🔒 Part 1: System Logic (Q1-Q5)</h4>
-            <p>Solve real scenarios using simple conditions, loops, numbers, and list checks.</p>
-          </div>
-          <div class="info-card">
-            <h4>🔮 Part 2: Predict Output (Q6-Q10)</h4>
-            <p>Trace code step-by-step to see what gets printed on screen or catch missing inputs.</p>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 28px; font-size: 0.9rem; color: #71717a;">
-          ⚡ <strong>Rules:</strong> 10 Questions • ⏱️ <strong>30 Seconds</strong> per question • Simple friendly explanations.
-        </div>
-
-        <button class="btn-start" onclick="startQuiz()">
-          🚀 Start Challenge
+      <!-- Home Landing Page -->
+      <div class="text-center py-8" id="homeScreen">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8">Python Revision Quiz</h1>
+        <button class="btn-action text-xl px-12 py-4" onclick="startQuiz()">
+          🚀 Start
         </button>
       </div>
 
       <!-- Quiz Header -->
-      <div class="quiz-header" id="quizHeader" style="display: none;">
-        <span class="badge" id="sectionBadge">Part 1: Logic</span>
+      <div class="quiz-header flex justify-between items-center mb-5 flex-wrap gap-3" id="quizHeader" style="display: none;">
+        <span class="badge" id="sectionBadge">Python Basics</span>
         <span class="badge" id="qCounter">Q 1 / 10</span>
         <span class="badge timer-badge" id="timerBadge">⏱️ 30s</span>
-        <button class="btn-home-small" onclick="showHomeScreen()">🏠 Home</button>
+        <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 border-2 border-slate-300 px-4 py-1.5 rounded-full text-sm font-semibold transition" onclick="showHomeScreen()">🏠 Home</button>
       </div>
 
       <!-- Progress Bar -->
@@ -447,29 +310,44 @@
 
       <!-- Question Container -->
       <div id="questionContainer" style="display: none;">
-        <div class="scenario-tag" id="scenarioTag">SCENARIO</div>
-        <h2 class="question-title" id="questionText">Loading question...</h2>
+        <div class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2" id="qTypeBadge">SINGLE CHOICE</div>
+        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4 leading-snug" id="questionText">Loading question...</h2>
         <div id="codeContainer"></div>
-        <div class="options-grid" id="optionsGrid"></div>
-        <div id="explanationContainer"></div>
+        
+        <div class="text-sm font-semibold text-slate-500 mb-3" id="instructionText">Select one option:</div>
+        
+        <!-- Options List -->
+        <div id="optionsGrid"></div>
+
+        <!-- Submit Button for Multi-Select -->
+        <div class="flex justify-end mt-4 mb-2" id="multiSubmitContainer" style="display: none;">
+          <button class="btn-action text-base px-8 py-3" id="submitMultiBtn" onclick="submitMultiAnswer()">
+            ✅ Submit Selections
+          </button>
+        </div>
       </div>
 
       <!-- Controls -->
-      <div class="controls" id="controlsContainer" style="display: none;">
-        <button class="btn-next" id="nextBtn" style="display: none;" onclick="handleNextQuestion()">
+      <div class="flex justify-end mt-6" id="controlsContainer" style="display: none;">
+        <button class="btn-action text-base px-8 py-3" id="nextBtn" style="display: none;" onclick="handleNextQuestion()">
           Next Question ➔
         </button>
       </div>
 
-      <!-- Results Screen -->
-      <div class="result-screen" id="resultScreen">
-        <h2>🎉 Quest Completed!</h2>
-        <div class="score-badge" id="finalScore">0 / 10</div>
-        <p class="score-summary" id="scoreSummary">Great job completing the beginner Python challenge!</p>
+      <!-- Result Screen -->
+      <div class="text-center py-4" id="resultScreen" style="display: none;">
+        <h2 class="text-3xl font-bold text-slate-900 mb-2">🎉 Quest Completed! 🎉</h2>
+        <div class="text-5xl font-extrabold text-amber-600 my-4" id="finalScore">0 / 10</div>
+        <p class="text-lg text-slate-600 mb-6" id="scoreSummary">Great effort completing your Python fundamentals quest!</p>
 
-        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
-          <button class="btn-restart" onclick="startQuiz()">🔄 Retake Quest</button>
-          <button class="btn-restart" style="background: #ffffff; color: #09090b;" onclick="showHomeScreen()">🏠 Home</button>
+        <!-- Handwritten Feedback Note -->
+        <div class="handwritten-note">
+          <div class="note-content" id="handwrittenNoteText"></div>
+        </div>
+
+        <div class="flex justify-center gap-4 flex-wrap mt-6">
+          <button class="btn-action" onclick="startQuiz()">🔄 Retake Quest</button>
+          <button class="btn-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showHomeScreen()">🏠 Back to Home</button>
         </div>
       </div>
 
@@ -477,160 +355,159 @@
   </div>
 
   <script>
-    // --- QUESTION DATASET (10 Beginner-Friendly Questions) ---
     const questionsData = [
-      // PART 1: SYSTEM & GAME LOGIC SCENARIOS (Q1 - Q5)
+      // Q1: Click on the correct datatypes (Multi-Select)
       {
         id: 1,
-        section: "Part 1: System Logic",
-        type: "SCENARIO: EMAIL LOGIN",
-        question: "1. You are building an email login screen. You want to check if the password typed by the user matches the correct secret password saved in your system. What basic Python logic checks this?",
+        type: "MULTI_SELECT",
+        question: "1. Click on all the correct standard Python data types:",
         options: [
-          { text: "if user_input == secret_password:", isCorrect: true },
-          { text: "if user_input = secret_password:", isCorrect: false, error: "A single '=' sets a variable, but checking if two things are equal requires double '=='!" },
-          { text: "while user_input == secret_password:", isCorrect: false, error: "A 'while' loop repeats code endlessly, but an 'if' statement is used for a single login check." },
-          { text: "if user_input + secret_password:", isCorrect: false, error: "Using '+' adds text together instead of comparing if they match!" }
-        ],
-        explanation: "In Python, double equals '==' checks if two values are identical! Using 'if user_input == secret_password:' lets the user log in when both passwords match."
-      },
-      {
-        id: 2,
-        section: "Part 1: System Logic",
-        type: "SCENARIO: ACCOUNT LOCKOUT",
-        question: "2. You want to allow a user maximum 3 failed password attempts. If they fail 3 times, lock the system. What control flow logic should you implement?",
-        options: [
-          { text: "A while loop tracking 'attempts < 3', incrementing 'attempts' on failed entries, and triggering a lockout if 'attempts == 3'", isCorrect: true },
-          { text: "A single 'if-else' statement that asks for the password three times on one line", isCorrect: false, error: "An 'if' statement only runs a check once, it cannot repeat user prompts automatically." },
-          { text: "A 'for' loop counting up to 100 with a 'pass' keyword", isCorrect: false, error: "Counting to 100 doesn't track 3 failed login attempts." },
-          { text: "A recursive function that reboots the server every time a wrong letter is typed", isCorrect: false, error: "Rebooting the server on a single typo is unnecessary and bad system architecture!" }
-        ],
-        explanation: "A 'while' loop continues prompting as long as 'attempts < 3'. Increasing an attempt counter by 1 on each failed password allows you to break out and trigger account lock when attempts reaches 3."
-      },
-      {
-        id: 3,
-        section: "Part 1: System Logic",
-        type: "SCENARIO: GAME REGISTRATION AGE CHECK",
-        question: "3. To register for a online multiplayer game, a player must be at least 13 years old. You have their age stored in a variable 'player_age'. Which simple code checks if they are allowed to play?",
-        options: [
-          { text: "if player_age >= 13:", isCorrect: true },
-          { text: "if player_age == 13:", isCorrect: false, error: "This only lets 13-year-olds play, blocking anyone who is 14, 15, or older!" },
-          { text: "if player_age < 13:", isCorrect: false, error: "This allows younger players under 13, which is the opposite of the rule!" },
-          { text: "while player_age > 13:", isCorrect: false, error: "A 'while' loop repeats code endlessly; an 'if' check is needed here." }
-        ],
-        explanation: "The '>=' symbol means 'greater than or equal to'. 'if player_age >= 13:' grants access to anyone who is 13 or older!"
-      },
-      {
-        id: 4,
-        section: "Part 1: System Logic",
-        type: "SCENARIO: CHAT SAFETY FILTER",
-        question: "4. You are building a chat feature for a game. You have a list of blocked words: blocked = ['spam', 'scam', 'rude']. When a player sends a word, how do you check if their word is inside that blocked list?",
-        options: [
-          { text: "if word in blocked:", isCorrect: true },
-          { text: "if word == blocked:", isCorrect: false, error: "This checks if a single word is identical to the whole list of words!" },
-          { text: "if blocked.has(word):", isCorrect: false, error: "Python uses the friendly 'in' keyword to check lists, not '.has()'!" },
-          { text: "for word in blocked == True:", isCorrect: false, error: "This is invalid Python syntax." }
-        ],
-        explanation: "The 'in' keyword in Python is a clean, friendly way to check if an item exists inside a list! 'if word in blocked:' evaluates to True if the word is found."
-      },
-      {
-        id: 5,
-        section: "Part 1: System Logic",
-        type: "SCENARIO: MINI-GAME COUNTDOWN TIMER",
-        question: "5. In a mini-game, a player gets 10 seconds to guess a secret code. You start with 'seconds = 10'. You want a loop to keep running as long as there is time left, taking away 1 second each turn. Which loop does this?",
-        options: [
-          { text: "while seconds > 0: inside which you do 'seconds = seconds - 1'", isCorrect: true },
-          { text: "if seconds == 10: inside which you do 'seconds = 0'", isCorrect: false, error: "An 'if' statement only runs once, so it won't step down second-by-second!" },
-          { text: "for seconds in 10:", isCorrect: false, error: "You cannot loop directly over a single number like 10 in Python!" },
-          { text: "while seconds = 0:", isCorrect: false, error: "A single '=' sets a variable, but loops need a comparison operator like '>'!" }
-        ],
-        explanation: "A 'while seconds > 0:' loop keeps repeating as long as time remains above zero. Subtracting 1 ('seconds = seconds - 1') counts down step-by-step until time runs out!"
+          { text: "integer", isCorrect: true, exp: "Correct! 'integer' (int) is a fundamental built-in Python data type for whole numbers." },
+          { text: "float", isCorrect: true, exp: "Correct! 'float' is the standard Python data type for decimal numbers." },
+          { text: "boolean", isCorrect: true, exp: "Correct! 'boolean' (bool) represents True or False logic in Python." },
+          { text: "string", isCorrect: true, exp: "Correct! 'string' (str) stores text characters in Python." },
+          { text: "number", isCorrect: false, exp: "Incorrect! 'number' is a general word, not a specific Python data type name (Python uses int, float, complex)." },
+          { text: "fraction", isCorrect: false, exp: "Incorrect! 'fraction' is not a basic built-in data type name in Python." },
+          { text: "true", isCorrect: false, exp: "Incorrect! 'true' is a value, not a data type name (and in Python it must be capitalized as True)." },
+          { text: "text", isCorrect: false, exp: "Incorrect! 'text' is not a data type name in Python; text is called 'string' or 'str'." }
+        ]
       },
 
-      // PART 2: CODE OUTPUT & ERROR PREDICTION (Q6 - Q10)
+      // Q2: num = "2" True/False
+      {
+        id: 2,
+        type: "TRUE_FALSE",
+        question: "2. State True or False: In the statement num = \"2\", the value stored in the variable is a number.",
+        code: `num = "2"`,
+        options: [
+          { text: "True", isCorrect: false, exp: "Incorrect! Because \"2\" is inside quotation marks, Python treats it as text (string), not a number!" },
+          { text: "False", isCorrect: true, exp: "Correct! Quotation marks make \"2\" a string (text). To store it as a number, write: num = 2 without quotes." }
+        ]
+      },
+
+      // Q3: Pick correct variable names (Multi-Select, 7 options)
+      {
+        id: 3,
+        type: "MULTI_SELECT",
+        question: "3. Pick all the valid and correct variable names in Python:",
+        options: [
+          { text: "number", isCorrect: true, exp: "Correct! 'number' uses only letters and is a perfectly valid variable name." },
+          { text: "name", isCorrect: true, exp: "Correct! 'name' is a completely valid variable name." },
+          { text: "num12", isCorrect: true, exp: "Correct! 'num12' is valid because numbers are allowed after letters." },
+          { text: "my_name", isCorrect: true, exp: "Correct! 'my_name' is valid because underscores are allowed in variable names." },
+          { text: "print", isCorrect: false, exp: "Incorrect! 'print' is a built-in Python function name! Using it as a variable name overwrites the function." },
+          { text: "first number", isCorrect: false, exp: "Incorrect! 'first number' contains a space. Python variable names cannot contain spaces." },
+          { text: "1num", isCorrect: false, exp: "Incorrect! '1num' starts with a number. Python variable names CANNOT start with digits." }
+        ]
+      },
+
+      // Q4: \n new line True/False
+      {
+        id: 4,
+        type: "TRUE_FALSE",
+        question: "4. State True or False: \\n is used in Python strings to create a new line.",
+        code: `print("Hello\\nWorld")`,
+        options: [
+          { text: "True", isCorrect: true, exp: "Correct! \\n is the newline escape character in Python that breaks text onto a new line." },
+          { text: "False", isCorrect: false, exp: "Incorrect! \\n IS the standard newline character in Python strings." }
+        ]
+      },
+
+      // Q5: Print(location) showing error
+      {
+        id: 5,
+        type: "SINGLE_CHOICE",
+        question: "5. Why is Print(location) showing an error when executed?",
+        code: `location = "Singapore"\nPrint(location)`,
+        options: [
+          { text: "print should be written in lowercase (print)", isCorrect: true, exp: "Correct! Python is case-sensitive, so built-in functions like print() must always be in lowercase." },
+          { text: "location must be inside double quotes inside Print()", isCorrect: false, exp: "Incorrect! Putting 'location' in quotes would print the word 'location' instead of the variable value Kolkata." },
+          { text: "Python statements must end with a semicolon ;", isCorrect: false, exp: "Incorrect! Python does not require semicolons at the end of lines." },
+          { text: "Variables containing text cannot be printed", isCorrect: false, exp: "Incorrect! Variables holding text strings can easily be printed using print()." }
+        ]
+      },
+
+      // Q6: "input" valid variable name True/False
       {
         id: 6,
-        section: "Part 2: Predict Output",
-        type: "CODE TRACE: RETURN VALUES",
-        question: "6. Predict what will be printed on screen when running this function code:",
-        code: `def double_points(score):\n    return score * 2\n\nplayer_score = 50\ndouble_points(player_score)\nprint(player_score)`,
+        type: "TRUE_FALSE",
+        question: "6. State True or False: \"input\" is a valid variable name to use in Python.",
+        code: `input = "User Data"`,
         options: [
-          { text: "50", isCorrect: true },
-          { text: "100", isCorrect: false, error: "The function returned 100, but we forgot to save it back into 'player_score = double_points(...) '!" },
-          { text: "0", isCorrect: false, error: "player_score started at 50 and was not reset to 0." },
-          { text: "Error", isCorrect: false, error: "The code is completely valid Python and will run without crashing." }
-        ],
-        explanation: "The function calculates 100 and returns it, but line 5 calls 'double_points(player_score)' without storing the answer back into the variable! So 'player_score' remains 50."
+          { text: "False", isCorrect: true, exp: "Correct! 'input' is a reserved built-in function in Python. Using it as a variable name breaks input()." },
+          { text: "True", isCorrect: false, exp: "Incorrect! Using 'input' as a variable name overwrites Python's built-in input() function." }
+        ]
       },
+
+      // Q7: Syntax error in print statement
       {
         id: 7,
-        section: "Part 2: Predict Output",
-        type: "CODE TRACE: PRINT VS RETURN",
-        question: "7. What gets printed when running this script?",
-        code: `def show_greeting(name):\n    print("Hello", name)\n\nresult = show_greeting("Alex")\nprint(result)`,
+        type: "SINGLE_CHOICE",
+        question: "7. Why is the following statement showing a syntax error?",
+        code: `color = "blue"\nprint(" I love,"color,"color)`,
         options: [
-          { text: "Hello Alex\nNone", isCorrect: true },
-          { text: "Hello Alex\nAlex", isCorrect: false, error: "The function doesn't have a 'return name' statement, so 'result' won't be 'Alex'." },
-          { text: "Hello Alex", isCorrect: false, error: "Line 5 explicitly prints 'result', which outputs 'None'." },
-          { text: "Alex", isCorrect: false, error: "The function prints 'Hello Alex', not just 'Alex'." }
-        ],
-        explanation: "The function prints 'Hello Alex' when called. But because it has no 'return' statement, Python automatically hands back 'None'. Printing 'result' displays 'None'!"
+          { text: "Quotes are broken/unclosed; the correct statement is print(\"I love\", color, \"color\")", isCorrect: true, exp: "Correct! Quotes must properly wrap text strings. The correct code is: print(\"I love\", color, \"color\")." },
+          { text: "Variables cannot be used inside print statements", isCorrect: false, exp: "Incorrect! Variables are frequently used and printed inside print() statements." },
+          { text: "The variable 'color' must be in capital letters", isCorrect: false, exp: "Incorrect! Variable names must simply match the exact casing used when defined." },
+          { text: "Text strings must use single quotes only", isCorrect: false, exp: "Incorrect! Python supports both single ('') and double (\"\") quotes." }
+        ]
       },
+
+      // Q8: f-string variable printing issue
       {
         id: 8,
-        section: "Part 2: Predict Output",
-        type: "CODE TRACE: LOOP COIN TOTAL",
-        question: "8. What total value will be printed after adding coins in a loop?",
-        code: `total_coins = 0\nfor coin in [5, 10, 15]:\n    total_coins = total_coins + coin\n\nprint(total_coins)`,
+        type: "SINGLE_CHOICE",
+        question: "8. Why is the following statement NOT printing the variable value 'Dog'?",
+        code: `animal = "Dog"\nprint(f"animal is man's best friend")`,
         options: [
-          { text: "30", isCorrect: true },
-          { text: "15", isCorrect: false, error: "15 is just the last coin, but the loop accumulates all of them together!" },
-          { text: "0", isCorrect: false, error: "total_coins grows as each coin is added inside the loop." },
-          { text: "[5, 10, 15]", isCorrect: false, error: "total_coins holds the calculated total sum, not the list itself." }
-        ],
-        explanation: "The loop iterates through each coin: 0 + 5 = 5; then 5 + 10 = 15; then 15 + 15 = 30. The final total printed is 30!"
+          { text: "The variable is missing curly braces {}; correct code is print(f\"{animal} is man's best friend\")", isCorrect: true, exp: "Correct! In Python f-strings, variables must be inside curly braces {animal} to print their stored values." },
+          { text: "f-strings are not allowed to use double quotes", isCorrect: false, exp: "Incorrect! Double quotes work completely fine with f-strings." },
+          { text: "The variable 'animal' must be converted to a number first", isCorrect: false, exp: "Incorrect! 'animal' is a text string, no conversion is needed." },
+          { text: "You cannot place variables inside f-strings", isCorrect: false, exp: "Incorrect! f-strings are specifically built to embed variables easily." }
+        ]
       },
+
+      // Q9: Store thirty one in variable number data type
       {
         id: 9,
-        section: "Part 2: Predict Output",
-        type: "CODE ERROR TRACING",
-        question: "9. What error occurs when calling this function?",
-        code: `def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10)`,
+        type: "SINGLE_CHOICE",
+        question: "9. I want to store the value thirty one (31) in the variable number. What is its data type?",
+        code: `number = 31`,
         options: [
-          { text: "TypeError: missing 1 required argument 'width'", isCorrect: true },
-          { text: "ZeroDivisionError", isCorrect: false, error: "There is no division in this code!" },
-          { text: "SyntaxError", isCorrect: false, error: "The function definition syntax is completely correct." },
-          { text: "No error, room will equal 10", isCorrect: false, error: "Functions need all requested arguments to calculate a result." }
-        ],
-        explanation: "'calculate_area' expects TWO numbers (length and width), but only ONE number (10) was provided in the function call!"
+          { text: "integer", isCorrect: true, exp: "Correct! Whole numbers without decimal points like 31 belong to the integer (int) data type." },
+          { text: "string", isCorrect: false, exp: "Incorrect! string is for text in quotes like '31', but 31 without quotes is a numeric integer." },
+          { text: "float", isCorrect: false, exp: "Incorrect! float is for decimal numbers like 31.0." },
+          { text: "boolean", isCorrect: false, exp: "Incorrect! boolean is only True or False." }
+        ]
       },
+
+      // Q10: Code wrong day:"Thursday"
       {
         id: 10,
-        section: "Part 2: Predict Output",
-        type: "CODE TRACE: VARIABLE SCOPE",
-        question: "10. What value is printed for health at the end of this script?",
-        code: `health = 100\n\ndef heal_player():\n    health = 150\n    print("Healed!")\n\nheal_player()\nprint(health)`,
+        type: "SINGLE_CHOICE",
+        question: "10. Why is this code wrong: day:\"Thursday\", where 'day' is intended to be a variable holding the day name?",
+        code: `day:"Thursday"`,
         options: [
-          { text: "Healed!\n100", isCorrect: true },
-          { text: "Healed!\n150", isCorrect: false, error: "Changing health = 150 inside the function creates a local variable and leaves the main outer health untouched!" },
-          { text: "100", isCorrect: false, error: "heal_player() prints 'Healed!' first when executed." },
-          { text: "150", isCorrect: false, error: "Outer health remains 100." }
-        ],
-        explanation: "'Healed!' is printed when heal_player() runs. Setting 'health = 150' inside the function creates a temporary local variable. The main 'health' variable outside stays 100!"
+          { text: "Variables store values using the equals sign = (day = \"Thursday\"), not a colon :", isCorrect: true, exp: "Correct! In Python, variable assignment requires the equals sign '=' (day = \"Thursday\")." },
+          { text: "Variable names must always be enclosed in double quotes", isCorrect: false, exp: "Incorrect! Variable names must NOT be enclosed in quotes." },
+          { text: "Days of the week cannot be stored as text strings", isCorrect: false, exp: "Incorrect! Any text can be stored inside a string variable." },
+          { text: "Colons can only be placed inside print statements", isCorrect: false, exp: "Incorrect! Colons are used for blocks and dictionaries, but never for variable assignment." }
+        ]
       }
     ];
 
-    // --- STATE VARIABLES ---
     let currentQIndex = 0;
     let score = 0;
     let timerSeconds = 30;
     let timerInterval = null;
     let answeredCurrent = false;
-    let activeOptions = [];
+    let selectedIndices = new Set();
+    let currentOptions = [];
 
-    // --- TETRIS CANVAS ANIMATION (Black Blocks Falling) ---
-    const canvas = document.getElementById('tetrisCanvas');
+    // --- CANVAS FLOWER ANIMATION ---
+    const canvas = document.getElementById('flowerCanvas');
     const ctx = canvas.getContext('2d');
-    let tetrisPieces = [];
+    let flowers = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -639,88 +516,120 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    const shapes = [
-      [[1, 1, 1, 1]], // I
-      [[1, 1], [1, 1]], // O
-      [[0, 1, 0], [1, 1, 1]], // T
-      [[1, 0, 0], [1, 1, 1]], // L
-      [[0, 0, 1], [1, 1, 1]], // J
-      [[0, 1, 1], [1, 1, 0]], // S
-      [[1, 1, 0], [0, 1, 1]]  // Z
-    ];
+    const flowerColors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#3b82f6', '#10b981', '#f59e0b'];
 
-    class FallingTetromino {
+    class FallingFlower {
       constructor() {
         this.reset();
         this.y = Math.random() * canvas.height;
       }
 
       reset() {
-        this.x = Math.random() * (canvas.width - 60);
-        this.y = -60;
-        this.shape = shapes[Math.floor(Math.random() * shapes.length)];
-        this.blockSize = Math.floor(Math.random() * 8) + 14;
+        this.x = Math.random() * canvas.width;
+        this.y = -30;
+        this.size = Math.random() * 12 + 10;
         this.speedY = Math.random() * 1.2 + 0.6;
-        this.opacity = Math.random() * 0.12 + 0.08;
+        this.speedRot = (Math.random() - 0.5) * 0.04;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+        this.petals = 5;
       }
 
       update() {
         this.y += this.speedY;
-        if (this.y > canvas.height + 80) {
+        this.rotation += this.speedRot;
+        if (this.y > canvas.height + 40) {
           this.reset();
         }
       }
 
       draw() {
-        ctx.fillStyle = `#000000`;
-        ctx.globalAlpha = this.opacity;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = 0.65;
 
-        for (let r = 0; r < this.shape.length; r++) {
-          for (let c = 0; c < this.shape[r].length; c++) {
-            if (this.shape[r][c]) {
-              const px = this.x + c * this.blockSize;
-              const py = this.y + r * this.blockSize;
-              ctx.fillRect(px, py, this.blockSize - 1, this.blockSize - 1);
-            }
-          }
+        // Draw Petals
+        ctx.fillStyle = this.color;
+        for (let i = 0; i < this.petals; i++) {
+          const angle = (i * 2 * Math.PI) / this.petals;
+          ctx.beginPath();
+          ctx.arc(
+            Math.cos(angle) * (this.size * 0.5),
+            Math.sin(angle) * (this.size * 0.5),
+            this.size * 0.45,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
         }
-        ctx.globalAlpha = 1.0;
+
+        // Draw Center Core
+        ctx.fillStyle = '#fef08a';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
       }
     }
 
-    for (let i = 0; i < 28; i++) {
-      tetrisPieces.push(new FallingTetromino());
+    for (let i = 0; i < 30; i++) {
+      flowers.push(new FallingFlower());
     }
 
-    function animateTetris() {
+    function animateFlowers() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      tetrisPieces.forEach(p => {
-        p.update();
-        p.draw();
+      flowers.forEach(f => {
+        f.update();
+        f.draw();
       });
-      requestAnimationFrame(animateTetris);
+      requestAnimationFrame(animateFlowers);
     }
-    animateTetris();
+    animateFlowers();
 
-    // --- QUIZ FUNCTIONS ---
+    // --- QUIZ ENGINE FUNCTIONS ---
 
     function loadQuestion() {
       answeredCurrent = false;
+      selectedIndices.clear();
       clearInterval(timerInterval);
       timerSeconds = 30;
       updateTimerDisplay();
 
       const q = questionsData[currentQIndex];
 
-      document.getElementById('sectionBadge').innerText = q.section;
       document.getElementById('qCounter').innerText = `Q ${currentQIndex + 1} / 10`;
       
       const progressPercent = ((currentQIndex) / 10) * 100;
       document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
-      document.getElementById('scenarioTag').innerText = q.type || "QUESTION";
+      // Set Type Badges & Instructions
+      const qTypeBadge = document.getElementById('qTypeBadge');
+      const instructionText = document.getElementById('instructionText');
+      const multiSubmitContainer = document.getElementById('multiSubmitContainer');
+      const submitMultiBtn = document.getElementById('submitMultiBtn');
+      
+      // Reset submit button state
+      submitMultiBtn.disabled = false;
+
+      if (q.type === 'MULTI_SELECT') {
+        qTypeBadge.innerText = '☑️ MULTI-SELECT QUESTION';
+        instructionText.innerText = 'Click on all correct choices, then press "Submit Selections":';
+        multiSubmitContainer.style.display = 'flex';
+      } else if (q.type === 'TRUE_FALSE') {
+        qTypeBadge.innerText = '⚡ TRUE OR FALSE';
+        instructionText.innerText = 'Select True or False:';
+        multiSubmitContainer.style.display = 'none';
+      } else {
+        qTypeBadge.innerText = '💡 MULTIPLE CHOICE';
+        instructionText.innerText = 'Select the one correct answer:';
+        multiSubmitContainer.style.display = 'none';
+      }
+
       document.getElementById('questionText').innerText = q.question;
 
+      // Code Container
       const codeContainer = document.getElementById('codeContainer');
       if (q.code) {
         codeContainer.innerHTML = `<pre class="code-box"><code>${escapeHTML(q.code)}</code></pre>`;
@@ -728,21 +637,36 @@
         codeContainer.innerHTML = '';
       }
 
-      // Shuffle options dynamically at runtime so correct answers are scattered
-      activeOptions = [...q.options].sort(() => Math.random() - 0.5);
-
+      // Options Grid Render
       const optionsGrid = document.getElementById('optionsGrid');
       optionsGrid.innerHTML = '';
+      
+      if (q.type === 'TRUE_FALSE') {
+        currentOptions = [...q.options];
+      } else {
+        // Dynamic shuffle for choices
+        currentOptions = [...q.options].sort(() => Math.random() - 0.5);
+      }
 
-      activeOptions.forEach((opt, idx) => {
+      currentOptions.forEach((opt, idx) => {
+        const itemWrapper = document.createElement('div');
+        itemWrapper.className = 'option-item';
+
         const btn = document.createElement('button');
         btn.className = 'option-btn';
-        btn.innerHTML = `<span>${escapeHTML(opt.text)}</span> <span class="status-icon"></span>`;
-        btn.onclick = () => selectOption(idx);
-        optionsGrid.appendChild(btn);
+        btn.id = `optBtn_${idx}`;
+        btn.innerHTML = `<span>${escapeHTML(opt.text)}</span> <span class="status-icon" id="status_${idx}"></span>`;
+        btn.onclick = () => handleOptionClick(idx);
+
+        const expDiv = document.createElement('div');
+        expDiv.className = 'btn-explanation';
+        expDiv.id = `expDiv_${idx}`;
+
+        itemWrapper.appendChild(btn);
+        itemWrapper.appendChild(expDiv);
+        optionsGrid.appendChild(itemWrapper);
       });
 
-      document.getElementById('explanationContainer').innerHTML = '';
       document.getElementById('nextBtn').style.display = 'none';
 
       // 30-Second Countdown Timer
@@ -760,42 +684,139 @@
       const badge = document.getElementById('timerBadge');
       badge.innerText = `⏱️ ${timerSeconds}s`;
       if (timerSeconds <= 8) {
-        badge.classList.add('warning');
+        badge.style.backgroundColor = '#fee2e2';
+        badge.style.color = '#dc2626';
       } else {
-        badge.classList.remove('warning');
+        badge.style.backgroundColor = '#fef9c3';
+        badge.style.color = '#854d0e';
       }
     }
 
-    function selectOption(selectedIndex) {
+    function handleOptionClick(index) {
       if (answeredCurrent) return;
+      const q = questionsData[currentQIndex];
+
+      if (q.type === 'MULTI_SELECT') {
+        // Toggle selection for multi-select
+        const btn = document.getElementById(`optBtn_${index}`);
+        if (selectedIndices.has(index)) {
+          selectedIndices.delete(index);
+          btn.classList.remove('selected');
+        } else {
+          selectedIndices.add(index);
+          btn.classList.add('selected');
+        }
+      } else {
+        // Single choice or T/F immediate submit
+        evaluateSingleChoice(index);
+      }
+    }
+
+    function evaluateSingleChoice(selectedIndex) {
       answeredCurrent = true;
       clearInterval(timerInterval);
 
       const q = questionsData[currentQIndex];
-      const selectedOpt = activeOptions[selectedIndex];
-      const optionButtons = document.querySelectorAll('.option-btn');
+      const selectedOpt = currentOptions[selectedIndex];
 
-      optionButtons.forEach(btn => btn.disabled = true);
+      // Disable all buttons
+      currentOptions.forEach((_, i) => {
+        const btn = document.getElementById(`optBtn_${i}`);
+        if (btn) btn.disabled = true;
+      });
 
       const isCorrect = selectedOpt.isCorrect;
 
       if (isCorrect) {
         score++;
-        optionButtons[selectedIndex].classList.add('correct');
-        optionButtons[selectedIndex].querySelector('.status-icon').innerText = '✅';
-      } else {
-        optionButtons[selectedIndex].classList.add('incorrect');
-        optionButtons[selectedIndex].querySelector('.status-icon').innerText = '❌';
-
-        activeOptions.forEach((opt, i) => {
-          if (opt.isCorrect) {
-            optionButtons[i].classList.add('correct');
-            optionButtons[i].querySelector('.status-icon').innerText = '💡 Correct';
-          }
-        });
       }
 
-      showExplanation(isCorrect, selectedOpt);
+      // Display explanations directly under buttons
+      currentOptions.forEach((opt, i) => {
+        const btn = document.getElementById(`optBtn_${i}`);
+        const statusSpan = document.getElementById(`status_${i}`);
+        const expDiv = document.getElementById(`expDiv_${i}`);
+
+        if (i === selectedIndex) {
+          if (opt.isCorrect) {
+            btn.classList.add('correct');
+            statusSpan.innerText = '✅';
+            expDiv.className = 'btn-explanation correct-exp';
+            expDiv.innerHTML = `<strong>✅ Correct:</strong> ${opt.exp}`;
+          } else {
+            btn.classList.add('incorrect');
+            statusSpan.innerText = '❌';
+            expDiv.className = 'btn-explanation incorrect-exp';
+            expDiv.innerHTML = `<strong>❌ Why this choice is incorrect:</strong> ${opt.exp}`;
+          }
+          expDiv.style.display = 'block';
+        } else if (opt.isCorrect) {
+          // Highlight correct answer if user picked wrong
+          btn.classList.add('correct');
+          statusSpan.innerText = '💡 Correct Answer';
+          expDiv.className = 'btn-explanation correct-exp';
+          expDiv.innerHTML = `<strong>💡 Correct Answer Explanation:</strong> ${opt.exp}`;
+          expDiv.style.display = 'block';
+        }
+      });
+
+      document.getElementById('nextBtn').style.display = 'inline-flex';
+    }
+
+    function submitMultiAnswer() {
+      if (answeredCurrent) return;
+      answeredCurrent = true;
+      clearInterval(timerInterval);
+
+      const q = questionsData[currentQIndex];
+
+      // Disable all buttons and hide multi-select submit container
+      currentOptions.forEach((_, i) => {
+        const btn = document.getElementById(`optBtn_${i}`);
+        if (btn) btn.disabled = true;
+      });
+      
+      const submitBtn = document.getElementById('submitMultiBtn');
+      if (submitBtn) submitBtn.disabled = true;
+
+      let allCorrect = true;
+
+      currentOptions.forEach((opt, idx) => {
+        const isSelected = selectedIndices.has(idx);
+        const btn = document.getElementById(`optBtn_${idx}`);
+        const statusSpan = document.getElementById(`status_${idx}`);
+        const expDiv = document.getElementById(`expDiv_${idx}`);
+
+        if (opt.isCorrect && isSelected) {
+          btn.classList.add('correct');
+          statusSpan.innerText = '✅';
+          expDiv.className = 'btn-explanation correct-exp';
+          expDiv.innerHTML = `<strong>✅ Correct Selection:</strong> ${opt.exp}`;
+          expDiv.style.display = 'block';
+        } else if (opt.isCorrect && !isSelected) {
+          allCorrect = false;
+          btn.classList.add('missed');
+          statusSpan.innerText = '⚠️ Missed Choice';
+          expDiv.className = 'btn-explanation missed-exp';
+          expDiv.innerHTML = `<strong>⚠️ Missed Option:</strong> ${opt.exp}`;
+          expDiv.style.display = 'block';
+        } else if (!opt.isCorrect && isSelected) {
+          allCorrect = false;
+          btn.classList.add('incorrect');
+          statusSpan.innerText = '❌ Incorrect';
+          expDiv.className = 'btn-explanation incorrect-exp';
+          expDiv.innerHTML = `<strong>❌ Incorrect Selection:</strong> ${opt.exp}`;
+          expDiv.style.display = 'block';
+        }
+      });
+
+      if (allCorrect) {
+        score++;
+      }
+
+      // Hide multi-select submit button after submitting answer
+      document.getElementById('multiSubmitContainer').style.display = 'none';
+
       document.getElementById('nextBtn').style.display = 'inline-flex';
     }
 
@@ -804,52 +825,24 @@
       answeredCurrent = true;
 
       const q = questionsData[currentQIndex];
-      const optionButtons = document.querySelectorAll('.option-btn');
 
-      optionButtons.forEach(btn => btn.disabled = true);
+      currentOptions.forEach((opt, i) => {
+        const btn = document.getElementById(`optBtn_${i}`);
+        const statusSpan = document.getElementById(`status_${i}`);
+        const expDiv = document.getElementById(`expDiv_${i}`);
+        if (btn) btn.disabled = true;
 
-      activeOptions.forEach((opt, i) => {
         if (opt.isCorrect) {
-          optionButtons[i].classList.add('correct');
-          optionButtons[i].querySelector('.status-icon').innerText = '💡 Correct';
+          btn.classList.add('correct');
+          statusSpan.innerText = '💡 Correct Answer';
+          expDiv.className = 'btn-explanation correct-exp';
+          expDiv.innerHTML = `<strong>💡 Correct Answer Explanation:</strong> ${opt.exp}`;
+          expDiv.style.display = 'block';
         }
       });
 
-      const expContainer = document.getElementById('explanationContainer');
-      expContainer.innerHTML = `
-        <div class="explanation-box wrong-theme">
-          <div class="explanation-title">⏰ Time's Up!</div>
-          <div class="explanation-text"><strong>Correct Explanation:</strong> ${q.explanation}</div>
-        </div>
-      `;
-
+      document.getElementById('multiSubmitContainer').style.display = 'none';
       document.getElementById('nextBtn').style.display = 'inline-flex';
-    }
-
-    function showExplanation(isCorrect, selectedOpt) {
-      const q = questionsData[currentQIndex];
-      const expContainer = document.getElementById('explanationContainer');
-
-      if (isCorrect) {
-        expContainer.innerHTML = `
-          <div class="explanation-box">
-            <div class="explanation-title" style="color: #16a34a;">🎉 Correct Logic!</div>
-            <div class="explanation-text">${q.explanation}</div>
-          </div>
-        `;
-      } else {
-        expContainer.innerHTML = `
-          <div class="explanation-box wrong-theme">
-            <div class="explanation-title" style="color: #dc2626;">❌ Not Quite! Here is why:</div>
-            <div class="explanation-wrong-reason">
-              <strong>Why your choice was wrong:</strong> ${selectedOpt.error || "That choice doesn't match standard Python rules."}
-            </div>
-            <div class="explanation-text" style="margin-top: 8px;">
-              <strong>💡 Correct Logic Explanation:</strong> ${q.explanation}
-            </div>
-          </div>
-        `;
-      }
     }
 
     function handleNextQuestion() {
@@ -865,24 +858,36 @@
       document.getElementById('questionContainer').style.display = 'none';
       document.getElementById('quizHeader').style.display = 'none';
       document.getElementById('progressBarBg').style.display = 'none';
+      document.getElementById('multiSubmitContainer').style.display = 'none';
       document.getElementById('controlsContainer').style.display = 'none';
 
       const resultScreen = document.getElementById('resultScreen');
       resultScreen.style.display = 'block';
 
-      document.getElementById('finalScore').innerText = `${score} / 10`;
+      document.getElementById('finalScore').innerText = `${score} / 10 Points`;
 
       let summaryMsg = "";
       if (score >= 9) {
-        summaryMsg = "🏆 Outstanding! You possess fantastic Python coding logic!";
+        summaryMsg = "🏆 Outstanding! You have mastered Python core fundamentals!";
       } else if (score >= 7) {
-        summaryMsg = "🚀 Great job! You have a solid understanding of loops and return values.";
+        summaryMsg = "🚀 Fantastic job! You have a super solid grasp of variables and syntax!";
       } else if (score >= 5) {
-        summaryMsg = "👍 Good effort! Practice tracing code step-by-step to sharpen your skills.";
+        summaryMsg = "👍 Good effort! Practice syntax details and variable rules to level up.";
       } else {
-        summaryMsg = "💪 Keep practicing! Python logic gets easier the more code you write.";
+        summaryMsg = "💪 Great start! Coding takes practice. Keep building your Python skills!";
       }
       document.getElementById('scoreSummary').innerText = summaryMsg;
+
+      // Personalized Handwritten Sign-off Note
+      const noteHtml = `
+        Dear Learner,<br><br>
+        Congratulations on completing all 10 questions in your Python Revision Quiz! You worked through data types, variable naming rules, code formatting bugs, and print statements.<br><br>
+        <strong>Your Score: ${score} out of 10 Points!</strong><br><br>
+        Every error you catch makes you a smarter programmer. Keep practicing, keep writing Python code, and stay curious!<br><br>
+        Warm regards,<br>
+        <strong>~ Tutor Priyadarshini ✍️</strong>
+      `;
+      document.getElementById('handwrittenNoteText').innerHTML = noteHtml;
     }
 
     function showHomeScreen() {
@@ -891,6 +896,7 @@
       document.getElementById('quizHeader').style.display = 'none';
       document.getElementById('progressBarBg').style.display = 'none';
       document.getElementById('questionContainer').style.display = 'none';
+      document.getElementById('multiSubmitContainer').style.display = 'none';
       document.getElementById('controlsContainer').style.display = 'none';
       document.getElementById('resultScreen').style.display = 'none';
     }
@@ -911,7 +917,7 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Default to home page view
+    // Load initial home page view
     showHomeScreen();
   </script>
 </body>
