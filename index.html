@@ -1,924 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python Revision Quiz 🌸</title>
-  <!-- Loading external fonts and Tailwind CSS -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Loop & Function Challenge</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Caveat for teacher's note, Fira Code for code, Outfit for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <style>
     body {
-      font-family: 'Fredoka', cursive, sans-serif;
-      background: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #eab308 100%);
-      min-height: 100vh;
-      color: #1e293b;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
+      font-family: 'Outfit', sans-serif;
       overflow-x: hidden;
     }
-
-    /* Falling Flowers Canvas */
-    #flowerCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 820px;
-    }
-
-    /* Quiz Card */
-    .card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
-      border: 4px solid #ca8a04;
-      transition: all 0.3s ease;
-    }
-
-    .badge {
-      background: #fef9c3;
-      color: #854d0e;
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: 2px solid #eab308;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .timer-badge {
-      background: #fee2e2;
-      color: #dc2626;
-      border-color: #ef4444;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 14px;
-      background: #e2e8f0;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      border: 2px solid #cbd5e1;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #059669);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-
-    /* Code Box */
-    .code-box {
-      background: #0f172a;
-      color: #f8fafc;
+    .font-code {
       font-family: 'Fira Code', monospace;
-      padding: 16px 20px;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      border-left: 6px solid #eab308;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
-      white-space: pre;
     }
-
-    /* Option Item Card */
-    .option-item {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 12px;
-    }
-
-    .option-btn {
-      background: #f8fafc;
-      border: 3px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 14px 20px;
-      font-size: 1.05rem;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 500;
-      color: #334155;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      outline: none;
-      user-select: none;
-      width: 100%;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      background: #f1f5f9;
-      border-color: #ca8a04;
-      transform: translateY(-2px);
-    }
-
-    .option-btn.selected {
-      background: #fef9c3 !important;
-      border-color: #ca8a04 !important;
-      color: #854d0e !important;
-      font-weight: 600;
-    }
-
-    .option-btn.correct {
-      background: #dcfce7 !important;
-      border-color: #22c55e !important;
-      color: #15803d !important;
-      font-weight: 600;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .option-btn.incorrect {
-      background: #fee2e2 !important;
-      border-color: #ef4444 !important;
-      color: #b91c1c !important;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .option-btn.missed {
-      background: #fef3c7 !important;
-      border-color: #f59e0b !important;
-      color: #92400e !important;
-      font-weight: 600;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .option-btn:disabled {
-      cursor: default;
-    }
-
-    /* Explanation Box Directly Under Button */
-    .btn-explanation {
-      display: none;
-      padding: 12px 16px;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-      font-size: 0.95rem;
-      line-height: 1.45;
-      animation: fadeIn 0.25s ease-in-out;
-    }
-
-    .btn-explanation.correct-exp {
-      background: #f0fdf4;
-      border: 3px solid #22c55e;
-      border-top: none;
-      color: #14532d;
-    }
-
-    .btn-explanation.incorrect-exp {
-      background: #fef2f2;
-      border: 3px solid #ef4444;
-      border-top: none;
-      color: #7f1d1d;
-    }
-
-    .btn-explanation.missed-exp {
-      background: #fffbeb;
-      border: 3px solid #f59e0b;
-      border-top: none;
-      color: #78350f;
-    }
-
-    /* Handwritten Note Styling */
-    .handwritten-note {
-      background: #fffde7;
-      background-image: linear-gradient(#e1f5fe 1px, transparent 1px);
-      background-size: 100% 28px;
-      border: 2px solid #fbc02d;
-      border-radius: 16px;
-      padding: 28px 24px;
-      margin: 24px 0;
-      text-align: left;
-      box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.08), -2px -2px 0px #fff;
-      transform: rotate(-1deg);
-      position: relative;
-    }
-
-    .handwritten-note::before {
-      content: '📌';
-      position: absolute;
-      top: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.8rem;
-    }
-
-    .note-content {
+    .font-handwriting {
       font-family: 'Caveat', cursive;
-      font-size: 1.65rem;
-      color: #1a237e;
-      line-height: 1.45;
     }
 
-    .btn-action {
-      background: linear-gradient(135deg, #ca8a04, #a16207);
-      color: white;
-      border: none;
-      padding: 14px 36px;
-      border-radius: 50px;
-      font-size: 1.15rem;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(202, 138, 4, 0.4);
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    /* Floating Ball Animation */
+    .floating-ball {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.45;
+      animation: floatAround infinite alternate ease-in-out;
+      filter: blur(2px);
     }
 
-    .btn-action:hover {
-      transform: scale(1.04);
-      background: linear-gradient(135deg, #a16207, #854d0e);
+    @keyframes floatAround {
+      0% {
+        transform: translateY(0px) translateX(0px) scale(1);
+      }
+      50% {
+        transform: translateY(-40px) translateX(30px) scale(1.1);
+      }
+      100% {
+        transform: translateY(30px) translateX(-25px) scale(0.95);
+      }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Notebook paper background for teacher note report */
+    .notebook-paper {
+      background-color: #fffef0;
+      background-image: linear-gradient(#e1e8ed 1px, transparent 1px);
+      background-size: 100% 2rem;
+      border-left: 4px double #3b82f6;
     }
 
-    @media (max-width: 640px) {
-      .card { padding: 20px; }
-      .note-content { font-size: 1.4rem; }
+    /* Custom Scrollbar for Code Blocks */
+    pre::-webkit-scrollbar {
+      height: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 4px;
     }
   </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-screen relative flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-900">
 
-  <!-- Falling Flowers Canvas -->
-  <canvas id="flowerCanvas"></canvas>
+  <!-- Background Floating Colored Balls Container -->
+  <div id="balls-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-  <div class="app-container">
-    <div class="card" id="quizCard">
+  <!-- Main Container -->
+  <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-      <!-- Home Landing Page -->
-      <div class="text-center py-8" id="homeScreen">
-        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8">Python Revision Quiz</h1>
-        <button class="btn-action text-xl px-12 py-4" onclick="startQuiz()">
-          🚀 Start
-        </button>
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="w-full">
+      
+      <!-- Top Header Bar -->
+      <div class="bg-slate-900/80 backdrop-blur-md border border-cyan-500/30 rounded-2xl p-4 md:p-6 mb-6 shadow-2xl">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+          
+          <!-- Category Badge & Question Tracker -->
+          <div>
+            <span id="section-badge" class="px-3 py-1 text-xs font-semibold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 uppercase tracking-wider">
+              Python Logic Quest
+            </span>
+            <h1 class="text-xl sm:text-2xl font-bold mt-1 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-300">
+              Question <span id="q-num">1</span> <span class="text-slate-400 font-normal text-lg">/ 10</span>
+            </h1>
+          </div>
+
+          <!-- Timer & Score Display -->
+          <div class="flex items-center gap-4">
+            <!-- Score -->
+            <div class="text-right">
+              <span class="text-xs text-slate-400 uppercase tracking-wider block">Score</span>
+              <span id="live-score" class="text-xl font-bold text-yellow-400">0 / 10</span>
+            </div>
+
+            <!-- Timer Circle -->
+            <div class="relative w-16 h-16 flex items-center justify-center bg-slate-800 rounded-full border-2 border-cyan-500 shadow-inner">
+              <span id="timer-text" class="text-xl font-extrabold text-cyan-400 font-code">50</span>
+              <span class="text-[9px] text-slate-400 absolute bottom-1">sec</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Progress Bar -->
+        <div class="w-full bg-slate-800 h-2.5 rounded-full mt-4 overflow-hidden border border-slate-700">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-1000 ease-linear w-full"></div>
+        </div>
       </div>
 
-      <!-- Quiz Header -->
-      <div class="quiz-header flex justify-between items-center mb-5 flex-wrap gap-3" id="quizHeader" style="display: none;">
-        <span class="badge" id="sectionBadge">Python Basics</span>
-        <span class="badge" id="qCounter">Q 1 / 10</span>
-        <span class="badge timer-badge" id="timerBadge">⏱️ 30s</span>
-        <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 border-2 border-slate-300 px-4 py-1.5 rounded-full text-sm font-semibold transition" onclick="showHomeScreen()">🏠 Home</button>
-      </div>
-
-      <!-- Progress Bar -->
-      <div class="progress-bar-bg" id="progressBarBg" style="display: none;">
-        <div class="progress-bar-fill" id="progressBar"></div>
-      </div>
-
-      <!-- Question Container -->
-      <div id="questionContainer" style="display: none;">
-        <div class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2" id="qTypeBadge">SINGLE CHOICE</div>
-        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-4 leading-snug" id="questionText">Loading question...</h2>
-        <div id="codeContainer"></div>
+      <!-- Question Card -->
+      <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-5 md:p-8 shadow-2xl relative overflow-hidden">
         
-        <div class="text-sm font-semibold text-slate-500 mb-3" id="instructionText">Select one option:</div>
-        
-        <!-- Options List -->
-        <div id="optionsGrid"></div>
+        <!-- Question Text -->
+        <div class="mb-6">
+          <h2 id="question-text" class="text-lg md:text-xl font-semibold text-slate-100 leading-relaxed">
+            Question text goes here...
+          </h2>
 
-        <!-- Submit Button for Multi-Select -->
-        <div class="flex justify-end mt-4 mb-2" id="multiSubmitContainer" style="display: none;">
-          <button class="btn-action text-base px-8 py-3" id="submitMultiBtn" onclick="submitMultiAnswer()">
-            ✅ Submit Selections
+          <!-- Code Snippet Block -->
+          <div id="code-container" class="hidden mt-4">
+            <pre class="bg-slate-950 border border-cyan-500/20 rounded-xl p-4 font-code text-sm sm:text-base text-cyan-300 overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+          </div>
+        </div>
+
+        <!-- 4 Option Buttons Grid -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <!-- 4 option buttons dynamically rendered here -->
+        </div>
+
+        <!-- Explanation Panel -->
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6">
+          <div class="flex items-start gap-3">
+            <span id="explanation-icon" class="text-2xl">💡</span>
+            <div>
+              <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
+              <p id="explanation-text" class="text-sm mt-1 leading-relaxed text-slate-200">
+                Simple explanation will appear right here under the buttons.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next / Continue Button -->
+        <div class="flex justify-end">
+          <button id="next-btn" class="hidden py-3 px-8 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold rounded-xl shadow-xl transition transform active:scale-95 flex items-center gap-2">
+            <span>Next Question</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
         </div>
+
       </div>
-
-      <!-- Controls -->
-      <div class="flex justify-end mt-6" id="controlsContainer" style="display: none;">
-        <button class="btn-action text-base px-8 py-3" id="nextBtn" style="display: none;" onclick="handleNextQuestion()">
-          Next Question ➔
-        </button>
-      </div>
-
-      <!-- Result Screen -->
-      <div class="text-center py-4" id="resultScreen" style="display: none;">
-        <h2 class="text-3xl font-bold text-slate-900 mb-2">🎉 Quest Completed! 🎉</h2>
-        <div class="text-5xl font-extrabold text-amber-600 my-4" id="finalScore">0 / 10</div>
-        <p class="text-lg text-slate-600 mb-6" id="scoreSummary">Great effort completing your Python fundamentals quest!</p>
-
-        <!-- Handwritten Feedback Note -->
-        <div class="handwritten-note">
-          <div class="note-content" id="handwrittenNoteText"></div>
-        </div>
-
-        <div class="flex justify-center gap-4 flex-wrap mt-6">
-          <button class="btn-action" onclick="startQuiz()">🔄 Retake Quest</button>
-          <button class="btn-action" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="showHomeScreen()">🏠 Back to Home</button>
-        </div>
-      </div>
-
     </div>
+
+    <!-- FINAL RESULT SCREEN -->
+    <div id="result-screen" class="hidden w-full my-6">
+      <div class="notebook-paper rounded-2xl p-6 sm:p-10 shadow-2xl text-slate-900 border-t-8 border-blue-600 relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-300 pb-4 mb-6">
+          <div>
+            <h1 class="font-handwriting text-4xl sm:text-5xl font-bold text-blue-900">Python Progress Report</h1>
+            <p class="text-sm text-slate-600 font-medium mt-1">Student Evaluation • 10 Questions Challenge</p>
+          </div>
+          <div class="mt-2 sm:mt-0 bg-blue-100 border border-blue-300 rounded-lg px-4 py-2 text-center">
+            <span class="text-xs uppercase text-blue-700 tracking-wider block font-bold">Total Score</span>
+            <span id="final-total-score" class="text-3xl font-extrabold text-blue-950">0 / 10</span>
+          </div>
+        </div>
+
+        <!-- Teacher's Note -->
+        <div class="mb-8 bg-blue-50/90 p-6 rounded-xl border border-blue-200 shadow-sm">
+          <h3 class="font-handwriting text-3xl font-bold text-blue-900 mb-2">Teacher's Note:</h3>
+          <p id="teacher-note-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed">
+            Loading teacher's note...
+          </p>
+        </div>
+
+        <!-- Action Button -->
+        <div class="flex justify-center border-t border-slate-300 pt-6">
+          <button id="restart-btn" class="py-3.5 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span>Retake Challenge</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
+  <!-- Footer -->
+  <footer class="relative z-10 py-4 text-center text-xs text-slate-400 border-t border-slate-800/60 bg-slate-950/60">
+    <p>Python Learning Quest • Loops & Logic Edition 🚀</p>
+  </footer>
+
   <script>
-    const questionsData = [
-      // Q1: Click on the correct datatypes (Multi-Select)
+    // -------------------------------------------------------------
+    // QUESTION DATABASE (10 QUESTIONS WITH 4 OPTIONS EACH)
+    // No String Functions used. Pure conditions, loops & return logic.
+    // -------------------------------------------------------------
+    const rawQuestionsDatabase = [
+
+      // --- Q1: FUNCTION OUTPUT PREDICTION ---
       {
-        id: 1,
-        type: "MULTI_SELECT",
-        question: "1. Click on all the correct standard Python data types:",
+        question: "What is the output printed by calling this Python function?",
+        code: "def calculate_bonus(points):\n    if points > 50:\n        return points + 20\n    else:\n        return points + 5\n\nfinal_score = calculate_bonus(40)\nprint(final_score)",
         options: [
-          { text: "integer", isCorrect: true, exp: "Correct! 'integer' (int) is a fundamental built-in Python data type for whole numbers." },
-          { text: "float", isCorrect: true, exp: "Correct! 'float' is the standard Python data type for decimal numbers." },
-          { text: "boolean", isCorrect: true, exp: "Correct! 'boolean' (bool) represents True or False logic in Python." },
-          { text: "string", isCorrect: true, exp: "Correct! 'string' (str) stores text characters in Python." },
-          { text: "number", isCorrect: false, exp: "Incorrect! 'number' is a general word, not a specific Python data type name (Python uses int, float, complex)." },
-          { text: "fraction", isCorrect: false, exp: "Incorrect! 'fraction' is not a basic built-in data type name in Python." },
-          { text: "true", isCorrect: false, exp: "Incorrect! 'true' is a value, not a data type name (and in Python it must be capitalized as True)." },
-          { text: "text", isCorrect: false, exp: "Incorrect! 'text' is not a data type name in Python; text is called 'string' or 'str'." }
-        ]
+          { text: "45", isCorrect: true },
+          { text: "60", isCorrect: false },
+          { text: "40", isCorrect: false },
+          { text: "50", isCorrect: false }
+        ],
+        explanation: "Since 40 is not greater than 50, Python skips the first part and runs the 'else' step. It adds 5 to 40, giving 45!"
       },
 
-      // Q2: num = "2" True/False
+      // --- Q2: REAL-WORLD SCENARIO - PASSWORD LOCKING ---
       {
-        id: 2,
-        type: "TRUE_FALSE",
-        question: "2. State True or False: In the statement num = \"2\", the value stored in the variable is a number.",
-        code: `num = "2"`,
+        question: "System Situation: A phone security system locks the screen after 3 wrong password attempts. How many times will this while loop run before the phone locks?",
+        code: "attempts = 0\nmax_attempts = 3\n\nwhile attempts < max_attempts:\n    attempts += 1\n\nprint(attempts)",
         options: [
-          { text: "True", isCorrect: false, exp: "Incorrect! Because \"2\" is inside quotation marks, Python treats it as text (string), not a number!" },
-          { text: "False", isCorrect: true, exp: "Correct! Quotation marks make \"2\" a string (text). To store it as a number, write: num = 2 without quotes." }
-        ]
+          { text: "3 times", isCorrect: true },
+          { text: "4 times", isCorrect: false },
+          { text: "2 times", isCorrect: false },
+          { text: "1 time", isCorrect: false }
+        ],
+        explanation: "The counter starts at 0 and adds 1 each round (0 ➔ 1, 1 ➔ 2, 2 ➔ 3). When it reaches 3, the loop stops, so it ran exactly 3 times."
       },
 
-      // Q3: Pick correct variable names (Multi-Select, 7 options)
+      // --- Q3: REAL-WORLD SCENARIO - ATM PIN RETRY ---
       {
-        id: 3,
-        type: "MULTI_SELECT",
-        question: "3. Pick all the valid and correct variable names in Python:",
+        question: "System Situation: An ATM machine checks a wrong PIN entry. How many times will this retry loop run before stopping?",
+        code: "pin_entered = 1234\ncorrect_pin = 9999\nretries = 0\n\nwhile pin_entered != correct_pin and retries < 4:\n    retries += 1",
         options: [
-          { text: "number", isCorrect: true, exp: "Correct! 'number' uses only letters and is a perfectly valid variable name." },
-          { text: "name", isCorrect: true, exp: "Correct! 'name' is a completely valid variable name." },
-          { text: "num12", isCorrect: true, exp: "Correct! 'num12' is valid because numbers are allowed after letters." },
-          { text: "my_name", isCorrect: true, exp: "Correct! 'my_name' is valid because underscores are allowed in variable names." },
-          { text: "print", isCorrect: false, exp: "Incorrect! 'print' is a built-in Python function name! Using it as a variable name overwrites the function." },
-          { text: "first number", isCorrect: false, exp: "Incorrect! 'first number' contains a space. Python variable names cannot contain spaces." },
-          { text: "1num", isCorrect: false, exp: "Incorrect! '1num' starts with a number. Python variable names CANNOT start with digits." }
-        ]
+          { text: "4 times", isCorrect: true },
+          { text: "5 times", isCorrect: false },
+          { text: "3 times", isCorrect: false },
+          { text: "0 times", isCorrect: false }
+        ],
+        explanation: "Because the PIN is incorrect, the loop checks retries from 0 up to 4. Once retries equals 4, the condition fails and the loop stops!"
       },
 
-      // Q4: \n new line True/False
+      // --- Q4: REAL-WORLD SCENARIO - SMART HEATER CONTROL ---
       {
-        id: 4,
-        type: "TRUE_FALSE",
-        question: "4. State True or False: \\n is used in Python strings to create a new line.",
-        code: `print("Hello\\nWorld")`,
+        question: "System Situation: A smart house heater increases room temperature by 5 degrees each minute. How many times does this heating loop repeat to go from 60 to 75 degrees?",
+        code: "temp = 60\ntarget_temp = 75\n\nwhile temp < target_temp:\n    temp += 5",
         options: [
-          { text: "True", isCorrect: true, exp: "Correct! \\n is the newline escape character in Python that breaks text onto a new line." },
-          { text: "False", isCorrect: false, exp: "Incorrect! \\n IS the standard newline character in Python strings." }
-        ]
+          { text: "3 times", isCorrect: true },
+          { text: "5 times", isCorrect: false },
+          { text: "15 times", isCorrect: false },
+          { text: "4 times", isCorrect: false }
+        ],
+        explanation: "Temperature increases: Round 1 (65°), Round 2 (70°), Round 3 (75°). At 75°, it reaches the target temperature and stops."
       },
 
-      // Q5: Print(location) showing error
+      // --- Q5: REAL-WORLD SCENARIO - SECURITY ALARM COUNTDOWN ---
       {
-        id: 5,
-        type: "SINGLE_CHOICE",
-        question: "5. Why is Print(location) showing an error when executed?",
-        code: `location = "Singapore"\nPrint(location)`,
+        question: "System Situation: A security alarm counts down from 10 seconds, decreasing by 2 seconds each beep. How many times will the alarm beep?",
+        code: "timer = 10\nbeeps = 0\n\nwhile timer > 0:\n    beeps += 1\n    timer -= 2",
         options: [
-          { text: "print should be written in lowercase (print)", isCorrect: true, exp: "Correct! Python is case-sensitive, so built-in functions like print() must always be in lowercase." },
-          { text: "location must be inside double quotes inside Print()", isCorrect: false, exp: "Incorrect! Putting 'location' in quotes would print the word 'location' instead of the variable value Kolkata." },
-          { text: "Python statements must end with a semicolon ;", isCorrect: false, exp: "Incorrect! Python does not require semicolons at the end of lines." },
-          { text: "Variables containing text cannot be printed", isCorrect: false, exp: "Incorrect! Variables holding text strings can easily be printed using print()." }
-        ]
+          { text: "5 times", isCorrect: true },
+          { text: "10 times", isCorrect: false },
+          { text: "4 times", isCorrect: false },
+          { text: "6 times", isCorrect: false }
+        ],
+        explanation: "Timer drops by 2 each beep: 10➔8 (1st), 8➔6 (2nd), 6➔4 (3rd), 4➔2 (4th), 2➔0 (5th). At 0, the countdown stops, so it beeps 5 times."
       },
 
-      // Q6: "input" valid variable name True/False
+      // --- Q6: REAL-WORLD SCENARIO - GAME HEALTH REGEN ---
       {
-        id: 6,
-        type: "TRUE_FALSE",
-        question: "6. State True or False: \"input\" is a valid variable name to use in Python.",
-        code: `input = "User Data"`,
+        question: "System Situation: A game character heals 10 health points each second up to 50 max health. Starting from 20 health, how many times does the healing loop run?",
+        code: "health = 20\nmax_health = 50\nticks = 0\n\nwhile health < max_health:\n    health += 10\n    ticks += 1",
         options: [
-          { text: "False", isCorrect: true, exp: "Correct! 'input' is a reserved built-in function in Python. Using it as a variable name breaks input()." },
-          { text: "True", isCorrect: false, exp: "Incorrect! Using 'input' as a variable name overwrites Python's built-in input() function." }
-        ]
+          { text: "3 times", isCorrect: true },
+          { text: "5 times", isCorrect: false },
+          { text: "4 times", isCorrect: false },
+          { text: "30 times", isCorrect: false }
+        ],
+        explanation: "Health increases: 20➔30 (1st tick), 30➔40 (2nd tick), 40➔50 (3rd tick). At 50 health, it is no longer less than max health!"
       },
 
-      // Q7: Syntax error in print statement
+      // --- Q7: PREDICT LOOP RUN COUNT (STEP RANGE) ---
       {
-        id: 7,
-        type: "SINGLE_CHOICE",
-        question: "7. Why is the following statement showing a syntax error?",
-        code: `color = "blue"\nprint(" I love,"color,"color)`,
+        question: "Predict the Loop: How many times will this range loop execute?",
+        code: "count = 0\nfor step in range(2, 10, 2):\n    count += 1\n\nprint(count)",
         options: [
-          { text: "Quotes are broken/unclosed; the correct statement is print(\"I love\", color, \"color\")", isCorrect: true, exp: "Correct! Quotes must properly wrap text strings. The correct code is: print(\"I love\", color, \"color\")." },
-          { text: "Variables cannot be used inside print statements", isCorrect: false, exp: "Incorrect! Variables are frequently used and printed inside print() statements." },
-          { text: "The variable 'color' must be in capital letters", isCorrect: false, exp: "Incorrect! Variable names must simply match the exact casing used when defined." },
-          { text: "Text strings must use single quotes only", isCorrect: false, exp: "Incorrect! Python supports both single ('') and double (\"\") quotes." }
-        ]
+          { text: "4 times", isCorrect: true },
+          { text: "5 times", isCorrect: false },
+          { text: "8 times", isCorrect: false },
+          { text: "10 times", isCorrect: false }
+        ],
+        explanation: "`range(2, 10, 2)` generates step numbers: 2, 4, 6, and 8 (it stops before 10). That is 4 numbers in total!"
       },
 
-      // Q8: f-string variable printing issue
+      // --- Q8: PREDICT LOOP RUN COUNT (COUNTDOWN WHILE) ---
       {
-        id: 8,
-        type: "SINGLE_CHOICE",
-        question: "8. Why is the following statement NOT printing the variable value 'Dog'?",
-        code: `animal = "Dog"\nprint(f"animal is man's best friend")`,
+        question: "Predict the Loop: How many total cycles will this while loop complete before stopping?",
+        code: "energy = 15\ncycles = 0\n\nwhile energy > 3:\n    energy -= 4\n    cycles += 1",
         options: [
-          { text: "The variable is missing curly braces {}; correct code is print(f\"{animal} is man's best friend\")", isCorrect: true, exp: "Correct! In Python f-strings, variables must be inside curly braces {animal} to print their stored values." },
-          { text: "f-strings are not allowed to use double quotes", isCorrect: false, exp: "Incorrect! Double quotes work completely fine with f-strings." },
-          { text: "The variable 'animal' must be converted to a number first", isCorrect: false, exp: "Incorrect! 'animal' is a text string, no conversion is needed." },
-          { text: "You cannot place variables inside f-strings", isCorrect: false, exp: "Incorrect! f-strings are specifically built to embed variables easily." }
-        ]
+          { text: "3 cycles", isCorrect: true },
+          { text: "4 cycles", isCorrect: false },
+          { text: "5 cycles", isCorrect: false },
+          { text: "15 cycles", isCorrect: false }
+        ],
+        explanation: "Energy drops: 15➔11 (1st), 11➔7 (2nd), 7➔3 (3rd). Since 3 is not greater than 3, the loop stops after 3 cycles."
       },
 
-      // Q9: Store thirty one in variable number data type
+      // --- Q9: PREDICT LOOP RUN COUNT (RANGE LOOP) ---
       {
-        id: 9,
-        type: "SINGLE_CHOICE",
-        question: "9. I want to store the value thirty one (31) in the variable number. What is its data type?",
-        code: `number = 31`,
+        question: "Predict the Loop: How many times does the for loop itself repeat in this code?",
+        code: "counter = 0\nfor i in range(1, 7):\n    if i % 2 == 0:\n        counter += 1",
         options: [
-          { text: "integer", isCorrect: true, exp: "Correct! Whole numbers without decimal points like 31 belong to the integer (int) data type." },
-          { text: "string", isCorrect: false, exp: "Incorrect! string is for text in quotes like '31', but 31 without quotes is a numeric integer." },
-          { text: "float", isCorrect: false, exp: "Incorrect! float is for decimal numbers like 31.0." },
-          { text: "boolean", isCorrect: false, exp: "Incorrect! boolean is only True or False." }
-        ]
+          { text: "6 times", isCorrect: true },
+          { text: "3 times", isCorrect: false },
+          { text: "7 times", isCorrect: false },
+          { text: "1 time", isCorrect: false }
+        ],
+        explanation: "`range(1, 7)` includes numbers 1, 2, 3, 4, 5, and 6. The loop runs once for every number in that range, which is 6 times!"
       },
 
-      // Q10: Code wrong day:"Thursday"
+      // --- Q10: PREDICT LOOP RUN COUNT (ACCUMULATOR WHILE) ---
       {
-        id: 10,
-        type: "SINGLE_CHOICE",
-        question: "10. Why is this code wrong: day:\"Thursday\", where 'day' is intended to be a variable holding the day name?",
-        code: `day:"Thursday"`,
+        question: "Predict the Loop: How many times will this loop run before total reaches 20 or more?",
+        code: "total = 0\nloops = 0\n\nwhile total < 20:\n    total += 6\n    loops += 1",
         options: [
-          { text: "Variables store values using the equals sign = (day = \"Thursday\"), not a colon :", isCorrect: true, exp: "Correct! In Python, variable assignment requires the equals sign '=' (day = \"Thursday\")." },
-          { text: "Variable names must always be enclosed in double quotes", isCorrect: false, exp: "Incorrect! Variable names must NOT be enclosed in quotes." },
-          { text: "Days of the week cannot be stored as text strings", isCorrect: false, exp: "Incorrect! Any text can be stored inside a string variable." },
-          { text: "Colons can only be placed inside print statements", isCorrect: false, exp: "Incorrect! Colons are used for blocks and dictionaries, but never for variable assignment." }
-        ]
+          { text: "4 times", isCorrect: true },
+          { text: "3 times", isCorrect: false },
+          { text: "5 times", isCorrect: false },
+          { text: "20 times", isCorrect: false }
+        ],
+        explanation: "Total increases: 0➔6 (1st), 6➔12 (2nd), 12➔18 (3rd), 18➔24 (4th). At 24, total is no longer less than 20, so it stopped after 4 loops!"
       }
     ];
 
-    let currentQIndex = 0;
+    // Shuffle options for each question dynamically
+    let questionsDatabase = [];
+
+    function prepareQuestions() {
+      questionsDatabase = rawQuestionsDatabase.map(q => {
+        const clonedOptions = [...q.options];
+        // Fisher-Yates shuffle options
+        for (let i = clonedOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [clonedOptions[i], clonedOptions[j]] = [clonedOptions[j], clonedOptions[i]];
+        }
+
+        const correctAnswerIdx = clonedOptions.findIndex(o => o.isCorrect);
+        return {
+          ...q,
+          options: clonedOptions.map(o => o.text),
+          correctAnswer: correctAnswerIdx
+        };
+      });
+    }
+
+    // STATE VARIABLES
+    let currentQuestionIdx = 0;
     let score = 0;
-    let timerSeconds = 30;
     let timerInterval = null;
-    let answeredCurrent = false;
-    let selectedIndices = new Set();
-    let currentOptions = [];
+    let timeLeft = 50;
+    let questionAnswered = false;
 
-    // --- CANVAS FLOWER ANIMATION ---
-    const canvas = document.getElementById('flowerCanvas');
-    const ctx = canvas.getContext('2d');
-    let flowers = [];
+    // DOM ELEMENTS
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const qNumEl = document.getElementById('q-num');
+    const liveScoreEl = document.getElementById('live-score');
+    const timerTextEl = document.getElementById('timer-text');
+    const timerBarEl = document.getElementById('timer-bar');
+    const questionTextEl = document.getElementById('question-text');
+    const codeContainer = document.getElementById('code-container');
+    const codeSnippetEl = document.getElementById('code-snippet');
+    const optionsGrid = document.getElementById('options-grid');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+    const nextBtn = document.getElementById('next-btn');
+    const teacherNoteText = document.getElementById('teacher-note-text');
+    const finalTotalScore = document.getElementById('final-total-score');
+    const restartBtn = document.getElementById('restart-btn');
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    function initFloatingBalls() {
+      const container = document.getElementById('balls-container');
+      container.innerHTML = '';
+      const colors = ['#3b82f6', '#06b6d4', '#6366f1', '#38bdf8', '#818cf8', '#0284c7'];
+      const ballCount = 18;
 
-    const flowerColors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#3b82f6', '#10b981', '#f59e0b'];
+      for (let i = 0; i < ballCount; i++) {
+        const ball = document.createElement('div');
+        ball.classList.add('floating-ball');
+        
+        const size = Math.floor(Math.random() * 80) + 40;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const duration = Math.floor(Math.random() * 6) + 6;
+        const delay = Math.random() * 4;
 
-    class FallingFlower {
-      constructor() {
-        this.reset();
-        this.y = Math.random() * canvas.height;
-      }
+        ball.style.width = `${size}px`;
+        ball.style.height = `${size}px`;
+        ball.style.left = `${left}%`;
+        ball.style.top = `${top}%`;
+        ball.style.backgroundColor = color;
+        ball.style.animationDuration = `${duration}s`;
+        ball.style.animationDelay = `${delay}s`;
 
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = -30;
-        this.size = Math.random() * 12 + 10;
-        this.speedY = Math.random() * 1.2 + 0.6;
-        this.speedRot = (Math.random() - 0.5) * 0.04;
-        this.rotation = Math.random() * Math.PI * 2;
-        this.color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
-        this.petals = 5;
-      }
-
-      update() {
-        this.y += this.speedY;
-        this.rotation += this.speedRot;
-        if (this.y > canvas.height + 40) {
-          this.reset();
-        }
-      }
-
-      draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rotation);
-        ctx.globalAlpha = 0.65;
-
-        // Draw Petals
-        ctx.fillStyle = this.color;
-        for (let i = 0; i < this.petals; i++) {
-          const angle = (i * 2 * Math.PI) / this.petals;
-          ctx.beginPath();
-          ctx.arc(
-            Math.cos(angle) * (this.size * 0.5),
-            Math.sin(angle) * (this.size * 0.5),
-            this.size * 0.45,
-            0,
-            Math.PI * 2
-          );
-          ctx.fill();
-        }
-
-        // Draw Center Core
-        ctx.fillStyle = '#fef08a';
-        ctx.beginPath();
-        ctx.arc(0, 0, this.size * 0.3, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
+        container.appendChild(ball);
       }
     }
 
-    for (let i = 0; i < 30; i++) {
-      flowers.push(new FallingFlower());
-    }
-
-    function animateFlowers() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      flowers.forEach(f => {
-        f.update();
-        f.draw();
-      });
-      requestAnimationFrame(animateFlowers);
-    }
-    animateFlowers();
-
-    // --- QUIZ ENGINE FUNCTIONS ---
-
-    function loadQuestion() {
-      answeredCurrent = false;
-      selectedIndices.clear();
+    function startTimer() {
       clearInterval(timerInterval);
-      timerSeconds = 30;
-      updateTimerDisplay();
+      timeLeft = 50;
+      updateTimerUI();
 
-      const q = questionsData[currentQIndex];
-
-      document.getElementById('qCounter').innerText = `Q ${currentQIndex + 1} / 10`;
-      
-      const progressPercent = ((currentQIndex) / 10) * 100;
-      document.getElementById('progressBar').style.width = `${progressPercent}%`;
-
-      // Set Type Badges & Instructions
-      const qTypeBadge = document.getElementById('qTypeBadge');
-      const instructionText = document.getElementById('instructionText');
-      const multiSubmitContainer = document.getElementById('multiSubmitContainer');
-      const submitMultiBtn = document.getElementById('submitMultiBtn');
-      
-      // Reset submit button state
-      submitMultiBtn.disabled = false;
-
-      if (q.type === 'MULTI_SELECT') {
-        qTypeBadge.innerText = '☑️ MULTI-SELECT QUESTION';
-        instructionText.innerText = 'Click on all correct choices, then press "Submit Selections":';
-        multiSubmitContainer.style.display = 'flex';
-      } else if (q.type === 'TRUE_FALSE') {
-        qTypeBadge.innerText = '⚡ TRUE OR FALSE';
-        instructionText.innerText = 'Select True or False:';
-        multiSubmitContainer.style.display = 'none';
-      } else {
-        qTypeBadge.innerText = '💡 MULTIPLE CHOICE';
-        instructionText.innerText = 'Select the one correct answer:';
-        multiSubmitContainer.style.display = 'none';
-      }
-
-      document.getElementById('questionText').innerText = q.question;
-
-      // Code Container
-      const codeContainer = document.getElementById('codeContainer');
-      if (q.code) {
-        codeContainer.innerHTML = `<pre class="code-box"><code>${escapeHTML(q.code)}</code></pre>`;
-      } else {
-        codeContainer.innerHTML = '';
-      }
-
-      // Options Grid Render
-      const optionsGrid = document.getElementById('optionsGrid');
-      optionsGrid.innerHTML = '';
-      
-      if (q.type === 'TRUE_FALSE') {
-        currentOptions = [...q.options];
-      } else {
-        // Dynamic shuffle for choices
-        currentOptions = [...q.options].sort(() => Math.random() - 0.5);
-      }
-
-      currentOptions.forEach((opt, idx) => {
-        const itemWrapper = document.createElement('div');
-        itemWrapper.className = 'option-item';
-
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.id = `optBtn_${idx}`;
-        btn.innerHTML = `<span>${escapeHTML(opt.text)}</span> <span class="status-icon" id="status_${idx}"></span>`;
-        btn.onclick = () => handleOptionClick(idx);
-
-        const expDiv = document.createElement('div');
-        expDiv.className = 'btn-explanation';
-        expDiv.id = `expDiv_${idx}`;
-
-        itemWrapper.appendChild(btn);
-        itemWrapper.appendChild(expDiv);
-        optionsGrid.appendChild(itemWrapper);
-      });
-
-      document.getElementById('nextBtn').style.display = 'none';
-
-      // 30-Second Countdown Timer
       timerInterval = setInterval(() => {
-        timerSeconds--;
-        updateTimerDisplay();
-        if (timerSeconds <= 0) {
+        timeLeft--;
+        updateTimerUI();
+
+        if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          handleTimeOut();
+          handleTimeout();
         }
       }, 1000);
     }
 
-    function updateTimerDisplay() {
-      const badge = document.getElementById('timerBadge');
-      badge.innerText = `⏱️ ${timerSeconds}s`;
-      if (timerSeconds <= 8) {
-        badge.style.backgroundColor = '#fee2e2';
-        badge.style.color = '#dc2626';
+    function updateTimerUI() {
+      timerTextEl.textContent = timeLeft;
+      const percentage = (timeLeft / 50) * 100;
+      timerBarEl.style.width = `${percentage}%`;
+
+      if (timeLeft <= 10) {
+        timerTextEl.classList.remove('text-cyan-400');
+        timerTextEl.classList.add('text-rose-500', 'animate-pulse');
+        timerBarEl.classList.remove('from-cyan-400', 'to-blue-500');
+        timerBarEl.classList.add('from-amber-500', 'to-rose-600');
       } else {
-        badge.style.backgroundColor = '#fef9c3';
-        badge.style.color = '#854d0e';
+        timerTextEl.classList.remove('text-rose-500', 'animate-pulse');
+        timerTextEl.classList.add('text-cyan-400');
+        timerBarEl.classList.remove('from-amber-500', 'to-rose-600');
+        timerBarEl.classList.add('from-cyan-400', 'to-blue-500');
       }
     }
 
-    function handleOptionClick(index) {
-      if (answeredCurrent) return;
-      const q = questionsData[currentQIndex];
-
-      if (q.type === 'MULTI_SELECT') {
-        // Toggle selection for multi-select
-        const btn = document.getElementById(`optBtn_${index}`);
-        if (selectedIndices.has(index)) {
-          selectedIndices.delete(index);
-          btn.classList.remove('selected');
-        } else {
-          selectedIndices.add(index);
-          btn.classList.add('selected');
-        }
-      } else {
-        // Single choice or T/F immediate submit
-        evaluateSingleChoice(index);
-      }
-    }
-
-    function evaluateSingleChoice(selectedIndex) {
-      answeredCurrent = true;
+    function stopTimer() {
       clearInterval(timerInterval);
+    }
 
-      const q = questionsData[currentQIndex];
-      const selectedOpt = currentOptions[selectedIndex];
+    function loadQuestion() {
+      questionAnswered = false;
+      const currentQ = questionsDatabase[currentQuestionIdx];
 
-      // Disable all buttons
-      currentOptions.forEach((_, i) => {
-        const btn = document.getElementById(`optBtn_${i}`);
-        if (btn) btn.disabled = true;
+      qNumEl.textContent = currentQuestionIdx + 1;
+      liveScoreEl.textContent = `${score} / 10`;
+
+      explanationBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+
+      questionTextEl.textContent = currentQ.question;
+
+      if (currentQ.code) {
+        codeSnippetEl.textContent = currentQ.code;
+        codeContainer.classList.remove('hidden');
+      } else {
+        codeContainer.classList.add('hidden');
+      }
+
+      optionsGrid.innerHTML = '';
+
+      currentQ.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.dataset.index = idx;
+        btn.className = "option-btn p-4 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-cyan-900/40 hover:border-cyan-500 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg bg-slate-700/60 border border-slate-600 text-cyan-400 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
+          <span class="font-code text-sm sm:text-base leading-snug">${optText}</span>
+        `;
+        btn.addEventListener('click', () => selectAnswer(idx));
+        optionsGrid.appendChild(btn);
       });
 
-      const isCorrect = selectedOpt.isCorrect;
+      startTimer();
+    }
 
-      if (isCorrect) {
-        score++;
-      }
+    function selectAnswer(selectedIdx) {
+      if (questionAnswered) return;
+      stopTimer();
+      questionAnswered = true;
 
-      // Display explanations directly under buttons
-      currentOptions.forEach((opt, i) => {
-        const btn = document.getElementById(`optBtn_${i}`);
-        const statusSpan = document.getElementById(`status_${i}`);
-        const expDiv = document.getElementById(`expDiv_${i}`);
+      const currentQ = questionsDatabase[currentQuestionIdx];
+      const isCorrect = (selectedIdx === currentQ.correctAnswer);
 
-        if (i === selectedIndex) {
-          if (opt.isCorrect) {
-            btn.classList.add('correct');
-            statusSpan.innerText = '✅';
-            expDiv.className = 'btn-explanation correct-exp';
-            expDiv.innerHTML = `<strong>✅ Correct:</strong> ${opt.exp}`;
-          } else {
-            btn.classList.add('incorrect');
-            statusSpan.innerText = '❌';
-            expDiv.className = 'btn-explanation incorrect-exp';
-            expDiv.innerHTML = `<strong>❌ Why this choice is incorrect:</strong> ${opt.exp}`;
-          }
-          expDiv.style.display = 'block';
-        } else if (opt.isCorrect) {
-          // Highlight correct answer if user picked wrong
-          btn.classList.add('correct');
-          statusSpan.innerText = '💡 Correct Answer';
-          expDiv.className = 'btn-explanation correct-exp';
-          expDiv.innerHTML = `<strong>💡 Correct Answer Explanation:</strong> ${opt.exp}`;
-          expDiv.style.display = 'block';
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === currentQ.correctAnswer) {
+          btn.classList.remove('border-slate-700', 'bg-slate-800/80');
+          btn.classList.add('border-emerald-500', 'bg-emerald-950/80', 'text-emerald-200');
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.classList.remove('border-slate-700', 'bg-slate-800/80');
+          btn.classList.add('border-rose-500', 'bg-rose-950/80', 'text-rose-200');
         }
       });
 
-      document.getElementById('nextBtn').style.display = 'inline-flex';
+      evaluateAnswer(isCorrect, currentQ.explanation);
     }
 
-    function submitMultiAnswer() {
-      if (answeredCurrent) return;
-      answeredCurrent = true;
-      clearInterval(timerInterval);
+    function handleTimeout() {
+      if (questionAnswered) return;
+      questionAnswered = true;
 
-      const q = questionsData[currentQIndex];
-
-      // Disable all buttons and hide multi-select submit container
-      currentOptions.forEach((_, i) => {
-        const btn = document.getElementById(`optBtn_${i}`);
-        if (btn) btn.disabled = true;
-      });
+      const currentQ = questionsDatabase[currentQuestionIdx];
       
-      const submitBtn = document.getElementById('submitMultiBtn');
-      if (submitBtn) submitBtn.disabled = true;
-
-      let allCorrect = true;
-
-      currentOptions.forEach((opt, idx) => {
-        const isSelected = selectedIndices.has(idx);
-        const btn = document.getElementById(`optBtn_${idx}`);
-        const statusSpan = document.getElementById(`status_${idx}`);
-        const expDiv = document.getElementById(`expDiv_${idx}`);
-
-        if (opt.isCorrect && isSelected) {
-          btn.classList.add('correct');
-          statusSpan.innerText = '✅';
-          expDiv.className = 'btn-explanation correct-exp';
-          expDiv.innerHTML = `<strong>✅ Correct Selection:</strong> ${opt.exp}`;
-          expDiv.style.display = 'block';
-        } else if (opt.isCorrect && !isSelected) {
-          allCorrect = false;
-          btn.classList.add('missed');
-          statusSpan.innerText = '⚠️ Missed Choice';
-          expDiv.className = 'btn-explanation missed-exp';
-          expDiv.innerHTML = `<strong>⚠️ Missed Option:</strong> ${opt.exp}`;
-          expDiv.style.display = 'block';
-        } else if (!opt.isCorrect && isSelected) {
-          allCorrect = false;
-          btn.classList.add('incorrect');
-          statusSpan.innerText = '❌ Incorrect';
-          expDiv.className = 'btn-explanation incorrect-exp';
-          expDiv.innerHTML = `<strong>❌ Incorrect Selection:</strong> ${opt.exp}`;
-          expDiv.style.display = 'block';
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === currentQ.correctAnswer) {
+          btn.classList.add('border-emerald-500', 'bg-emerald-950/80');
         }
       });
 
-      if (allCorrect) {
-        score++;
+      showExplanation(false, "⏳ Time's up! You ran out of 50 seconds. " + currentQ.explanation);
+      nextBtn.classList.remove('hidden');
+    }
+
+    function evaluateAnswer(isCorrect, explanationTextContent) {
+      if (isCorrect) {
+        score += 1;
+        liveScoreEl.textContent = `${score} / 10`;
+        showExplanation(true, "🎉 Correct! " + explanationTextContent);
+      } else {
+        showExplanation(false, "❌ Not quite! " + explanationTextContent);
       }
 
-      // Hide multi-select submit button after submitting answer
-      document.getElementById('multiSubmitContainer').style.display = 'none';
-
-      document.getElementById('nextBtn').style.display = 'inline-flex';
+      nextBtn.classList.remove('hidden');
     }
 
-    function handleTimeOut() {
-      if (answeredCurrent) return;
-      answeredCurrent = true;
+    function showExplanation(isCorrect, message) {
+      explanationBox.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-500/50', 'bg-rose-950/60', 'border-rose-500/50');
+      
+      if (isCorrect) {
+        explanationBox.classList.add('bg-emerald-950/60', 'border-emerald-500/50', 'text-emerald-200');
+        explanationTitle.textContent = "Great Job!";
+        explanationTitle.className = "font-bold text-base text-emerald-400";
+      } else {
+        explanationBox.classList.add('bg-rose-950/60', 'border-rose-500/50', 'text-rose-200');
+        explanationTitle.textContent = "Quick Explanation";
+        explanationTitle.className = "font-bold text-base text-rose-400";
+      }
 
-      const q = questionsData[currentQIndex];
-
-      currentOptions.forEach((opt, i) => {
-        const btn = document.getElementById(`optBtn_${i}`);
-        const statusSpan = document.getElementById(`status_${i}`);
-        const expDiv = document.getElementById(`expDiv_${i}`);
-        if (btn) btn.disabled = true;
-
-        if (opt.isCorrect) {
-          btn.classList.add('correct');
-          statusSpan.innerText = '💡 Correct Answer';
-          expDiv.className = 'btn-explanation correct-exp';
-          expDiv.innerHTML = `<strong>💡 Correct Answer Explanation:</strong> ${opt.exp}`;
-          expDiv.style.display = 'block';
-        }
-      });
-
-      document.getElementById('multiSubmitContainer').style.display = 'none';
-      document.getElementById('nextBtn').style.display = 'inline-flex';
+      explanationText.textContent = message;
     }
 
-    function handleNextQuestion() {
-      currentQIndex++;
-      if (currentQIndex < questionsData.length) {
+    nextBtn.addEventListener('click', () => {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questionsDatabase.length) {
         loadQuestion();
       } else {
-        showResults();
+        showResultsScreen();
       }
-    }
+    });
 
-    function showResults() {
-      document.getElementById('questionContainer').style.display = 'none';
-      document.getElementById('quizHeader').style.display = 'none';
-      document.getElementById('progressBarBg').style.display = 'none';
-      document.getElementById('multiSubmitContainer').style.display = 'none';
-      document.getElementById('controlsContainer').style.display = 'none';
+    function showResultsScreen() {
+      quizScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
 
-      const resultScreen = document.getElementById('resultScreen');
-      resultScreen.style.display = 'block';
+      finalTotalScore.textContent = `${score} / 10`;
 
-      document.getElementById('finalScore').innerText = `${score} / 10 Points`;
+      let noteContent = "";
 
-      let summaryMsg = "";
       if (score >= 9) {
-        summaryMsg = "🏆 Outstanding! You have mastered Python core fundamentals!";
+        noteContent = `Superstar Coder! 🌟 You scored ${score}/10! You have an incredible understanding of how loops run and how real-world system conditions work. You tracked every single loop iteration like a true computer scientist! Keep up the brilliant work!`;
       } else if (score >= 7) {
-        summaryMsg = "🚀 Fantastic job! You have a super solid grasp of variables and syntax!";
+        noteContent = `Great job! 🚀 You scored ${score}/10! You really understand how while loops count and how system logic works in real life. Review questions where the loop stopping condition was off by one, and you'll get a perfect 10 next time!`;
       } else if (score >= 5) {
-        summaryMsg = "👍 Good effort! Practice syntax details and variable rules to level up.";
+        noteContent = `Good effort! 👍 You scored ${score}/10! You understand the basics of functions and simple conditions. To improve, practice counting how numbers change step-by-step inside while loops!`;
       } else {
-        summaryMsg = "💪 Great start! Coding takes practice. Keep building your Python skills!";
+        noteContent = `Nice try! 💡 You scored ${score}/10. Coding takes practice! Don't worry at all—try tracing the loop values on a piece of paper before answering. Take another try and watch your score soar!`;
       }
-      document.getElementById('scoreSummary').innerText = summaryMsg;
 
-      // Personalized Handwritten Sign-off Note
-      const noteHtml = `
-        Dear Learner,<br><br>
-        Congratulations on completing all 10 questions in your Python Revision Quiz! You worked through data types, variable naming rules, code formatting bugs, and print statements.<br><br>
-        <strong>Your Score: ${score} out of 10 Points!</strong><br><br>
-        Every error you catch makes you a smarter programmer. Keep practicing, keep writing Python code, and stay curious!<br><br>
-        Warm regards,<br>
-        <strong>~ Tutor Priyadarshini ✍️</strong>
-      `;
-      document.getElementById('handwrittenNoteText').innerHTML = noteHtml;
+      teacherNoteText.textContent = noteContent;
     }
 
-    function showHomeScreen() {
-      clearInterval(timerInterval);
-      document.getElementById('homeScreen').style.display = 'block';
-      document.getElementById('quizHeader').style.display = 'none';
-      document.getElementById('progressBarBg').style.display = 'none';
-      document.getElementById('questionContainer').style.display = 'none';
-      document.getElementById('multiSubmitContainer').style.display = 'none';
-      document.getElementById('controlsContainer').style.display = 'none';
-      document.getElementById('resultScreen').style.display = 'none';
-    }
-
-    function startQuiz() {
-      currentQIndex = 0;
+    restartBtn.addEventListener('click', () => {
+      currentQuestionIdx = 0;
       score = 0;
-      document.getElementById('homeScreen').style.display = 'none';
-      document.getElementById('quizHeader').style.display = 'flex';
-      document.getElementById('progressBarBg').style.display = 'block';
-      document.getElementById('questionContainer').style.display = 'block';
-      document.getElementById('controlsContainer').style.display = 'flex';
-      document.getElementById('resultScreen').style.display = 'none';
+      prepareQuestions();
+      resultScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
       loadQuestion();
-    }
+    });
 
-    function escapeHTML(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    // Load initial home page view
-    showHomeScreen();
+    // INIT APPLICATION
+    initFloatingBalls();
+    prepareQuestions();
+    loadQuestion();
   </script>
 </body>
 </html>
+
+
