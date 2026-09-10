@@ -6,7 +6,7 @@
   <title>Python Revision</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Caveat for teacher's feedback, Fira Code for code, Outfit for UI -->
+  <!-- Google Fonts: Caveat for teacher's feedback, Fira Code for Python code, Outfit for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,111 +23,148 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Falling Brown Lego Bricks Animation */
-    .lego-brick {
-      position: fixed;
-      top: -60px;
+    /* Drifting Boat Animation */
+    .sailing-boat {
+      position: absolute;
       pointer-events: none;
-      z-index: 1;
-      animation: fallDown linear infinite;
+      z-index: 2;
+      animation: sailAcross linear infinite;
     }
 
-    @keyframes fallDown {
+    @keyframes sailAcross {
       0% {
-        transform: translateY(-20px) rotate(0deg) translateX(0px);
-        opacity: 0.9;
-      }
-      50% {
-        transform: translateY(50vh) rotate(160deg) translateX(25px);
+        transform: translateX(-120px) translateY(0px) rotate(0deg);
         opacity: 0.85;
       }
+      25% {
+        transform: translateX(25vw) translateY(-6px) rotate(2deg);
+      }
+      50% {
+        transform: translateX(50vw) translateY(4px) rotate(-1deg);
+        opacity: 0.95;
+      }
+      75% {
+        transform: translateX(75vw) translateY(-4px) rotate(2deg);
+      }
       100% {
-        transform: translateY(105vh) rotate(360deg) translateX(-20px);
-        opacity: 0;
+        transform: translateX(105vw) translateY(0px) rotate(0deg);
+        opacity: 0.85;
       }
     }
 
-    /* Notebook Sheet for Teacher's Feedback */
-    .feedback-sheet {
-      background-color: #fffdf9;
-      background-image: linear-gradient(#e5ddd3 1px, transparent 1px);
-      background-size: 100% 2.1rem;
-      border-left: 5px double #78350f;
+    /* Rotating Spiral Shapes */
+    .spiral-bg {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.18;
+      animation: spinSlow linear infinite;
     }
 
-    /* Code scroll styling */
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Lined Notebook Sheet for Teacher's Feedback */
+    .feedback-sheet {
+      background-color: #f8fafc;
+      background-image: linear-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 100% 2.2rem;
+      border-left: 5px double #0284c7;
+    }
+
+    /* Custom Code Scrollbar */
     pre::-webkit-scrollbar {
       height: 6px;
     }
     pre::-webkit-scrollbar-thumb {
-      background: #a16207;
+      background: #0284c7;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-[#f7f2e7] text-stone-900 min-h-screen relative flex flex-col justify-between selection:bg-amber-800 selection:text-white">
+<body class="bg-gradient-to-b from-sky-950 via-blue-950 to-slate-950 text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-cyan-400 selection:text-slate-950">
 
-  <!-- Falling LEGO Bricks Background Container -->
-  <div id="lego-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+  <!-- Background Spirals -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <!-- Top Left Spiral -->
+    <svg class="spiral-bg w-96 h-96 -top-20 -left-20 text-cyan-400" style="animation-duration: 45s;" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
+      <path d="M50,50 A5,5 0 0,1 55,50 A10,10 0 0,1 45,50 A15,15 0 0,1 60,50 A20,20 0 0,1 35,50 A25,25 0 0,1 65,50 A30,30 0 0,1 30,50 A35,35 0 0,1 70,50 A40,40 0 0,1 25,50" />
+    </svg>
+    <!-- Bottom Right Spiral -->
+    <svg class="spiral-bg w-80 h-80 -bottom-16 -right-16 text-sky-300" style="animation-duration: 60s; animation-direction: reverse;" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
+      <path d="M50,50 A5,5 0 0,1 55,50 A10,10 0 0,1 45,50 A15,15 0 0,1 60,50 A20,20 0 0,1 35,50 A25,25 0 0,1 65,50 A30,30 0 0,1 30,50 A35,35 0 0,1 70,50" />
+    </svg>
+  </div>
+
+  <!-- Drifting Sailboats Container -->
+  <div id="boats-container" class="fixed inset-0 overflow-hidden pointer-events-none z-10"></div>
+
+  <!-- Animated Bottom Waves -->
+  <div class="fixed bottom-0 left-0 right-0 pointer-events-none z-0 opacity-40">
+    <svg class="w-full h-24 sm:h-32 text-blue-800/50" viewBox="0 0 1440 320" fill="currentColor" preserveAspectRatio="none">
+      <path d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,213.3C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
 
   <!-- Main Container -->
-  <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
+  <div class="relative z-20 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-    <!-- Header (Strictly Python Revision) -->
+    <!-- Strict Header -->
     <header class="text-center mb-6">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-amber-950 tracking-tight drop-shadow-sm">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 tracking-tight drop-shadow-md">
         Python Revision
       </h1>
-      <p class="text-sm font-semibold text-stone-600 mt-1">Loops, Logic & Functions in Real Systems</p>
     </header>
 
     <!-- QUIZ SCREEN -->
     <div id="quiz-screen" class="w-full">
       
-      <!-- Top Info Bar: Question Counter, Live Score, Timer -->
-      <div class="bg-[#ece3d4] border border-[#d6c7b2] rounded-2xl p-4 sm:p-5 mb-5 shadow-md">
+      <!-- Top Info Bar: Question Counter, Live Score, 30s Timer -->
+      <div class="bg-slate-900/80 backdrop-blur-md border border-sky-500/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
         <div class="flex justify-between items-center gap-3">
           
           <!-- Question Number Tracker -->
           <div>
-            <span class="text-xs uppercase font-bold text-amber-900 tracking-wider block">Question</span>
-            <div class="text-2xl font-black text-amber-950 font-code">
-              <span id="q-num">1</span> <span class="text-stone-500 text-lg font-normal">/ 10</span>
+            <span class="text-xs uppercase font-bold text-sky-400 tracking-wider block">Question</span>
+            <div class="text-2xl font-black text-cyan-200 font-code">
+              <span id="q-num">1</span> <span class="text-slate-400 text-lg font-normal">/ 10</span>
             </div>
           </div>
 
           <!-- Live Score -->
-          <div class="text-center bg-[#dfd3bf] px-4 py-2 rounded-xl border border-[#c7b69d] shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-amber-900 block font-bold">Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-950 font-code">0 / 10</span>
+          <div class="text-center bg-slate-800/90 px-4 py-2 rounded-xl border border-sky-500/20 shadow-inner">
+            <span class="text-[11px] uppercase tracking-wider text-sky-300 block font-bold">Score</span>
+            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
           </div>
 
-          <!-- 30-Second Timer -->
+          <!-- 30-Second Countdown Timer -->
           <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-[#dfd3bf] rounded-full border-2 border-amber-800 shadow-inner">
-              <span id="timer-text" class="text-xl font-black text-amber-950 font-code">30</span>
-              <span class="text-[8px] text-stone-700 absolute bottom-1 font-bold">sec</span>
+            <div class="relative w-14 h-14 flex items-center justify-center bg-slate-800 rounded-full border-2 border-cyan-400 shadow-inner">
+              <span id="timer-text" class="text-xl font-black text-cyan-300 font-code">30</span>
+              <span class="text-[8px] text-slate-400 absolute bottom-1 font-bold">sec</span>
             </div>
           </div>
         </div>
 
         <!-- Timer Progress Bar -->
-        <div class="w-full bg-[#dfd3bf] h-2.5 rounded-full mt-3 overflow-hidden border border-[#cbbca7]">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-amber-700 via-amber-800 to-amber-950 transition-all duration-1000 ease-linear w-full"></div>
+        <div class="w-full bg-slate-800 h-2.5 rounded-full mt-3 overflow-hidden border border-slate-700">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
-      <!-- Question Box -->
-      <div class="bg-[#ffffff]/90 backdrop-blur-sm border border-[#decbb3] rounded-2xl p-5 sm:p-7 shadow-lg relative">
+      <!-- Question Card -->
+      <div class="bg-slate-900/85 backdrop-blur-md border border-sky-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
         
-        <!-- Question Scenario / Text -->
-        <h2 id="question-text" class="text-lg sm:text-xl font-bold text-stone-900 leading-relaxed mb-4">
+        <!-- Story Question Text -->
+        <h2 id="question-text" class="text-base sm:text-lg font-medium text-slate-100 leading-relaxed mb-4">
           Question loading...
         </h2>
 
-        <!-- Code Snippet Area -->
+        <!-- Properly Indented Code Snippet Area -->
         <div id="code-container" class="mb-5">
-          <pre class="bg-[#29221b] text-amber-200 border border-amber-900/40 rounded-xl p-4 font-code text-sm sm:text-base overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+          <pre class="bg-slate-950 text-cyan-300 border border-sky-500/30 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner leading-relaxed"><code id="code-snippet"></code></pre>
         </div>
 
         <!-- 4 Options Grid -->
@@ -136,12 +173,12 @@
         </div>
 
         <!-- Explanation Container (Under Buttons) -->
-        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-sm">
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
           <div class="flex items-start gap-3">
             <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
             <div>
               <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
-              <p id="explanation-text" class="text-sm mt-1 leading-relaxed text-stone-800">
+              <p id="explanation-text" class="text-sm mt-1 leading-relaxed text-slate-200">
                 Explanation text appears here.
               </p>
             </div>
@@ -150,7 +187,7 @@
 
         <!-- Next Question Button -->
         <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-amber-800 to-amber-950 hover:from-amber-700 hover:to-amber-900 text-amber-50 font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <span>Next Question</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
@@ -161,43 +198,43 @@
 
     <!-- RESULT SCREEN -->
     <div id="result-screen" class="hidden w-full my-4">
-      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-xl text-stone-900 border-t-8 border-amber-900 relative overflow-hidden">
+      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-sky-600 relative overflow-hidden">
         
         <!-- Result Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-[#d8cbba] pb-4 mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-300 pb-4 mb-6">
           <div>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-amber-950">Teacher's Feedback</h2>
-            <p class="text-xs text-stone-600 font-semibold tracking-wide uppercase mt-1">Python Logic & System Thinking Assessment</p>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-blue-950">Teacher's Feedback</h2>
+            <p class="text-xs text-slate-600 font-semibold tracking-wide uppercase mt-1">Python Logic, Data Structures & System Execution</p>
           </div>
-          <div class="mt-3 sm:mt-0 bg-[#f1e7d8] border-2 border-amber-800/40 rounded-xl px-4 py-2 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-amber-950 font-bold block">Final Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-amber-950 font-code">0 / 10</span>
+          <div class="mt-3 sm:mt-0 bg-sky-100 border-2 border-sky-500/40 rounded-xl px-4 py-2 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-sky-900 font-bold block">Final Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-sky-950 font-code">0 / 10</span>
           </div>
         </div>
 
-        <!-- Teacher's Feedback Body -->
-        <div class="mb-6 bg-white/80 p-6 rounded-xl border border-stone-300 shadow-sm">
-          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-stone-900 leading-relaxed">
+        <!-- Teacher's Feedback Body (Handwritten Font) -->
+        <div class="mb-6 bg-white/80 p-6 rounded-xl border border-slate-300 shadow-sm">
+          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-900 leading-relaxed">
             Generating feedback note...
           </p>
         </div>
 
-        <!-- Quick Revision Tips for 16-Year-Old Coders -->
-        <div class="mb-6 p-4 rounded-xl bg-[#f5ecdd] border border-[#d8c5ad]">
-          <h3 class="font-bold text-sm text-amber-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Core Python Habits:
+        <!-- Quick Revision Tips for 13-14 Year Old Coders -->
+        <div class="mb-6 p-4 rounded-xl bg-sky-50 border border-sky-200">
+          <h3 class="font-bold text-xs text-sky-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span>📌</span> Key Python Takeaways:
           </h3>
-          <ul class="text-xs sm:text-sm text-stone-700 space-y-1.5 leading-relaxed">
-            <li>• <strong>Loop range(start, stop)</strong>: Always stops <em>before</em> reaching the stop value!</li>
-            <li>• <strong>Function Header</strong>: Missing the colon (<code class="bg-amber-100 px-1 rounded font-code">:</code>) throws a <code class="bg-amber-100 px-1 rounded font-code">SyntaxError</code> before running.</li>
-            <li>• <strong>Types</strong>: Adding a string to an integer without conversion throws a <code class="bg-amber-100 px-1 rounded font-code">TypeError</code>.</li>
-            <li>• <strong>While Loops</strong>: Always check if the loop variable is properly modified to prevent infinite loops.</li>
+          <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 leading-relaxed">
+            <li>• <strong>List Indexing</strong>: First item is always index <code class="bg-sky-200/70 px-1 rounded font-code">[0]</code>, second is <code class="bg-sky-200/70 px-1 rounded font-code">[1]</code>!</li>
+            <li>• <strong>Dictionaries</strong>: Accessing a key that doesn't exist raises a <code class="bg-sky-200/70 px-1 rounded font-code">KeyError</code>.</li>
+            <li>• <strong>Function Headers</strong>: Forgetting the colon (<code class="bg-sky-200/70 px-1 rounded font-code">:</code>) at the end of <code class="bg-sky-200/70 px-1 rounded font-code">def</code> gives a <code class="bg-sky-200/70 px-1 rounded font-code">SyntaxError</code>.</li>
+            <li>• <strong>Nested Loops</strong>: Total iterations = (outer loop count) × (inner loop count).</li>
           </ul>
         </div>
 
         <!-- Retake Button -->
-        <div class="flex justify-center border-t border-stone-300 pt-5">
-          <button id="restart-btn" class="py-3 px-8 bg-amber-900 hover:bg-amber-950 text-amber-100 font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
+        <div class="flex justify-center border-t border-slate-300 pt-5">
+          <button id="restart-btn" class="py-3 px-8 bg-sky-700 hover:bg-sky-800 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             <span>Retake Revision</span>
           </button>
@@ -209,147 +246,148 @@
   </div>
 
   <!-- Footer -->
-  <footer class="relative z-10 py-3 text-center text-xs text-stone-600 bg-[#eee5d6] border-t border-[#d8ccb8]">
-    <p>Python Revision • System Logic & Loop Predictor</p>
+  <footer class="relative z-20 py-3 text-center text-xs text-sky-300/70 bg-slate-950/80 border-t border-sky-900/50">
+    <p>Python Revision • Loops, Functions & Data Structures</p>
   </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 10 QUESTIONS: REAL-WORLD CS SCENARIOS, LOOPS, CONDITIONS, FUNCTIONS & ERRORS
+    // 10 STORY-BASED QUESTIONS FOR 13-14 YEAR OLD STUDENTS
+    // Properly indented Python snippets covering loops, functions, conditions, lists, dicts & errors.
     // -------------------------------------------------------------
     const questionsRaw = [
-      // Q1: While loop iterations (Network Retry System)
+      // Q1: Space Rover Battery - Condition & Function Output
       {
-        question: "A network router attempts to ping an offline server. How many times will this retry loop run before giving up?",
-        code: "attempts = 0\nmax_retries = 4\n\nwhile attempts < max_retries:\n    attempts += 1\n\nprint('Server timeout')",
+        question: "Story: The Mars Rover 'Curiosity-2' recharges its battery during daylight. What value will be printed after charging?",
+        code: "def charge_rover(battery, solar_power):\n    if solar_power > 50:\n        battery += 20\n    else:\n        battery += 5\n    return battery\n\ncurrent_battery = 40\nnew_battery = charge_rover(current_battery, 60)\nprint(new_battery)",
         options: [
-          { text: "4 times", isCorrect: true },
-          { text: "3 times", isCorrect: false },
-          { text: "5 times", isCorrect: false },
-          { text: "0 times", isCorrect: false }
-        ],
-        explanation: "The counter starts at 0 and increments by 1 on each run (0 ➔ 1, 1 ➔ 2, 2 ➔ 3, 3 ➔ 4). When attempts reaches 4, 4 < 4 becomes False and the loop stops after exactly 4 iterations."
-      },
-
-      // Q2: Loop counting with step (Drone Battery Drain)
-      {
-        question: "A delivery drone's battery monitor drops power by 15% every check. How many times does this while loop execute?",
-        code: "battery = 80\ncycles = 0\n\nwhile battery > 30:\n    battery -= 15\n    cycles += 1\n\nprint(cycles)",
-        options: [
-          { text: "4 times", isCorrect: true },
-          { text: "3 times", isCorrect: false },
-          { text: "5 times", isCorrect: false },
-          { text: "2 times", isCorrect: false }
-        ],
-        explanation: "Tracking values: Round 1 (80 ➔ 65), Round 2 (65 ➔ 50), Round 3 (50 ➔ 35), Round 4 (35 ➔ 20). At 20%, 20 > 30 is False, so the loop ran 4 times."
-      },
-
-      // Q3: Range loop run count (Batch Sensor readings)
-      {
-        question: "An IoT weather station reads data packets using a step range. How many total times does this loop run?",
-        code: "packets = 0\nfor hour in range(2, 14, 3):\n    packets += 1\n\nprint(packets)",
-        options: [
-          { text: "4 times", isCorrect: true },
-          { text: "5 times", isCorrect: false },
-          { text: "3 times", isCorrect: false },
-          { text: "6 times", isCorrect: false }
-        ],
-        explanation: "range(2, 14, 3) steps forward by 3: values are 2, 5, 8, and 11. The next value would be 14, which reaches the stop limit. Therefore, it loops exactly 4 times."
-      },
-
-      // Q4: Output prediction with break (Security Scanner)
-      {
-        question: "A cyber-security scan checks port numbers from 1 to 5. What will be the final printed output of this code?",
-        code: "found = 0\nfor port in range(1, 6):\n    if port == 3:\n        break\n    found += port\n\nprint(found)",
-        options: [
-          { text: "3", isCorrect: true },
-          { text: "6", isCorrect: false },
-          { text: "15", isCorrect: false },
-          { text: "1", isCorrect: false }
-        ],
-        explanation: "When port is 1, found becomes 1. When port is 2, found becomes 1 + 2 = 3. When port is 3, the if condition triggers 'break', immediately stopping the loop before adding 3. The final output is 3."
-      },
-
-      // Q5: Condition + Modulo prediction (CPU Job Scheduler)
-      {
-        question: "A CPU task scheduler processes high-priority jobs on even thread IDs. What is the value of 'scheduled' after the loop?",
-        code: "scheduled = 0\nfor thread_id in range(1, 9):\n    if thread_id % 2 == 0:\n        scheduled += 1\n\nprint(scheduled)",
-        options: [
-          { text: "4", isCorrect: true },
-          { text: "8", isCorrect: false },
-          { text: "5", isCorrect: false },
-          { text: "3", isCorrect: false }
-        ],
-        explanation: "range(1, 9) generates numbers 1 through 8. The condition (thread_id % 2 == 0) checks for even numbers: 2, 4, 6, and 8. That makes 4 even numbers, so scheduled is 4."
-      },
-
-      // Q6: Function output prediction (Cloud Storage Quota)
-      {
-        question: "A cloud storage function calculates upload fees. What is the output printed by this function call?",
-        code: "def calc_fee(gb_used):\n    if gb_used > 50:\n        return gb_used * 2\n    else:\n        return gb_used + 10\n\nfee = calc_fee(45)\nprint(fee)",
-        options: [
-          { text: "55", isCorrect: true },
-          { text: "90", isCorrect: false },
+          { text: "60", isCorrect: true },
           { text: "45", isCorrect: false },
-          { text: "50", isCorrect: false }
+          { text: "40", isCorrect: false },
+          { text: "80", isCorrect: false }
         ],
-        explanation: "Since gb_used is 45, the condition 45 > 50 is False. Python executes the 'else' branch, returning 45 + 10 = 55."
+        explanation: "Since solar_power is 60 (which is > 50), Python executes the 'if' branch: battery = 40 + 20 = 60!"
       },
 
-      // Q7: Spot the error in function (Smart Door Controller)
+      // Q2: Secret Decoder - List Indexing
       {
-        question: "A developer wrote this function to unlock an electronic smart door. What error will Python raise when interpreting this code?",
-        code: "def verify_badge(badge_id)\n    if badge_id == 101:\n        return True\n    return False",
+        question: "Story: Alex is decoding a secret spy passcode hidden inside a list of gadgets. What string will be printed?",
+        code: "gadgets = [\"laser\", \"drone\", \"grapple\", \"radar\"]\nsecret_code = gadgets[1] + \"-\" + gadgets[3]\nprint(secret_code)",
         options: [
-          { text: "SyntaxError: missing colon (':') at end of function header", isCorrect: true },
-          { text: "TypeError: badge_id is not defined as an integer", isCorrect: false },
-          { text: "IndentationError: the if statement is not indented", isCorrect: false },
-          { text: "NameError: return keyword not found", isCorrect: false }
+          { text: "\"drone-radar\"", isCorrect: true },
+          { text: "\"laser-grapple\"", isCorrect: false },
+          { text: "\"drone-grapple\"", isCorrect: false },
+          { text: "\"laser-radar\"", isCorrect: false }
         ],
-        explanation: "In Python, every 'def' function declaration must end with a colon (:). Writing 'def verify_badge(badge_id)' without ':' causes an immediate SyntaxError before execution."
+        explanation: "Python list indices start at 0! Index [1] is \"drone\" and index [3] is \"radar\", making \"drone-radar\"."
       },
 
-      // Q8: Type error prediction (User Age Verification)
+      // Q3: Cyber Game Inventory - Dictionary KeyError
       {
-        question: "A website registration form takes the user's age input. What error occurs when running this snippet?",
-        code: "user_age = '16'\nnext_year_age = user_age + 1\nprint(next_year_age)",
+        question: "Story: Maya is coding an inventory tracker for her RPG game. What happens when Python runs this line?",
+        code: "inventory = {\"swords\": 3, \"potions\": 5, \"shields\": 2}\nprint(inventory[\"bows\"])",
         options: [
-          { text: "TypeError: can only concatenate str to str, not int", isCorrect: true },
-          { text: "ValueError: invalid literal for integer", isCorrect: false },
-          { text: "SyntaxError: quotes cannot surround numbers", isCorrect: false },
-          { text: "No error, it prints 17", isCorrect: false }
+          { text: "KeyError (because \"bows\" is not in the dictionary)", isCorrect: true },
+          { text: "It prints 0", isCorrect: false },
+          { text: "It prints None", isCorrect: false },
+          { text: "SyntaxError", isCorrect: false }
         ],
-        explanation: "user_age is a string ('16'), not an int. Python cannot add a string and an integer directly using '+', so it raises a TypeError. You must write int(user_age) + 1."
+        explanation: "Accessing a key that doesn't exist in a dictionary raises a KeyError in Python!"
       },
 
-      // Q9: Nested Loop run count (Display Pixel Matrix)
+      // Q4: Smart Aquarium Heater - While Loop Execution Count
       {
-        question: "A mini OLED display refreshes an LED pixel grid. How many times will the 'draw_pixel' function be called?",
-        code: "draws = 0\nfor row in range(3):\n    for col in range(4):\n        draws += 1\n\nprint(draws)",
+        question: "Story: An automated aquarium heater warms water by 2 degrees every minute until reaching 24 degrees. How many minutes does it run?",
+        code: "temp = 18\nminutes = 0\n\nwhile temp < 24:\n    temp += 2\n    minutes += 1\n\nprint(minutes)",
         options: [
-          { text: "12 times", isCorrect: true },
-          { text: "7 times", isCorrect: false },
-          { text: "9 times", isCorrect: false },
-          { text: "16 times", isCorrect: false }
+          { text: "3 minutes", isCorrect: true },
+          { text: "4 minutes", isCorrect: false },
+          { text: "6 minutes", isCorrect: false },
+          { text: "2 minutes", isCorrect: false }
         ],
-        explanation: "The outer loop runs 3 times (row: 0, 1, 2). For each of those 3 rows, the inner loop runs 4 times (col: 0, 1, 2, 3). Total executions = 3 * 4 = 12 times."
+        explanation: "Cycle tracking: Minute 1 (18➔20), Minute 2 (20➔22), Minute 3 (22➔24). At 24, 24 < 24 is False, so it ran 3 times."
       },
 
-      // Q10: Function with loop return (Firewall IP Whitelist)
+      // Q5: Esports Leaderboard - List Append & Indexing
       {
-        question: "A firewall function searches for a blocked IP in a list. What is the output of calling check_ip(7)?",
-        code: "def check_ip(target):\n    blocked_ips = [2, 5, 7, 9]\n    for ip in blocked_ips:\n        if ip == target:\n            return 'BLOCKED'\n    return 'SAFE'\n\nprint(check_ip(7))",
+        question: "Story: Jordan's gaming leaderboard updates after winning a match. What score is printed by scores[3]?",
+        code: "scores = [85, 92, 78]\nscores.append(95)\nprint(scores[3])",
         options: [
-          { text: "'BLOCKED'", isCorrect: true },
-          { text: "'SAFE'", isCorrect: false },
-          { text: "True", isCorrect: false },
+          { text: "95", isCorrect: true },
+          { text: "78", isCorrect: false },
+          { text: "92", isCorrect: false },
+          { text: "IndexError", isCorrect: false }
+        ],
+        explanation: "`.append(95)` adds 95 to the end of the list at index 3 (since original indices were 0, 1, 2). Thus scores[3] is 95!"
+      },
+
+      // Q6: Pet Care Robot - Loop with Condition Return
+      {
+        question: "Story: A pet-feeding robot searches a list of meal times to check if hour 8 is scheduled. What output will the robot give?",
+        code: "def check_schedule(meal_times):\n    for hour in meal_times:\n        if hour == 8:\n            return \"Breakfast Found!\"\n    return \"Not Scheduled\"\n\nschedule = [6, 8, 12, 19]\nprint(check_schedule(schedule))",
+        options: [
+          { text: "\"Breakfast Found!\"", isCorrect: true },
+          { text: "\"Not Scheduled\"", isCorrect: false },
+          { text: "8", isCorrect: false },
           { text: "None", isCorrect: false }
         ],
-        explanation: "The loop inspects 2, then 5, then hits 7. Since 7 == 7 is True, the function immediately executes 'return BLOCKED', terminating the function and outputting 'BLOCKED'."
+        explanation: "The loop inspects 6, then 8. Since 8 == 8 is True, the function immediately returns \"Breakfast Found!\"."
+      },
+
+      // Q7: Code Club Door Lock - Spot the Function Error
+      {
+        question: "Story: Sam wrote a function to unlock the Coding Club door card scanner. Why does Python raise a SyntaxError?",
+        code: "def verify_card(card_id)\n    if card_id == 404:\n        return \"Access Denied\"\n    return \"Access Granted\"",
+        options: [
+          { text: "Missing colon (':') at the end of def verify_card(card_id)", isCorrect: true },
+          { text: "The variable card_id is not defined", isCorrect: false },
+          { text: "IndentationError in return statement", isCorrect: false },
+          { text: "Double quotes cannot be returned", isCorrect: false }
+        ],
+        explanation: "Function header declarations in Python must always end with a colon `:` (e.g. `def verify_card(card_id):`)."
+      },
+
+      // Q8: Music Playlist Tracker - Dictionary Length
+      {
+        question: "Story: A music app updates song play counts and adds a new song. What is the printed length len(playlist)?",
+        code: "playlist = {\"SongA\": 10, \"SongB\": 15}\nplaylist[\"SongA\"] += 5\nplaylist[\"SongC\"] = 1\nprint(len(playlist))",
+        options: [
+          { text: "3", isCorrect: true },
+          { text: "2", isCorrect: false },
+          { text: "16", isCorrect: false },
+          { text: "4", isCorrect: false }
+        ],
+        explanation: "`playlist[\"SongA\"] += 5` updates an existing key (count becomes 15). `playlist[\"SongC\"] = 1` adds a new key. Total keys = 3!"
+      },
+
+      // Q9: Rollercoaster Gate - For Loop Condition Counter
+      {
+        question: "Story: A theme park scanner checks heights (in cm) of friends waiting in line. How many passed the 140cm height limit?",
+        code: "heights = [135, 150, 128, 142, 160]\npassed = 0\nfor h in heights:\n    if h >= 140:\n        passed += 1\n\nprint(passed)",
+        options: [
+          { text: "3", isCorrect: true },
+          { text: "5", isCorrect: false },
+          { text: "2", isCorrect: false },
+          { text: "4", isCorrect: false }
+        ],
+        explanation: "The heights >= 140 are 150, 142, and 160. That makes exactly 3 friends who passed!"
+      },
+
+      // Q10: Treasure Vault - Nested Loop Calculation
+      {
+        question: "Story: A video game hero unlocks a grid chest containing rows and columns of magical runes. What is the value of runes_activated?",
+        code: "runes_activated = 0\nfor row in range(2):\n    for col in range(3):\n        runes_activated += 1\n\nprint(runes_activated)",
+        options: [
+          { text: "6", isCorrect: true },
+          { text: "5", isCorrect: false },
+          { text: "2", isCorrect: false },
+          { text: "3", isCorrect: false }
+        ],
+        explanation: "The outer loop runs 2 times (row 0, 1). For each row, the inner loop runs 3 times (col 0, 1, 2). Total = 2 × 3 = 6!"
       }
     ];
 
-    // Helper: Safely escape HTML characters
+    // Helper: Safely escape HTML string
     function escapeHTML(str) {
       return str
         .replace(/&/g, '&amp;')
@@ -359,13 +397,12 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Prepare Questions with shuffled options
+    // Shuffle options dynamically
     let questionsList = [];
 
     function prepareQuestions() {
       questionsList = questionsRaw.map(q => {
         const clonedOpts = [...q.options];
-        // Fisher-Yates shuffle options
         for (let i = clonedOpts.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
@@ -407,66 +444,42 @@
     const teacherFeedbackText = document.getElementById('teacher-feedback-text');
     const restartBtn = document.getElementById('restart-btn');
 
-    // -------------------------------------------------------------
-    // FALLING BROWN LEGO BRICKS ANIMATION
-    // -------------------------------------------------------------
-    function createFallingLegoBricks() {
-      const container = document.getElementById('lego-container');
+    // Render Drifting Boats in Ocean Background
+    function createDriftingBoats() {
+      const container = document.getElementById('boats-container');
       container.innerHTML = '';
 
-      // Realistic brown Lego brick SVGs in different shades
-      const legoSVGs = [
-        // 2x4 standard brick (classic brown)
-        `<svg width="44" height="26" viewBox="0 0 54 32" fill="#78350f">
-          <rect x="2" y="8" width="50" height="22" rx="2" fill="#78350f" stroke="#542407" stroke-width="2"/>
-          <rect x="6" y="2" width="8" height="6" rx="1" fill="#92400e"/>
-          <rect x="18" y="2" width="8" height="6" rx="1" fill="#92400e"/>
-          <rect x="30" y="2" width="8" height="6" rx="1" fill="#92400e"/>
-          <rect x="42" y="2" width="8" height="6" rx="1" fill="#92400e"/>
-        </svg>`,
-        // 2x2 square brick (medium warm brown)
-        `<svg width="30" height="26" viewBox="0 0 34 32" fill="#92400e">
-          <rect x="2" y="8" width="30" height="22" rx="2" fill="#92400e" stroke="#6b2f0a" stroke-width="2"/>
-          <rect x="6" y="2" width="8" height="6" rx="1" fill="#b45309"/>
-          <rect x="20" y="2" width="8" height="6" rx="1" fill="#b45309"/>
-        </svg>`,
-        // 2x3 brick (deep chocolate brown)
-        `<svg width="38" height="26" viewBox="0 0 44 32" fill="#542407">
-          <rect x="2" y="8" width="40" height="22" rx="2" fill="#542407" stroke="#3b1903" stroke-width="2"/>
-          <rect x="6" y="2" width="8" height="6" rx="1" fill="#78350f"/>
-          <rect x="18" y="2" width="8" height="6" rx="1" fill="#78350f"/>
-          <rect x="30" y="2" width="8" height="6" rx="1" fill="#78350f"/>
-        </svg>`,
-        // 1x2 small beam (golden brown)
-        `<svg width="28" height="20" viewBox="0 0 30 24" fill="#a16207">
-          <rect x="2" y="6" width="26" height="16" rx="2" fill="#a16207" stroke="#78350f" stroke-width="1.5"/>
-          <rect x="6" y="2" width="6" height="4" rx="1" fill="#ca8a04"/>
-          <rect x="18" y="2" width="6" height="4" rx="1" fill="#ca8a04"/>
-        </svg>`
-      ];
+      const boatSVG = `
+        <svg width="50" height="36" viewBox="0 0 60 45" fill="none">
+          <!-- Hull -->
+          <path d="M6 32 C15 42, 45 42, 54 32 L48 24 L12 24 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+          <!-- Main Sail -->
+          <path d="M30 4 L30 22 L46 22 Z" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.5"/>
+          <!-- Small Sail -->
+          <path d="M28 8 L28 22 L16 22 Z" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="1.5"/>
+          <!-- Mast -->
+          <line x1="30" y1="2" x2="30" y2="24" stroke="#0369a1" stroke-width="2"/>
+        </svg>
+      `;
 
-      for (let i = 0; i < 20; i++) {
-        const brick = document.createElement('div');
-        brick.className = 'lego-brick';
-        brick.innerHTML = legoSVGs[i % legoSVGs.length];
+      for (let i = 0; i < 4; i++) {
+        const boat = document.createElement('div');
+        boat.className = 'sailing-boat';
+        boat.innerHTML = boatSVG;
 
-        const leftPos = Math.random() * 100;
-        const duration = Math.random() * 7 + 7; // 7s to 14s
-        const delay = Math.random() * 8; // 0 to 8s
-        const scale = (Math.random() * 0.4 + 0.7).toFixed(2);
+        const topPos = 15 + i * 20; // Spread vertically
+        const duration = 18 + Math.random() * 10; // 18s - 28s speed
+        const delay = i * 5; // Staggered delays
 
-        brick.style.left = `${leftPos}%`;
-        brick.style.animationDuration = `${duration}s`;
-        brick.style.animationDelay = `${delay}s`;
-        brick.style.transform = `scale(${scale})`;
+        boat.style.top = `${topPos}%`;
+        boat.style.animationDuration = `${duration}s`;
+        boat.style.animationDelay = `${delay}s`;
 
-        container.appendChild(brick);
+        container.appendChild(boat);
       }
     }
 
-    // -------------------------------------------------------------
-    // TIMER (30 SECONDS)
-    // -------------------------------------------------------------
+    // Timer Engine (30 Seconds)
     function startTimer() {
       clearInterval(timerId);
       timeLeft = 30;
@@ -489,19 +502,17 @@
       timerBarEl.style.width = `${pct}%`;
 
       if (timeLeft <= 7) {
-        timerTextEl.classList.add('text-red-600', 'animate-pulse');
-        timerBarEl.classList.remove('from-amber-700', 'via-amber-800', 'to-amber-950');
-        timerBarEl.classList.add('from-red-600', 'to-red-800');
+        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-cyan-400', 'via-sky-400', 'to-blue-500');
+        timerBarEl.classList.add('from-rose-500', 'to-red-600');
       } else {
-        timerTextEl.classList.remove('text-red-600', 'animate-pulse');
-        timerBarEl.classList.remove('from-red-600', 'to-red-800');
-        timerBarEl.classList.add('from-amber-700', 'via-amber-800', 'to-amber-950');
+        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
+        timerBarEl.classList.add('from-cyan-400', 'via-sky-400', 'to-blue-500');
       }
     }
 
-    // -------------------------------------------------------------
-    // LOAD QUESTION
-    // -------------------------------------------------------------
+    // Load Question into UI
     function displayQuestion() {
       isAnswered = false;
       const q = questionsList[currentIndex];
@@ -519,11 +530,11 @@
       q.options.forEach((optText, idx) => {
         const btn = document.createElement('button');
         btn.dataset.idx = idx;
-        btn.className = "option-btn p-4 rounded-xl border border-[#d2c2ad] bg-[#fbf8f2] hover:bg-[#ebdcc7] hover:border-amber-800 text-left text-stone-900 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-sm";
+        btn.className = "option-btn p-4 rounded-xl border border-sky-500/30 bg-slate-800/80 hover:bg-sky-900/40 hover:border-cyan-400 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
 
         btn.innerHTML = `
-          <span class="w-8 h-8 rounded-lg bg-[#ebdcc7] border border-[#cfbfa9] text-amber-950 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-sm sm:text-base leading-snug font-code">${escapeHTML(optText)}</span>
+          <span class="w-8 h-8 rounded-lg bg-slate-700/80 border border-slate-600 text-cyan-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
         `;
 
         btn.addEventListener('click', () => handleOptionClick(idx));
@@ -533,9 +544,7 @@
       startTimer();
     }
 
-    // -------------------------------------------------------------
-    // HANDLE SELECTION
-    // -------------------------------------------------------------
+    // Handle Option Click
     function handleOptionClick(selectedIdx) {
       if (isAnswered) return;
       isAnswered = true;
@@ -548,13 +557,11 @@
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          // Highlight correct green
-          btn.classList.remove('border-[#d2c2ad]', 'bg-[#fbf8f2]');
-          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
+          btn.classList.remove('border-sky-500/30', 'bg-slate-800/80');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/80', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         } else if (idx === selectedIdx && !isCorrect) {
-          // Highlight chosen wrong red
-          btn.classList.remove('border-[#d2c2ad]', 'bg-[#fbf8f2]');
-          btn.classList.add('border-rose-600', 'bg-rose-50', 'text-rose-950', 'ring-2', 'ring-rose-500');
+          btn.classList.remove('border-sky-500/30', 'bg-slate-800/80');
+          btn.classList.add('border-rose-500', 'bg-rose-950/80', 'text-rose-200', 'ring-2', 'ring-rose-500');
         }
       });
 
@@ -578,7 +585,7 @@
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/80', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         }
       });
 
@@ -587,26 +594,23 @@
     }
 
     function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
+      explanationBox.classList.remove('hidden', 'bg-emerald-950/70', 'border-emerald-500/50', 'bg-rose-950/70', 'border-rose-500/50');
 
       if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-50', 'border-emerald-400');
+        explanationBox.classList.add('bg-emerald-950/70', 'border-emerald-500/50');
         explanationIcon.textContent = "✅";
         explanationTitle.textContent = "Spot on!";
-        explanationTitle.className = "font-bold text-base text-emerald-800";
+        explanationTitle.className = "font-bold text-base text-emerald-400";
       } else {
-        explanationBox.classList.add('bg-rose-50', 'border-rose-400');
-        explanationIcon.textContent = "❌";
+        explanationBox.classList.add('bg-rose-950/70', 'border-rose-500/50');
+        explanationIcon.textContent = "💡";
         explanationTitle.textContent = "Solution Breakdown";
-        explanationTitle.className = "font-bold text-base text-rose-800";
+        explanationTitle.className = "font-bold text-base text-rose-400";
       }
 
       explanationText.textContent = message;
     }
 
-    // -------------------------------------------------------------
-    // NEXT BUTTON & RESULTS
-    // -------------------------------------------------------------
     nextBtn.addEventListener('click', () => {
       currentIndex++;
       if (currentIndex < questionsList.length) {
@@ -624,13 +628,13 @@
 
       let feedback = "";
       if (score >= 9) {
-        feedback = `Incredible performance! 🌟 You scored ${score} out of 10! You have demonstrated exceptional analytical skill in dry-running loops, tracking state modifications, and pinpointing syntax/type bugs. Your computational thinking is sharp and ready for building real software projects! Keep it up!`;
+        feedback = `Fantastic work! 🌟 You scored ${score} out of 10! You showed impressive mastery over list indexing, dictionary key handling, function returns, and loop counts. You think like a real Python developer! Keep writing great code!`;
       } else if (score >= 7) {
-        feedback = `Strong effort! 🚀 You scored ${score} out of 10! You showed a reliable grasp of while loop iterations and standard condition branches. Just be cautious with range() upper boundaries and remember that Python function headers strictly demand a colon (:). Great job overall!`;
+        feedback = `Great job! 🚀 You scored ${score} out of 10! You have a super solid understanding of loops and conditional logic. Just remember that list indexing starts at [0] and missing colons cause SyntaxErrors. Very well done!`;
       } else if (score >= 5) {
-        feedback = `Good progress! 👍 You scored ${score} out of 10. You handled basic conditionals and returns well. Take a quick moment to practice tracking nested loops and data type combinations (like str + int). A little manual tracing on paper will push you straight to 10/10!`;
+        feedback = `Good effort! 👍 You scored ${score} out of 10. You handled basic conditionals and function outputs well. Take a quick moment to review dictionary KeyErrors and nested loop calculations to hit 10/10 next time!`;
       } else {
-        feedback = `Don't be discouraged! 💡 You scored ${score} out of 10. Predicting code execution takes practice. The secret is to 'play the computer' and write down variable values step-by-step for each loop cycle. Check the key habits below and retake the quiz!`;
+        feedback = `Nice try! 💡 You scored ${score} out of 10. Predicting code execution takes practice! The trick is to 'be the computer' and track list indices and loop variables step-by-step on paper. Keep practicing and re-try!`;
       }
 
       teacherFeedbackText.textContent = feedback;
@@ -645,10 +649,8 @@
       displayQuestion();
     });
 
-    // -------------------------------------------------------------
     // INITIALIZATION
-    // -------------------------------------------------------------
-    createFallingLegoBricks();
+    createDriftingBoats();
     prepareQuestions();
     displayQuestion();
   </script>
