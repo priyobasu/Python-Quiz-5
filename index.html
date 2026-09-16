@@ -4,17 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Python Revision</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Caveat for teacher's feedback, Fira Code for Python code, Outfit for UI -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      overflow-x: hidden;
     }
     .font-code {
       font-family: 'Fira Code', monospace;
@@ -23,636 +21,511 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Drifting Boat Animation */
-    .sailing-boat {
-      position: absolute;
-      pointer-events: none;
-      z-index: 2;
-      animation: sailAcross linear infinite;
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
     }
 
-    @keyframes sailAcross {
-      0% {
-        transform: translateX(-120px) translateY(0px) rotate(0deg);
-        opacity: 0.85;
-      }
-      25% {
-        transform: translateX(25vw) translateY(-6px) rotate(2deg);
-      }
-      50% {
-        transform: translateX(50vw) translateY(4px) rotate(-1deg);
-        opacity: 0.95;
-      }
-      75% {
-        transform: translateX(75vw) translateY(-4px) rotate(2deg);
-      }
-      100% {
-        transform: translateX(105vw) translateY(0px) rotate(0deg);
-        opacity: 0.85;
-      }
-    }
-
-    /* Rotating Spiral Shapes */
-    .spiral-bg {
-      position: absolute;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.18;
-      animation: spinSlow linear infinite;
-    }
-
-    @keyframes spinSlow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* Lined Notebook Sheet for Teacher's Feedback */
-    .feedback-sheet {
-      background-color: #f8fafc;
-      background-image: linear-gradient(#cbd5e1 1px, transparent 1px);
-      background-size: 100% 2.2rem;
-      border-left: 5px double #0284c7;
-    }
-
-    /* Custom Code Scrollbar */
-    pre::-webkit-scrollbar {
+    pre::-webkit-scrollbar, textarea::-webkit-scrollbar {
       height: 6px;
+      width: 6px;
     }
-    pre::-webkit-scrollbar-thumb {
-      background: #0284c7;
+    pre::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+      background: #475569;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-gradient-to-b from-sky-950 via-blue-950 to-slate-950 text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-cyan-400 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
-  <!-- Background Spirals -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-    <!-- Top Left Spiral -->
-    <svg class="spiral-bg w-96 h-96 -top-20 -left-20 text-cyan-400" style="animation-duration: 45s;" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
-      <path d="M50,50 A5,5 0 0,1 55,50 A10,10 0 0,1 45,50 A15,15 0 0,1 60,50 A20,20 0 0,1 35,50 A25,25 0 0,1 65,50 A30,30 0 0,1 30,50 A35,35 0 0,1 70,50 A40,40 0 0,1 25,50" />
-    </svg>
-    <!-- Bottom Right Spiral -->
-    <svg class="spiral-bg w-80 h-80 -bottom-16 -right-16 text-sky-300" style="animation-duration: 60s; animation-direction: reverse;" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.8">
-      <path d="M50,50 A5,5 0 0,1 55,50 A10,10 0 0,1 45,50 A15,15 0 0,1 60,50 A20,20 0 0,1 35,50 A25,25 0 0,1 65,50 A30,30 0 0,1 30,50 A35,35 0 0,1 70,50" />
-    </svg>
-  </div>
-
-  <!-- Drifting Sailboats Container -->
-  <div id="boats-container" class="fixed inset-0 overflow-hidden pointer-events-none z-10"></div>
-
-  <!-- Animated Bottom Waves -->
-  <div class="fixed bottom-0 left-0 right-0 pointer-events-none z-0 opacity-40">
-    <svg class="w-full h-24 sm:h-32 text-blue-800/50" viewBox="0 0 1440 320" fill="currentColor" preserveAspectRatio="none">
-      <path d="M0,192L48,197.3C96,203,192,213,288,197.3C384,181,480,139,576,144C672,149,768,203,864,213.3C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-    </svg>
-  </div>
-
-  <!-- Main Container -->
-  <div class="relative z-20 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
-
-    <!-- Strict Header -->
-    <header class="text-center mb-6">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 tracking-tight drop-shadow-md">
-        Python Revision
-      </h1>
-    </header>
-
-    <!-- QUIZ SCREEN -->
-    <div id="quiz-screen" class="w-full">
-      
-      <!-- Top Info Bar: Question Counter, Live Score, 30s Timer -->
-      <div class="bg-slate-900/80 backdrop-blur-md border border-sky-500/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
-        <div class="flex justify-between items-center gap-3">
-          
-          <!-- Question Number Tracker -->
-          <div>
-            <span class="text-xs uppercase font-bold text-sky-400 tracking-wider block">Question</span>
-            <div class="text-2xl font-black text-cyan-200 font-code">
-              <span id="q-num">1</span> <span class="text-slate-400 text-lg font-normal">/ 10</span>
-            </div>
-          </div>
-
-          <!-- Live Score -->
-          <div class="text-center bg-slate-800/90 px-4 py-2 rounded-xl border border-sky-500/20 shadow-inner">
-            <span class="text-[11px] uppercase tracking-wider text-sky-300 block font-bold">Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
-          </div>
-
-          <!-- 30-Second Countdown Timer -->
-          <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-slate-800 rounded-full border-2 border-cyan-400 shadow-inner">
-              <span id="timer-text" class="text-xl font-black text-cyan-300 font-code">30</span>
-              <span class="text-[8px] text-slate-400 absolute bottom-1 font-bold">sec</span>
-            </div>
-          </div>
+  <header class="hero-gradient border-b border-purple-500/20 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 shadow-xl">
+    <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase tracking-wider">
+            ⏱️ Complete in 1 Hour
+          </span>
+          <span class="text-xs text-slate-400">Self-Paced Practice Lab</span>
         </div>
-
-        <!-- Timer Progress Bar -->
-        <div class="w-full bg-slate-800 h-2.5 rounded-full mt-3 overflow-hidden border border-slate-700">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 transition-all duration-1000 ease-linear w-full"></div>
-        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-200 to-amber-200 mt-1">
+          Python Revision
+        </h1>
       </div>
 
-      <!-- Question Card -->
-      <div class="bg-slate-900/85 backdrop-blur-md border border-sky-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
-        
-        <!-- Story Question Text -->
-        <h2 id="question-text" class="text-base sm:text-lg font-medium text-slate-100 leading-relaxed mb-4">
-          Question loading...
+      <!-- Live Task Progress & Teacher Feedback Direct Button -->
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="w-full sm:w-56 bg-slate-900/90 border border-slate-700 p-2.5 rounded-2xl shadow-inner">
+          <div class="flex justify-between items-center text-xs font-semibold mb-1">
+            <span class="text-slate-300">Submitted</span>
+            <span id="progress-text" class="text-purple-400 font-code font-bold">0 / 15</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 w-0 transition-all duration-500 ease-out"></div>
+          </div>
+        </div>
+
+        <button onclick="triggerFarewellModal()" class="shrink-0 py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transition transform active:scale-95">
+          View Teacher Feedback 📝
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 flex-grow w-full">
+    
+    <!-- Instructions Banner -->
+    <div class="bg-gradient-to-r from-slate-900 via-purple-950/40 to-slate-900 border border-purple-500/30 rounded-2xl p-5 mb-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="space-y-1">
+        <h2 class="text-base font-bold text-purple-200 flex items-center gap-2">
+          <span>🎯</span> How to complete this revision:
         </h2>
-
-        <!-- Properly Indented Code Snippet Area -->
-        <div id="code-container" class="mb-5">
-          <pre class="bg-slate-950 text-cyan-300 border border-sky-500/30 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner leading-relaxed"><code id="code-snippet"></code></pre>
-        </div>
-
-        <!-- 4 Options Grid -->
-        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <!-- Options rendered dynamically -->
-        </div>
-
-        <!-- Explanation Container (Under Buttons) -->
-        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
-          <div class="flex items-start gap-3">
-            <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
-            <div>
-              <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
-              <p id="explanation-text" class="text-sm mt-1 leading-relaxed text-slate-200">
-                Explanation text appears here.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Next Question Button -->
-        <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
-            <span>Next Question</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </button>
-        </div>
-
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          1. Write or paste your code into the text box under each question.<br>
+          2. Click <strong>Submit Code</strong> to submit your solution.<br>
+          3. Click <strong>View Reference Solution</strong> to compare your code and logic!
+        </p>
       </div>
     </div>
 
-    <!-- RESULT SCREEN -->
-    <div id="result-screen" class="hidden w-full my-4">
-      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-sky-600 relative overflow-hidden">
-        
-        <!-- Result Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-300 pb-4 mb-6">
-          <div>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-blue-950">Teacher's Feedback</h2>
-            <p class="text-xs text-slate-600 font-semibold tracking-wide uppercase mt-1">Python Logic, Data Structures & System Execution</p>
-          </div>
-          <div class="mt-3 sm:mt-0 bg-sky-100 border-2 border-sky-500/40 rounded-xl px-4 py-2 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-sky-900 font-bold block">Final Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-sky-950 font-code">0 / 10</span>
-          </div>
-        </div>
-
-        <!-- Teacher's Feedback Body (Handwritten Font) -->
-        <div class="mb-6 bg-white/80 p-6 rounded-xl border border-slate-300 shadow-sm">
-          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-900 leading-relaxed">
-            Generating feedback note...
-          </p>
-        </div>
-
-        <!-- Quick Revision Tips for 13-14 Year Old Coders -->
-        <div class="mb-6 p-4 rounded-xl bg-sky-50 border border-sky-200">
-          <h3 class="font-bold text-xs text-sky-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Key Python Takeaways:
-          </h3>
-          <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 leading-relaxed">
-            <li>• <strong>List Indexing</strong>: First item is always index <code class="bg-sky-200/70 px-1 rounded font-code">[0]</code>, second is <code class="bg-sky-200/70 px-1 rounded font-code">[1]</code>!</li>
-            <li>• <strong>Dictionaries</strong>: Accessing a key that doesn't exist raises a <code class="bg-sky-200/70 px-1 rounded font-code">KeyError</code>.</li>
-            <li>• <strong>Function Headers</strong>: Forgetting the colon (<code class="bg-sky-200/70 px-1 rounded font-code">:</code>) at the end of <code class="bg-sky-200/70 px-1 rounded font-code">def</code> gives a <code class="bg-sky-200/70 px-1 rounded font-code">SyntaxError</code>.</li>
-            <li>• <strong>Nested Loops</strong>: Total iterations = (outer loop count) × (inner loop count).</li>
-          </ul>
-        </div>
-
-        <!-- Retake Button -->
-        <div class="flex justify-center border-t border-slate-300 pt-5">
-          <button id="restart-btn" class="py-3 px-8 bg-sky-700 hover:bg-sky-800 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            <span>Retake Revision</span>
-          </button>
-        </div>
-
-      </div>
+    <!-- Category Filters -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button onclick="filterCategory('all')" id="btn-all" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-purple-600 border-purple-400 text-white shadow-md">
+        All Questions (15)
+      </button>
+      <button onclick="filterCategory('easy')" id="btn-easy" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-emerald-400 hover:bg-slate-800">
+        🟢 Loops & Conditions (5)
+      </button>
+      <button onclick="filterCategory('medium')" id="btn-medium" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-amber-400 hover:bg-slate-800">
+        🟡 Functions & Classes (5)
+      </button>
+      <button onclick="filterCategory('hard')" id="btn-hard" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-rose-400 hover:bg-slate-800">
+        🔴 Simple AI & Vision (5)
+      </button>
     </div>
 
-  </div>
+    <!-- Challenges Container -->
+    <div id="challenges-grid" class="space-y-5">
+      <!-- Cards rendered dynamically via JS -->
+    </div>
 
-  <!-- Footer -->
-  <footer class="relative z-20 py-3 text-center text-xs text-sky-300/70 bg-slate-950/80 border-t border-sky-900/50">
-    <p>Python Revision • Loops, Functions & Data Structures</p>
+    <div id="submit-section" class="mt-10 text-center bg-slate-900/90 border border-purple-500/30 rounded-3xl p-6 shadow-2xl">
+      <h3 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
+        Finished your revision work?
+      </h3>
+      <p class="text-xs text-slate-400 mt-1 max-w-lg mx-auto">
+        You can check your teacher's feedback anytime during or at the end of the session!
+      </p>
+      <button onclick="triggerFarewellModal()" class="mt-4 py-3.5 px-8 bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500 hover:from-emerald-300 hover:to-cyan-400 text-slate-950 font-black text-sm rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
+        <span>🎓 Open Teacher's Feedback</span>
+      </button>
+    </div>
+
+  </main>
+
+  <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800/80 bg-slate-950">
+    <p>Python Revision Lab • Practice, Self-Tally & Feedback 🚀</p>
   </footer>
+
+  <div id="farewell-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-slate-900 border-2 border-purple-500/50 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden transform scale-95 transition-transform duration-300" id="modal-card">
+      
+      <!-- Festive Header -->
+      <div class="flex justify-between items-start border-b border-slate-800 pb-3 mb-5">
+        <div>
+          <span class="px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase tracking-widest">
+            Session Complete 🎉
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-300 to-amber-200 mt-1">
+            Teacher's Feedback
+          </h2>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-2xl font-bold p-1">✕</button>
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-purple-500/30 text-center">
+          <span class="text-xs text-slate-400 font-semibold block">Questions Attempted</span>
+          <span id="modal-completed-count" class="text-2xl font-black text-emerald-400 font-code mt-0.5">0 / 15</span>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-2xl border border-purple-500/30 text-center">
+          <span class="text-xs text-slate-400 font-semibold block">Skills Covered</span>
+          <span class="text-xs font-bold text-purple-300 mt-1 block">Loops, OOP & OpenCV Vision</span>
+        </div>
+      </div>
+
+      <!-- Teacher Note Box -->
+      <div class="bg-[#fefce8] text-slate-900 p-5 rounded-2xl border-l-6 border-amber-500 shadow-lg mb-5">
+        <h3 class="font-handwriting text-2xl font-bold text-amber-900 mb-1">Teacher's Note 📝</h3>
+        <p class="font-handwriting text-xl sm:text-2xl leading-relaxed text-slate-800">
+          "It has been an absolute joy teaching you! You've shown incredible logic, deep curiosity, and great problem-solving skills in every session. From writing clean Python loops to building motion burglar alarms and face filters, your growth has been super impressive! All the best for your upcoming coding sessions & projects—keep building awesome things! 🚀✨"
+        </p>
+      </div>
+
+      <!-- Close Button -->
+      <div class="flex justify-end">
+        <button onclick="closeModal()" class="py-2.5 px-6 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg transition transform active:scale-95">
+          Close & Return 🌟
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <script>
     // -------------------------------------------------------------
-    // 10 STORY-BASED QUESTIONS FOR 13-14 YEAR OLD STUDENTS
-    // Properly indented Python snippets covering loops, functions, conditions, lists, dicts & errors.
+    // 15 STRAIGHTFORWARD REVISION QUESTIONS & SOLUTIONS
     // -------------------------------------------------------------
-    const questionsRaw = [
-      // Q1: Space Rover Battery - Condition & Function Output
+    const challengesData = [
+      
+      // ==========================================
+      // EASY: LOOPS & CONDITIONS (Q1 - Q5)
+      // ==========================================
       {
-        question: "Story: The Mars Rover 'Curiosity-2' recharges its battery during daylight. What value will be printed after charging?",
-        code: "def charge_rover(battery, solar_power):\n    if solar_power > 50:\n        battery += 20\n    else:\n        battery += 5\n    return battery\n\ncurrent_battery = 40\nnew_battery = charge_rover(current_battery, 60)\nprint(new_battery)",
-        options: [
-          { text: "60", isCorrect: true },
-          { text: "45", isCorrect: false },
-          { text: "40", isCorrect: false },
-          { text: "80", isCorrect: false }
-        ],
-        explanation: "Since solar_power is 60 (which is > 50), Python executes the 'if' branch: battery = 40 + 20 = 60!"
+        id: "q-1",
+        category: "easy",
+        levelText: "Level 1 • Loops & Conditions",
+        levelColor: "emerald",
+        title: "1. Even and Odd Counter",
+        description: "Given a list of numbers `[12, 7, 5, 18, 22]`, write a `for` loop and an `if/else` condition to count how many numbers are even and how many are odd.",
+        solutionCode: `numbers = [12, 7, 5, 18, 22]\neven_count = 0\nodd_count = 0\n\nfor num in numbers:\n    if num % 2 == 0:\n        even_count += 1\n    else:\n        odd_count += 1\n\nprint("Even count:", even_count)\nprint("Odd count:", odd_count)`
+      },
+      {
+        id: "q-2",
+        category: "easy",
+        levelText: "Level 1 • Loops & Conditions",
+        levelColor: "emerald",
+        title: "2. High Score Filter",
+        description: "Given `scores = [45, 88, 52, 30, 95]`, loop through the list and print only the scores that are strictly greater than 50.",
+        solutionCode: `scores = [45, 88, 52, 30, 95]\n\nfor score in scores:\n    if score > 50:\n        print("High Score:", score)`
+      },
+      {
+        id: "q-3",
+        category: "easy",
+        levelText: "Level 1 • Loops & Conditions",
+        levelColor: "emerald",
+        title: "3. Countdown Timer Loop",
+        description: "Write a `while` loop starting at `count = 5` that counts down to 1, printing each number, and finally prints `'Blastoff!'` when finished.",
+        solutionCode: `count = 5\nwhile count > 0:\n    print(count)\n    count -= 1\nprint("Blastoff! 🚀")`
+      },
+      {
+        id: "q-4",
+        category: "easy",
+        levelText: "Level 1 • Loops & Conditions",
+        levelColor: "emerald",
+        title: "4. Square Number Function",
+        description: "Write a simple function `square_number(n)` that returns the square of `n` (`n * n`). Call the function with `5` and print the result.",
+        solutionCode: `def square_number(n):\n    return n * n\n\nresult = square_number(5)\nprint("Square of 5 is:", result)`
+      },
+      {
+        id: "q-5",
+        category: "easy",
+        levelText: "Level 1 • Loops & Conditions",
+        levelColor: "emerald",
+        title: "5. Pass or Fail Checker Function",
+        description: "Write a function `check_result(mark)` that returns `'Pass'` if `mark >= 50`, else returns `'Fail'`. Test it with `mark = 72`.",
+        solutionCode: `def check_result(mark):\n    if mark >= 50:\n        return "Pass"\n    else:\n        return "Fail"\n\nprint("Status:", check_result(72))`
       },
 
-      // Q2: Secret Decoder - List Indexing
+      // ==========================================
+      // MEDIUM: FUNCTIONS & CLASSES (Q6 - Q10)
+      // ==========================================
       {
-        question: "Story: Alex is decoding a secret spy passcode hidden inside a list of gadgets. What string will be printed?",
-        code: "gadgets = [\"laser\", \"drone\", \"grapple\", \"radar\"]\nsecret_code = gadgets[1] + \"-\" + gadgets[3]\nprint(secret_code)",
-        options: [
-          { text: "\"drone-radar\"", isCorrect: true },
-          { text: "\"laser-grapple\"", isCorrect: false },
-          { text: "\"drone-grapple\"", isCorrect: false },
-          { text: "\"laser-radar\"", isCorrect: false }
-        ],
-        explanation: "Python list indices start at 0! Index [1] is \"drone\" and index [3] is \"radar\", making \"drone-radar\"."
+        id: "q-6",
+        category: "medium",
+        levelText: "Level 2 • Functions & Classes",
+        levelColor: "amber",
+        title: "6. Total Price Calculator with Discount",
+        description: "Write a function `calculate_total(prices)` that sums a list of prices. If total sum is > 100, apply a 10% discount (`total * 0.9`). Return the final price.",
+        solutionCode: `def calculate_total(prices):\n    total = sum(prices)\n    if total > 100:\n        total = total * 0.9\n    return total\n\nitems = [40, 50, 30]\nprint("Final Discounted Price:", calculate_total(items))`
+      },
+      {
+        id: "q-7",
+        category: "medium",
+        levelText: "Level 2 • Functions & Classes",
+        levelColor: "amber",
+        title: "7. Vowel Counter Function",
+        description: "Write a function `count_vowels(text)` that loops through characters in `text` and returns the count of vowels (`a, e, i, o, u`).",
+        solutionCode: `def count_vowels(text):\n    vowels = "aeiouAEIOU"\n    count = 0\n    for char in text:\n        if char in vowels:\n            count += 1\n    return count\n\nprint("Vowels count:", count_vowels("Python Code"))`
+      },
+      {
+        id: "q-8",
+        category: "medium",
+        levelText: "Level 2 • Functions & Classes",
+        levelColor: "amber",
+        title: "8. Simple Camera Controller Class",
+        description: "Create a class `Webcam` with attributes `resolution=\"1080p\"` and `is_on=False`. Add a method `start()` that sets `is_on = True` and prints `'Camera Started'`. ",
+        solutionCode: `class Webcam:\n    def __init__(self, resolution="1080p"):\n        self.resolution = resolution\n        self.is_on = False\n\n    def start(self):\n        self.is_on = True\n        print("Camera Started at", self.resolution)\n\ncam = Webcam()\ncam.start()`
+      },
+      {
+        id: "q-9",
+        category: "medium",
+        levelText: "Level 2 • Functions & Classes",
+        levelColor: "amber",
+        title: "9. Crop Region of Interest (ROI) Snippet",
+        description: "Write code using array slicing `image[y:y+h, x:x+w]` to extract a region of interest at `x=50, y=50, w=100, h=100` from an image.",
+        solutionCode: `import cv2\n\n# Array slicing formula: image[y_start : y_end, x_start : x_end]\nx, y, w, h = 50, 50, 100, 100\nroi = image[y:y+h, x:x+w]\nprint("Cropped ROI shape:", roi.shape)`
+      },
+      {
+        id: "q-10",
+        category: "medium",
+        levelText: "Level 2 • Functions & Classes",
+        levelColor: "amber",
+        title: "10. Grayscale Image Converter Function",
+        description: "Write a function `convert_to_gray(frame)` that converts a BGR color image frame to Grayscale using `cv2.cvtColor()` and returns it.",
+        solutionCode: `import cv2\n\ndef convert_to_gray(frame):\n    # Convert color frame (BGR) to Grayscale\n    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)\n    return gray_frame`
       },
 
-      // Q3: Cyber Game Inventory - Dictionary KeyError
+      // ==========================================
+      // HARD: SIMPLE AI & VISION (Q11 - Q15)
+      // ==========================================
       {
-        question: "Story: Maya is coding an inventory tracker for her RPG game. What happens when Python runs this line?",
-        code: "inventory = {\"swords\": 3, \"potions\": 5, \"shields\": 2}\nprint(inventory[\"bows\"])",
-        options: [
-          { text: "KeyError (because \"bows\" is not in the dictionary)", isCorrect: true },
-          { text: "It prints 0", isCorrect: false },
-          { text: "It prints None", isCorrect: false },
-          { text: "SyntaxError", isCorrect: false }
-        ],
-        explanation: "Accessing a key that doesn't exist in a dictionary raises a KeyError in Python!"
+        id: "q-11",
+        category: "hard",
+        levelText: "Level 3 • Simple AI & Vision",
+        levelColor: "rose",
+        title: "11. Blurring an Image or Face Region",
+        description: "Write a line of code using `cv2.GaussianBlur()` to apply a Gaussian blur to an `image` with a kernel size of `(15, 15)`.",
+        solutionCode: `import cv2\n\n# Apply Gaussian Blur (smooth/blur image)\nblurred_image = cv2.GaussianBlur(image, (15, 15), 0)`
       },
-
-      // Q4: Smart Aquarium Heater - While Loop Execution Count
       {
-        question: "Story: An automated aquarium heater warms water by 2 degrees every minute until reaching 24 degrees. How many minutes does it run?",
-        code: "temp = 18\nminutes = 0\n\nwhile temp < 24:\n    temp += 2\n    minutes += 1\n\nprint(minutes)",
-        options: [
-          { text: "3 minutes", isCorrect: true },
-          { text: "4 minutes", isCorrect: false },
-          { text: "6 minutes", isCorrect: false },
-          { text: "2 minutes", isCorrect: false }
-        ],
-        explanation: "Cycle tracking: Minute 1 (18➔20), Minute 2 (20➔22), Minute 3 (22➔24). At 24, 24 < 24 is False, so it ran 3 times."
+        id: "q-12",
+        category: "hard",
+        levelText: "Level 3 • Simple AI & Vision",
+        levelColor: "rose",
+        title: "12. Load Face Detection Haar Cascade Model",
+        description: "Write code that loads OpenCV's built-in face detection model `haarcascade_frontalface_default.xml` using `cv2.CascadeClassifier()`.",
+        solutionCode: `import cv2\n\n# Load pre-trained Haar Cascade face detection model\nface_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')\nprint("Face detector model loaded!")`
       },
-
-      // Q5: Esports Leaderboard - List Append & Indexing
       {
-        question: "Story: Jordan's gaming leaderboard updates after winning a match. What score is printed by scores[3]?",
-        code: "scores = [85, 92, 78]\nscores.append(95)\nprint(scores[3])",
-        options: [
-          { text: "95", isCorrect: true },
-          { text: "78", isCorrect: false },
-          { text: "92", isCorrect: false },
-          { text: "IndexError", isCorrect: false }
-        ],
-        explanation: "`.append(95)` adds 95 to the end of the list at index 3 (since original indices were 0, 1, 2). Thus scores[3] is 95!"
+        id: "q-13",
+        category: "hard",
+        levelText: "Level 3 • Simple AI & Vision",
+        levelColor: "rose",
+        title: "13. Draw Green Bounding Box Around Face",
+        description: "Given face coordinates `(x, y, w, h)`, write code using `cv2.rectangle()` to draw a green border box with thickness `2` around the face on `frame`.",
+        solutionCode: `import cv2\n\n# (x, y) = top-left corner, (x+w, y+h) = bottom-right corner\n# (0, 255, 0) = Green color in BGR, 2 = border thickness\ncv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)`
       },
-
-      // Q6: Pet Care Robot - Loop with Condition Return
       {
-        question: "Story: A pet-feeding robot searches a list of meal times to check if hour 8 is scheduled. What output will the robot give?",
-        code: "def check_schedule(meal_times):\n    for hour in meal_times:\n        if hour == 8:\n            return \"Breakfast Found!\"\n    return \"Not Scheduled\"\n\nschedule = [6, 8, 12, 19]\nprint(check_schedule(schedule))",
-        options: [
-          { text: "\"Breakfast Found!\"", isCorrect: true },
-          { text: "\"Not Scheduled\"", isCorrect: false },
-          { text: "8", isCorrect: false },
-          { text: "None", isCorrect: false }
-        ],
-        explanation: "The loop inspects 6, then 8. Since 8 == 8 is True, the function immediately returns \"Breakfast Found!\"."
+        id: "q-14",
+        category: "hard",
+        levelText: "Level 3 • Simple AI & Vision",
+        levelColor: "rose",
+        title: "14. Load Smile Detection Model",
+        description: "Write code to load OpenCV's smile detector model `haarcascade_smile.xml` and detect smiles on `gray_frame` using `detectMultiScale()`.",
+        solutionCode: `import cv2\n\n# Load smile detection cascade model\nsmile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_smile.xml')\n\n# Detect smiles on grayscale frame\nsmiles = smile_cascade.detectMultiScale(gray_frame, scaleFactor=1.8, minNeighbors=20)`
       },
-
-      // Q7: Code Club Door Lock - Spot the Function Error
       {
-        question: "Story: Sam wrote a function to unlock the Coding Club door card scanner. Why does Python raise a SyntaxError?",
-        code: "def verify_card(card_id)\n    if card_id == 404:\n        return \"Access Denied\"\n    return \"Access Granted\"",
-        options: [
-          { text: "Missing colon (':') at the end of def verify_card(card_id)", isCorrect: true },
-          { text: "The variable card_id is not defined", isCorrect: false },
-          { text: "IndentationError in return statement", isCorrect: false },
-          { text: "Double quotes cannot be returned", isCorrect: false }
-        ],
-        explanation: "Function header declarations in Python must always end with a colon `:` (e.g. `def verify_card(card_id):`)."
-      },
-
-      // Q8: Music Playlist Tracker - Dictionary Length
-      {
-        question: "Story: A music app updates song play counts and adds a new song. What is the printed length len(playlist)?",
-        code: "playlist = {\"SongA\": 10, \"SongB\": 15}\nplaylist[\"SongA\"] += 5\nplaylist[\"SongC\"] = 1\nprint(len(playlist))",
-        options: [
-          { text: "3", isCorrect: true },
-          { text: "2", isCorrect: false },
-          { text: "16", isCorrect: false },
-          { text: "4", isCorrect: false }
-        ],
-        explanation: "`playlist[\"SongA\"] += 5` updates an existing key (count becomes 15). `playlist[\"SongC\"] = 1` adds a new key. Total keys = 3!"
-      },
-
-      // Q9: Rollercoaster Gate - For Loop Condition Counter
-      {
-        question: "Story: A theme park scanner checks heights (in cm) of friends waiting in line. How many passed the 140cm height limit?",
-        code: "heights = [135, 150, 128, 142, 160]\npassed = 0\nfor h in heights:\n    if h >= 140:\n        passed += 1\n\nprint(passed)",
-        options: [
-          { text: "3", isCorrect: true },
-          { text: "5", isCorrect: false },
-          { text: "2", isCorrect: false },
-          { text: "4", isCorrect: false }
-        ],
-        explanation: "The heights >= 140 are 150, 142, and 160. That makes exactly 3 friends who passed!"
-      },
-
-      // Q10: Treasure Vault - Nested Loop Calculation
-      {
-        question: "Story: A video game hero unlocks a grid chest containing rows and columns of magical runes. What is the value of runes_activated?",
-        code: "runes_activated = 0\nfor row in range(2):\n    for col in range(3):\n        runes_activated += 1\n\nprint(runes_activated)",
-        options: [
-          { text: "6", isCorrect: true },
-          { text: "5", isCorrect: false },
-          { text: "2", isCorrect: false },
-          { text: "3", isCorrect: false }
-        ],
-        explanation: "The outer loop runs 2 times (row 0, 1). For each row, the inner loop runs 3 times (col 0, 1, 2). Total = 2 × 3 = 6!"
+        id: "q-15",
+        category: "hard",
+        levelText: "Level 3 • Simple AI & Vision",
+        levelColor: "rose",
+        title: "15. Add Colored Border Frame to Image",
+        description: "Given image dimensions `width` and `height`, write code using `cv2.rectangle()` to draw a blue border frame around the outer edges of an image.",
+        solutionCode: `import cv2\n\nheight, width = frame.shape[:2]\n\n# Draw a blue border around the outer edge (255, 0, 0 = Blue BGR, 10 = thickness)\ncv2.rectangle(frame, (0, 0), (width, height), (255, 0, 0), 10)`
       }
     ];
 
-    // Helper: Safely escape HTML string
-    function escapeHTML(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+    // STATE
+    let submittedUserCode = {}; // Stores submitted text by ID
+    let currentCategoryFilter = 'all';
 
-    // Shuffle options dynamically
-    let questionsList = [];
-
-    function prepareQuestions() {
-      questionsList = questionsRaw.map(q => {
-        const clonedOpts = [...q.options];
-        for (let i = clonedOpts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
-        }
-        return {
-          question: q.question,
-          code: q.code,
-          options: clonedOpts.map(o => o.text),
-          correctIndex: clonedOpts.findIndex(o => o.isCorrect),
-          explanation: q.explanation
-        };
-      });
-    }
-
-    // STATE VARIABLES
-    let currentIndex = 0;
-    let score = 0;
-    let timeLeft = 30;
-    let timerId = null;
-    let isAnswered = false;
-
-    // DOM ELEMENTS
-    const qNumEl = document.getElementById('q-num');
-    const liveScoreEl = document.getElementById('live-score');
-    const timerTextEl = document.getElementById('timer-text');
-    const timerBarEl = document.getElementById('timer-bar');
-    const questionTextEl = document.getElementById('question-text');
-    const codeSnippetEl = document.getElementById('code-snippet');
-    const optionsGrid = document.getElementById('options-grid');
-    const explanationBox = document.getElementById('explanation-box');
-    const explanationTitle = document.getElementById('explanation-title');
-    const explanationText = document.getElementById('explanation-text');
-    const explanationIcon = document.getElementById('explanation-icon');
-    const nextBtn = document.getElementById('next-btn');
-
-    const quizScreen = document.getElementById('quiz-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const finalTotalScore = document.getElementById('final-total-score');
-    const teacherFeedbackText = document.getElementById('teacher-feedback-text');
-    const restartBtn = document.getElementById('restart-btn');
-
-    // Render Drifting Boats in Ocean Background
-    function createDriftingBoats() {
-      const container = document.getElementById('boats-container');
+    // RENDER CHALLENGES
+    function renderChallenges() {
+      const container = document.getElementById('challenges-grid');
       container.innerHTML = '';
 
-      const boatSVG = `
-        <svg width="50" height="36" viewBox="0 0 60 45" fill="none">
-          <!-- Hull -->
-          <path d="M6 32 C15 42, 45 42, 54 32 L48 24 L12 24 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
-          <!-- Main Sail -->
-          <path d="M30 4 L30 22 L46 22 Z" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.5"/>
-          <!-- Small Sail -->
-          <path d="M28 8 L28 22 L16 22 Z" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="1.5"/>
-          <!-- Mast -->
-          <line x1="30" y1="2" x2="30" y2="24" stroke="#0369a1" stroke-width="2"/>
-        </svg>
-      `;
+      const filtered = challengesData.filter(item => {
+        if (currentCategoryFilter === 'all') return true;
+        return item.category === currentCategoryFilter;
+      });
 
-      for (let i = 0; i < 4; i++) {
-        const boat = document.createElement('div');
-        boat.className = 'sailing-boat';
-        boat.innerHTML = boatSVG;
+      filtered.forEach((item) => {
+        const isSubmitted = !!submittedUserCode[item.id];
 
-        const topPos = 15 + i * 20; // Spread vertically
-        const duration = 18 + Math.random() * 10; // 18s - 28s speed
-        const delay = i * 5; // Staggered delays
+        let borderBadge = "border-emerald-500/40 text-emerald-400 bg-emerald-500/10";
+        if (item.levelColor === "amber") borderBadge = "border-amber-500/40 text-amber-400 bg-amber-500/10";
+        if (item.levelColor === "rose") borderBadge = "border-rose-500/40 text-rose-400 bg-rose-500/10";
 
-        boat.style.top = `${topPos}%`;
-        boat.style.animationDuration = `${duration}s`;
-        boat.style.animationDelay = `${delay}s`;
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 transition shadow-lg relative";
+        
+        card.innerHTML = `
+          <!-- Header Bar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-md border uppercase tracking-wider ${borderBadge}">
+                  ${item.levelText}
+                </span>
+                ${isSubmitted ? '<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Code Submitted ✓</span>' : ''}
+              </div>
+              <h3 class="font-bold text-base sm:text-lg text-slate-100 mt-1">
+                ${item.title}
+              </h3>
+            </div>
+          </div>
 
-        container.appendChild(boat);
-      }
-    }
+          <!-- Prompt Description -->
+          <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
+            ${item.description}
+          </p>
 
-    // Timer Engine (30 Seconds)
-    function startTimer() {
-      clearInterval(timerId);
-      timeLeft = 30;
-      renderTimer();
+          <!-- Text Input Area for Code Submission -->
+          <div class="mt-4">
+            <label class="block text-xs font-semibold text-slate-400 mb-1">
+              Your Python Code Submission:
+            </label>
+            <textarea 
+              id="user-input-${item.id}"
+              rows="4" 
+              placeholder="# Type or paste your solution code here...\ndef solution():\n    pass" 
+              class="w-full bg-slate-950 text-purple-200 font-code text-xs p-3 rounded-xl border border-slate-800 focus:border-purple-500 focus:outline-none transition resize-y leading-relaxed"
+            >${submittedUserCode[item.id] || ''}</textarea>
+          </div>
 
-      timerId = setInterval(() => {
-        timeLeft--;
-        renderTimer();
+          <!-- Action Buttons: Submit & Unlock Solution -->
+          <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <button 
+              onclick="submitCode('${item.id}')" 
+              class="py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow transition transform active:scale-95 flex items-center gap-1.5"
+            >
+              <span>${isSubmitted ? 'Update Submission' : 'Submit Code'}</span>
+              <span>🚀</span>
+            </button>
 
-        if (timeLeft <= 0) {
-          clearInterval(timerId);
-          onTimeout();
-        }
-      }, 1000);
-    }
+            <!-- Solution View Button (Unlocked after submit or clicked anytime) -->
+            <button 
+              onclick="toggleSolution('${item.id}')" 
+              id="sol-btn-${item.id}" 
+              class="${isSubmitted ? 'bg-slate-800 hover:bg-slate-700 text-amber-300 border-amber-500/40' : 'bg-slate-950/60 text-slate-500 border-slate-800'} py-2 px-4 rounded-xl text-xs font-bold border transition flex items-center gap-1.5"
+            >
+              <span>💡 View Reference Solution</span>
+              <span id="sol-arrow-${item.id}">▼</span>
+            </button>
+          </div>
 
-    function renderTimer() {
-      timerTextEl.textContent = timeLeft;
-      const pct = (timeLeft / 30) * 100;
-      timerBarEl.style.width = `${pct}%`;
-
-      if (timeLeft <= 7) {
-        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-cyan-400', 'via-sky-400', 'to-blue-500');
-        timerBarEl.classList.add('from-rose-500', 'to-red-600');
-      } else {
-        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
-        timerBarEl.classList.add('from-cyan-400', 'via-sky-400', 'to-blue-500');
-      }
-    }
-
-    // Load Question into UI
-    function displayQuestion() {
-      isAnswered = false;
-      const q = questionsList[currentIndex];
-
-      qNumEl.textContent = currentIndex + 1;
-      liveScoreEl.textContent = `${score} / 10`;
-
-      explanationBox.classList.add('hidden');
-      nextBtn.classList.add('hidden');
-
-      questionTextEl.textContent = q.question;
-      codeSnippetEl.textContent = q.code;
-      optionsGrid.innerHTML = '';
-
-      q.options.forEach((optText, idx) => {
-        const btn = document.createElement('button');
-        btn.dataset.idx = idx;
-        btn.className = "option-btn p-4 rounded-xl border border-sky-500/30 bg-slate-800/80 hover:bg-sky-900/40 hover:border-cyan-400 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
-
-        btn.innerHTML = `
-          <span class="w-8 h-8 rounded-lg bg-slate-700/80 border border-slate-600 text-cyan-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
+          <!-- Solution Reference Block (Hidden until toggled) -->
+          <div id="sol-box-${item.id}" class="hidden mt-4">
+            <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-3 relative">
+              <div class="flex justify-between items-center text-[11px] text-amber-400 font-code mb-1 pb-1 border-b border-slate-800">
+                <span>Reference Model Solution</span>
+                <span class="text-[10px] text-slate-500">Compare logic & syntax</span>
+              </div>
+              <pre class="font-code text-xs text-amber-200 overflow-x-auto leading-relaxed"><code>${escapeHTML(item.solutionCode)}</code></pre>
+            </div>
+          </div>
         `;
 
-        btn.addEventListener('click', () => handleOptionClick(idx));
-        optionsGrid.appendChild(btn);
+        container.appendChild(card);
       });
 
-      startTimer();
+      updateProgress();
     }
 
-    // Handle Option Click
-    function handleOptionClick(selectedIdx) {
-      if (isAnswered) return;
-      isAnswered = true;
-      clearInterval(timerId);
+    function escapeHTML(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-      const q = questionsList[currentIndex];
-      const isCorrect = (selectedIdx === q.correctIndex);
+    function submitCode(id) {
+      const textarea = document.getElementById(`user-input-${id}`);
+      const codeVal = textarea.value.trim();
 
-      const buttons = optionsGrid.querySelectorAll('.option-btn');
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.remove('border-sky-500/30', 'bg-slate-800/80');
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/80', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
-        } else if (idx === selectedIdx && !isCorrect) {
-          btn.classList.remove('border-sky-500/30', 'bg-slate-800/80');
-          btn.classList.add('border-rose-500', 'bg-rose-950/80', 'text-rose-200', 'ring-2', 'ring-rose-500');
-        }
+      if (!codeVal) {
+        textarea.classList.add('border-rose-500');
+        setTimeout(() => textarea.classList.remove('border-rose-500'), 1500);
+        return;
+      }
+
+      submittedUserCode[id] = codeVal;
+      
+      // Auto-reveal reference solution so student can compare logic!
+      const solBox = document.getElementById(`sol-box-${id}`);
+      const solArrow = document.getElementById(`sol-arrow-${id}`);
+      if (solBox && solBox.classList.contains('hidden')) {
+        solBox.classList.remove('hidden');
+        if (solArrow) solArrow.textContent = '▲';
+      }
+
+      renderChallenges();
+    }
+
+    function toggleSolution(id) {
+      const solBox = document.getElementById(`sol-box-${id}`);
+      const solArrow = document.getElementById(`sol-arrow-${id}`);
+      if (solBox.classList.contains('hidden')) {
+        solBox.classList.remove('hidden');
+        solArrow.textContent = '▲';
+      } else {
+        solBox.classList.add('hidden');
+        solArrow.textContent = '▼';
+      }
+    }
+
+    function filterCategory(cat) {
+      currentCategoryFilter = cat;
+
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-600', 'border-purple-400', 'text-white');
+        btn.classList.add('bg-slate-900', 'border-slate-700', 'text-slate-300');
       });
 
-      if (isCorrect) {
-        score += 1;
-        liveScoreEl.textContent = `${score} / 10`;
-        showExplanation(true, "Correct! " + q.explanation);
-      } else {
-        showExplanation(false, "Incorrect! " + q.explanation);
+      const activeBtn = document.getElementById(`btn-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-900', 'border-slate-700', 'text-slate-300');
+        activeBtn.classList.add('bg-purple-600', 'border-purple-400', 'text-white');
       }
 
-      nextBtn.classList.remove('hidden');
+      renderChallenges();
     }
 
-    function onTimeout() {
-      if (isAnswered) return;
-      isAnswered = true;
+    function updateProgress() {
+      const count = Object.keys(submittedUserCode).length;
+      const total = challengesData.length;
+      const pct = (count / total) * 100;
 
-      const q = questionsList[currentIndex];
-      const buttons = optionsGrid.querySelectorAll('.option-btn');
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/80', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
-        }
-      });
-
-      showExplanation(false, "⏳ Time's up! You had 30 seconds for this question. " + q.explanation);
-      nextBtn.classList.remove('hidden');
+      document.getElementById('progress-text').textContent = `${count} / ${total}`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
     }
 
-    function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-950/70', 'border-emerald-500/50', 'bg-rose-950/70', 'border-rose-500/50');
+    function triggerFarewellModal() {
+      const modal = document.getElementById('farewell-modal');
+      const modalCard = document.getElementById('modal-card');
+      const submittedCount = Object.keys(submittedUserCode).length;
 
-      if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-950/70', 'border-emerald-500/50');
-        explanationIcon.textContent = "✅";
-        explanationTitle.textContent = "Spot on!";
-        explanationTitle.className = "font-bold text-base text-emerald-400";
-      } else {
-        explanationBox.classList.add('bg-rose-950/70', 'border-rose-500/50');
-        explanationIcon.textContent = "💡";
-        explanationTitle.textContent = "Solution Breakdown";
-        explanationTitle.className = "font-bold text-base text-rose-400";
+      document.getElementById('modal-completed-count').textContent = `${submittedCount} / ${challengesData.length}`;
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalCard.classList.remove('scale-95');
+        modalCard.classList.add('scale-100');
+      }, 10);
+
+      // Trigger Confetti Burst
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
       }
-
-      explanationText.textContent = message;
     }
 
-    nextBtn.addEventListener('click', () => {
-      currentIndex++;
-      if (currentIndex < questionsList.length) {
-        displayQuestion();
-      } else {
-        showTeacherReport();
-      }
-    });
+    function closeModal() {
+      const modal = document.getElementById('farewell-modal');
+      const modalCard = document.getElementById('modal-card');
 
-    function showTeacherReport() {
-      quizScreen.classList.add('hidden');
-      resultScreen.classList.remove('hidden');
+      modal.classList.add('opacity-0');
+      modalCard.classList.remove('scale-100');
+      modalCard.classList.add('scale-95');
 
-      finalTotalScore.textContent = `${score} / 10`;
-
-      let feedback = "";
-      if (score >= 9) {
-        feedback = `Fantastic work! 🌟 You scored ${score} out of 10! You showed impressive mastery over list indexing, dictionary key handling, function returns, and loop counts. You think like a real Python developer! Keep writing great code!`;
-      } else if (score >= 7) {
-        feedback = `Great job! 🚀 You scored ${score} out of 10! You have a super solid understanding of loops and conditional logic. Just remember that list indexing starts at [0] and missing colons cause SyntaxErrors. Very well done!`;
-      } else if (score >= 5) {
-        feedback = `Good effort! 👍 You scored ${score} out of 10. You handled basic conditionals and function outputs well. Take a quick moment to review dictionary KeyErrors and nested loop calculations to hit 10/10 next time!`;
-      } else {
-        feedback = `Nice try! 💡 You scored ${score} out of 10. Predicting code execution takes practice! The trick is to 'be the computer' and track list indices and loop variables step-by-step on paper. Keep practicing and re-try!`;
-      }
-
-      teacherFeedbackText.textContent = feedback;
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
     }
 
-    restartBtn.addEventListener('click', () => {
-      currentIndex = 0;
-      score = 0;
-      prepareQuestions();
-      resultScreen.classList.add('hidden');
-      quizScreen.classList.remove('hidden');
-      displayQuestion();
-    });
-
-    // INITIALIZATION
-    createDriftingBoats();
-    prepareQuestions();
-    displayQuestion();
+    // INIT
+    renderChallenges();
   </script>
 </body>
 </html>
