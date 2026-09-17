@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Revision</title>
+  <title>HTML Revision</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Caveat for teacher's feedback, Fira Code for code, Outfit for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
     }
     .font-code {
       font-family: 'Fira Code', monospace;
@@ -21,511 +23,699 @@
       font-family: 'Caveat', cursive;
     }
 
-    .hero-gradient {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    /* Flying Unicorns Animation */
+    .flying-unicorn {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.75;
+      animation: floatUnicorn linear infinite;
     }
 
-    pre::-webkit-scrollbar, textarea::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
+    @keyframes floatUnicorn {
+      0% {
+        transform: translateX(-120px) translateY(0px) rotate(0deg) scale(0.9);
+      }
+      25% {
+        transform: translateX(25vw) translateY(-25px) rotate(4deg) scale(1.05);
+      }
+      50% {
+        transform: translateX(50vw) translateY(15px) rotate(-3deg) scale(0.95);
+      }
+      75% {
+        transform: translateX(75vw) translateY(-20px) rotate(3deg) scale(1.02);
+      }
+      100% {
+        transform: translateX(105vw) translateY(0px) rotate(0deg) scale(0.9);
+      }
     }
-    pre::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
-      background: #475569;
+
+    /* Notebook sheet background for feedback */
+    .feedback-sheet {
+      background-color: #fff5f8;
+      background-image: linear-gradient(#fbcfe8 1px, transparent 1px);
+      background-size: 100% 2.1rem;
+      border-left: 5px double #db2777;
+    }
+
+    pre::-webkit-scrollbar {
+      height: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #ec4899;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
+<body class="bg-gradient-to-br from-pink-900 via-fuchsia-950 to-rose-950 text-white min-h-screen relative flex flex-col justify-between selection:bg-pink-400 selection:text-pink-950">
 
-  <header class="hero-gradient border-b border-purple-500/20 sticky top-0 z-30 backdrop-blur-md bg-opacity-90 shadow-xl">
-    <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase tracking-wider">
-            ⏱️ Complete in 1 Hour
-          </span>
-          <span class="text-xs text-slate-400">Self-Paced Practice Lab</span>
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-200 to-amber-200 mt-1">
-          Python Revision
-        </h1>
-      </div>
+  <!-- Background Flying Unicorns Container -->
+  <div id="unicorns-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-      <!-- Live Task Progress & Teacher Feedback Direct Button -->
-      <div class="flex items-center gap-3 w-full sm:w-auto">
-        <div class="w-full sm:w-56 bg-slate-900/90 border border-slate-700 p-2.5 rounded-2xl shadow-inner">
-          <div class="flex justify-between items-center text-xs font-semibold mb-1">
-            <span class="text-slate-300">Submitted</span>
-            <span id="progress-text" class="text-purple-400 font-code font-bold">0 / 15</span>
-          </div>
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
-            <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 w-0 transition-all duration-500 ease-out"></div>
-          </div>
-        </div>
+  <!-- Main Container -->
+  <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-        <button onclick="triggerFarewellModal()" class="shrink-0 py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transition transform active:scale-95">
-          View Teacher Feedback 📝
-        </button>
-      </div>
-    </div>
-  </header>
+    <!-- Header (Strictly "HTML Revision") -->
+    <header class="text-center mb-6">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-200 to-fuchsia-200 tracking-tight drop-shadow-md">
+        HTML Revision
+      </h1>
+      <p class="text-xs sm:text-sm font-semibold text-pink-300/80 mt-1">Tags, Attributes, Properties & Rules</p>
+    </header>
 
-  <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 flex-grow w-full">
-    
-    <!-- Instructions Banner -->
-    <div class="bg-gradient-to-r from-slate-900 via-purple-950/40 to-slate-900 border border-purple-500/30 rounded-2xl p-5 mb-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="space-y-1">
-        <h2 class="text-base font-bold text-purple-200 flex items-center gap-2">
-          <span>🎯</span> How to complete this revision:
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-          1. Write or paste your code into the text box under each question.<br>
-          2. Click <strong>Submit Code</strong> to submit your solution.<br>
-          3. Click <strong>View Reference Solution</strong> to compare your code and logic!
-        </p>
-      </div>
-    </div>
-
-    <!-- Category Filters -->
-    <div class="flex flex-wrap gap-2 mb-6">
-      <button onclick="filterCategory('all')" id="btn-all" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-purple-600 border-purple-400 text-white shadow-md">
-        All Questions (15)
-      </button>
-      <button onclick="filterCategory('easy')" id="btn-easy" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-emerald-400 hover:bg-slate-800">
-        🟢 Loops & Conditions (5)
-      </button>
-      <button onclick="filterCategory('medium')" id="btn-medium" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-amber-400 hover:bg-slate-800">
-        🟡 Functions & Classes (5)
-      </button>
-      <button onclick="filterCategory('hard')" id="btn-hard" class="category-btn py-2 px-4 rounded-xl text-xs font-bold border transition bg-slate-900 border-slate-700 text-rose-400 hover:bg-slate-800">
-        🔴 Simple AI & Vision (5)
-      </button>
-    </div>
-
-    <!-- Challenges Container -->
-    <div id="challenges-grid" class="space-y-5">
-      <!-- Cards rendered dynamically via JS -->
-    </div>
-
-    <div id="submit-section" class="mt-10 text-center bg-slate-900/90 border border-purple-500/30 rounded-3xl p-6 shadow-2xl">
-      <h3 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
-        Finished your revision work?
-      </h3>
-      <p class="text-xs text-slate-400 mt-1 max-w-lg mx-auto">
-        You can check your teacher's feedback anytime during or at the end of the session!
-      </p>
-      <button onclick="triggerFarewellModal()" class="mt-4 py-3.5 px-8 bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500 hover:from-emerald-300 hover:to-cyan-400 text-slate-950 font-black text-sm rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
-        <span>🎓 Open Teacher's Feedback</span>
-      </button>
-    </div>
-
-  </main>
-
-  <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800/80 bg-slate-950">
-    <p>Python Revision Lab • Practice, Self-Tally & Feedback 🚀</p>
-  </footer>
-
-  <div id="farewell-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-slate-900 border-2 border-purple-500/50 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden transform scale-95 transition-transform duration-300" id="modal-card">
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="w-full">
       
-      <!-- Festive Header -->
-      <div class="flex justify-between items-start border-b border-slate-800 pb-3 mb-5">
-        <div>
-          <span class="px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase tracking-widest">
-            Session Complete 🎉
-          </span>
-          <h2 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-300 to-amber-200 mt-1">
-            Teacher's Feedback
-          </h2>
+      <!-- Top Info Bar: Question Counter, Live Score, 30s Timer -->
+      <div class="bg-pink-950/80 backdrop-blur-md border border-pink-500/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
+        <div class="flex justify-between items-center gap-3">
+          
+          <!-- Question Number Tracker -->
+          <div>
+            <span class="text-xs uppercase font-bold text-pink-300 tracking-wider block">Question</span>
+            <div class="text-xl sm:text-2xl font-black text-pink-100 font-code">
+              <span id="q-num">1</span> <span class="text-pink-400 text-lg font-normal">/ 10</span>
+            </div>
+          </div>
+
+          <!-- Live Score -->
+          <div class="text-center bg-pink-900/80 px-4 py-2 rounded-xl border border-pink-500/30 shadow-inner">
+            <span class="text-[11px] uppercase tracking-wider text-pink-300 block font-bold">Score</span>
+            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
+          </div>
+
+          <!-- 30-Second Timer -->
+          <div class="flex items-center gap-2">
+            <div class="relative w-14 h-14 flex items-center justify-center bg-pink-900/90 rounded-full border-2 border-pink-400 shadow-inner">
+              <span id="timer-text" class="text-xl font-black text-pink-200 font-code">30</span>
+              <span class="text-[8px] text-pink-300 absolute bottom-1 font-bold">sec</span>
+            </div>
+          </div>
         </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-2xl font-bold p-1">✕</button>
-      </div>
 
-      <!-- Stats Summary -->
-      <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="bg-slate-950 p-3 rounded-2xl border border-purple-500/30 text-center">
-          <span class="text-xs text-slate-400 font-semibold block">Questions Attempted</span>
-          <span id="modal-completed-count" class="text-2xl font-black text-emerald-400 font-code mt-0.5">0 / 15</span>
-        </div>
-        <div class="bg-slate-950 p-3 rounded-2xl border border-purple-500/30 text-center">
-          <span class="text-xs text-slate-400 font-semibold block">Skills Covered</span>
-          <span class="text-xs font-bold text-purple-300 mt-1 block">Loops, OOP & OpenCV Vision</span>
+        <!-- Timer Progress Bar -->
+        <div class="w-full bg-pink-950 h-2.5 rounded-full mt-3 overflow-hidden border border-pink-800">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
-      <!-- Teacher Note Box -->
-      <div class="bg-[#fefce8] text-slate-900 p-5 rounded-2xl border-l-6 border-amber-500 shadow-lg mb-5">
-        <h3 class="font-handwriting text-2xl font-bold text-amber-900 mb-1">Teacher's Note 📝</h3>
-        <p class="font-handwriting text-xl sm:text-2xl leading-relaxed text-slate-800">
-          "It has been an absolute joy teaching you! You've shown incredible logic, deep curiosity, and great problem-solving skills in every session. From writing clean Python loops to building motion burglar alarms and face filters, your growth has been super impressive! All the best for your upcoming coding sessions & projects—keep building awesome things! 🚀✨"
-        </p>
-      </div>
+      <!-- Question Box -->
+      <div class="bg-pink-950/85 backdrop-blur-md border border-pink-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
+        
+        <!-- Multi-select Hint Banner (Conditional) -->
+        <div id="multi-hint" class="hidden mb-3 p-2.5 rounded-xl bg-fuchsia-500/20 border border-fuchsia-400/40 text-fuchsia-200 text-xs font-semibold flex items-center gap-2">
+          <span>✨</span>
+          <span>This question has <strong>multiple correct answers</strong>! Click all options that apply, then click <strong>Submit Selection</strong>.</span>
+        </div>
 
-      <!-- Close Button -->
-      <div class="flex justify-end">
-        <button onclick="closeModal()" class="py-2.5 px-6 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg transition transform active:scale-95">
-          Close & Return 🌟
-        </button>
-      </div>
+        <!-- Question Scenario / Text -->
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-pink-100 leading-relaxed mb-4">
+          Question loading...
+        </h2>
 
+        <!-- Options Container -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+          <!-- Options rendered dynamically -->
+        </div>
+
+        <!-- Multi-select Submit Button -->
+        <div id="multi-submit-container" class="hidden mb-5">
+          <button id="multi-submit-btn" class="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-400 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">
+            Submit Selection 🦄
+          </button>
+        </div>
+
+        <!-- Explanation Container (Placed Directly Below Buttons) -->
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-5 shadow-md">
+          <div class="flex items-start gap-3">
+            <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
+            <div>
+              <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
+              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-pink-100">
+                Explanation text appears here.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Question Button -->
+        <div class="flex justify-end">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 hover:from-pink-300 hover:to-rose-300 text-pink-950 font-black rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+            <span>Next Question</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+
+      </div>
     </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="hidden w-full my-4">
+      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-2xl text-pink-950 border-t-8 border-pink-600 relative overflow-hidden">
+        
+        <!-- Result Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-pink-300 pb-4 mb-6">
+          <div>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-pink-950">Teacher's Feedback</h2>
+            <p class="text-xs text-pink-800 font-semibold tracking-wide uppercase mt-1">HTML Attributes, Properties & Syntax Review</p>
+          </div>
+          <div class="mt-3 sm:mt-0 bg-pink-100 border-2 border-pink-400 rounded-xl px-4 py-2 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-pink-900 font-bold block">Final Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-pink-950 font-code">0 / 10</span>
+          </div>
+        </div>
+
+        <!-- Teacher's Feedback Body (Handwritten Font) -->
+        <div class="mb-6 bg-white/80 p-6 rounded-xl border border-pink-200 shadow-sm">
+          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-pink-950 leading-relaxed">
+            Generating feedback note...
+          </p>
+        </div>
+
+        <!-- Quick HTML Reference Box -->
+        <div class="mb-6 p-4 rounded-xl bg-pink-100/70 border border-pink-300">
+          <h3 class="font-bold text-xs text-pink-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span>📌</span> Key HTML & CSS Rules to Remember:
+          </h3>
+          <ul class="text-xs sm:text-sm text-pink-900 space-y-1.5 leading-relaxed">
+            <li>• <strong>HTML Attributes</strong>: Written inside the opening tag (e.g. <code class="bg-pink-200 px-1 rounded font-code">src</code>, <code class="bg-pink-200 px-1 rounded font-code">href</code>, <code class="bg-pink-200 px-1 rounded font-code">style</code>, <code class="bg-pink-200 px-1 rounded font-code">type</code>, <code class="bg-pink-200 px-1 rounded font-code">bgcolor</code>).</li>
+            <li>• <strong>CSS Properties</strong>: Written inside the <code class="bg-pink-200 px-1 rounded font-code">style="..."</code> attribute (e.g. <code class="bg-pink-200 px-1 rounded font-code">color</code>, <code class="bg-pink-200 px-1 rounded font-code">textAlign</code>, <code class="bg-pink-200 px-1 rounded font-code">border</code>).</li>
+            <li>• <strong>Tags</strong>: Structural elements like <code class="bg-pink-200 px-1 rounded font-code">&lt;a&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;br&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;h1&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;body&gt;</code>.</li>
+          </ul>
+        </div>
+
+        <!-- Retake Button -->
+        <div class="flex justify-center border-t border-pink-300 pt-5">
+          <button id="restart-btn" class="py-3 px-8 bg-pink-700 hover:bg-pink-800 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span>Retake Revision</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 py-3 text-center text-xs text-pink-300/80 bg-pink-950/80 border-t border-pink-900/50">
+    <p>HTML Revision • Flying Unicorns Edition 🦄</p>
+  </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 15 STRAIGHTFORWARD REVISION QUESTIONS & SOLUTIONS
+    // 10 QUESTIONS SPECIFIED BY USER
     // -------------------------------------------------------------
-    const challengesData = [
-      
-      // ==========================================
-      // EASY: LOOPS & CONDITIONS (Q1 - Q5)
-      // ==========================================
+    const questionsRaw = [
+
+      // Q1: MULTI-SELECT ATTRIBUTES
       {
-        id: "q-1",
-        category: "easy",
-        levelText: "Level 1 • Loops & Conditions",
-        levelColor: "emerald",
-        title: "1. Even and Odd Counter",
-        description: "Given a list of numbers `[12, 7, 5, 18, 22]`, write a `for` loop and an `if/else` condition to count how many numbers are even and how many are odd.",
-        solutionCode: `numbers = [12, 7, 5, 18, 22]\neven_count = 0\nodd_count = 0\n\nfor num in numbers:\n    if num % 2 == 0:\n        even_count += 1\n    else:\n        odd_count += 1\n\nprint("Even count:", even_count)\nprint("Odd count:", odd_count)`
-      },
-      {
-        id: "q-2",
-        category: "easy",
-        levelText: "Level 1 • Loops & Conditions",
-        levelColor: "emerald",
-        title: "2. High Score Filter",
-        description: "Given `scores = [45, 88, 52, 30, 95]`, loop through the list and print only the scores that are strictly greater than 50.",
-        solutionCode: `scores = [45, 88, 52, 30, 95]\n\nfor score in scores:\n    if score > 50:\n        print("High Score:", score)`
-      },
-      {
-        id: "q-3",
-        category: "easy",
-        levelText: "Level 1 • Loops & Conditions",
-        levelColor: "emerald",
-        title: "3. Countdown Timer Loop",
-        description: "Write a `while` loop starting at `count = 5` that counts down to 1, printing each number, and finally prints `'Blastoff!'` when finished.",
-        solutionCode: `count = 5\nwhile count > 0:\n    print(count)\n    count -= 1\nprint("Blastoff! 🚀")`
-      },
-      {
-        id: "q-4",
-        category: "easy",
-        levelText: "Level 1 • Loops & Conditions",
-        levelColor: "emerald",
-        title: "4. Square Number Function",
-        description: "Write a simple function `square_number(n)` that returns the square of `n` (`n * n`). Call the function with `5` and print the result.",
-        solutionCode: `def square_number(n):\n    return n * n\n\nresult = square_number(5)\nprint("Square of 5 is:", result)`
-      },
-      {
-        id: "q-5",
-        category: "easy",
-        levelText: "Level 1 • Loops & Conditions",
-        levelColor: "emerald",
-        title: "5. Pass or Fail Checker Function",
-        description: "Write a function `check_result(mark)` that returns `'Pass'` if `mark >= 50`, else returns `'Fail'`. Test it with `mark = 72`.",
-        solutionCode: `def check_result(mark):\n    if mark >= 50:\n        return "Pass"\n    else:\n        return "Fail"\n\nprint("Status:", check_result(72))`
+        type: "multi",
+        question: "Click on ALL the items in the list below that are HTML Attributes:",
+        options: [
+          { text: "bgcolor", isCorrect: true },
+          { text: "backgroundcolor", isCorrect: false },
+          { text: "type", isCorrect: true },
+          { text: "border", isCorrect: false }, // border is a CSS property (and deprecated table attribute, user specified properties as border)
+          { text: "style", isCorrect: true },
+          { text: "src", isCorrect: true },
+          { text: "href", isCorrect: true }
+        ],
+        explanation: "Correct attributes: 'bgcolor', 'type', 'style', 'src', and 'href'! ('backgroundcolor' does not exist in standard HTML, and 'border' is primarily a CSS property)."
       },
 
-      // ==========================================
-      // MEDIUM: FUNCTIONS & CLASSES (Q6 - Q10)
-      // ==========================================
+      // Q2: MULTI-SELECT PROPERTIES
       {
-        id: "q-6",
-        category: "medium",
-        levelText: "Level 2 • Functions & Classes",
-        levelColor: "amber",
-        title: "6. Total Price Calculator with Discount",
-        description: "Write a function `calculate_total(prices)` that sums a list of prices. If total sum is > 100, apply a 10% discount (`total * 0.9`). Return the final price.",
-        solutionCode: `def calculate_total(prices):\n    total = sum(prices)\n    if total > 100:\n        total = total * 0.9\n    return total\n\nitems = [40, 50, 30]\nprint("Final Discounted Price:", calculate_total(items))`
-      },
-      {
-        id: "q-7",
-        category: "medium",
-        levelText: "Level 2 • Functions & Classes",
-        levelColor: "amber",
-        title: "7. Vowel Counter Function",
-        description: "Write a function `count_vowels(text)` that loops through characters in `text` and returns the count of vowels (`a, e, i, o, u`).",
-        solutionCode: `def count_vowels(text):\n    vowels = "aeiouAEIOU"\n    count = 0\n    for char in text:\n        if char in vowels:\n            count += 1\n    return count\n\nprint("Vowels count:", count_vowels("Python Code"))`
-      },
-      {
-        id: "q-8",
-        category: "medium",
-        levelText: "Level 2 • Functions & Classes",
-        levelColor: "amber",
-        title: "8. Simple Camera Controller Class",
-        description: "Create a class `Webcam` with attributes `resolution=\"1080p\"` and `is_on=False`. Add a method `start()` that sets `is_on = True` and prints `'Camera Started'`. ",
-        solutionCode: `class Webcam:\n    def __init__(self, resolution="1080p"):\n        self.resolution = resolution\n        self.is_on = False\n\n    def start(self):\n        self.is_on = True\n        print("Camera Started at", self.resolution)\n\ncam = Webcam()\ncam.start()`
-      },
-      {
-        id: "q-9",
-        category: "medium",
-        levelText: "Level 2 • Functions & Classes",
-        levelColor: "amber",
-        title: "9. Crop Region of Interest (ROI) Snippet",
-        description: "Write code using array slicing `image[y:y+h, x:x+w]` to extract a region of interest at `x=50, y=50, w=100, h=100` from an image.",
-        solutionCode: `import cv2\n\n# Array slicing formula: image[y_start : y_end, x_start : x_end]\nx, y, w, h = 50, 50, 100, 100\nroi = image[y:y+h, x:x+w]\nprint("Cropped ROI shape:", roi.shape)`
-      },
-      {
-        id: "q-10",
-        category: "medium",
-        levelText: "Level 2 • Functions & Classes",
-        levelColor: "amber",
-        title: "10. Grayscale Image Converter Function",
-        description: "Write a function `convert_to_gray(frame)` that converts a BGR color image frame to Grayscale using `cv2.cvtColor()` and returns it.",
-        solutionCode: `import cv2\n\ndef convert_to_gray(frame):\n    # Convert color frame (BGR) to Grayscale\n    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)\n    return gray_frame`
+        type: "multi",
+        question: "Click on ALL the items in the list below that are CSS Properties (used inside style):",
+        options: [
+          { text: "textAlign", isCorrect: true },
+          { text: "br", isCorrect: false },
+          { text: "color", isCorrect: true },
+          { text: "h1", isCorrect: false },
+          { text: "border", isCorrect: true },
+          { text: "body", isCorrect: false }
+        ],
+        explanation: "Correct properties: 'textAlign', 'color', and 'border'! ('br', 'h1', and 'body' are HTML tags, not CSS properties)."
       },
 
-      // ==========================================
-      // HARD: SIMPLE AI & VISION (Q11 - Q15)
-      // ==========================================
+      // Q3: LINK TAG MCQ
       {
-        id: "q-11",
-        category: "hard",
-        levelText: "Level 3 • Simple AI & Vision",
-        levelColor: "rose",
-        title: "11. Blurring an Image or Face Region",
-        description: "Write a line of code using `cv2.GaussianBlur()` to apply a Gaussian blur to an `image` with a kernel size of `(15, 15)`.",
-        solutionCode: `import cv2\n\n# Apply Gaussian Blur (smooth/blur image)\nblurred_image = cv2.GaussianBlur(image, (15, 15), 0)`
+        type: "mcq",
+        question: "Which tag is used to link another webpage to your website?",
+        options: [
+          { text: "Anchor Tag (<a>)", isCorrect: true },
+          { text: "Action Tag (<action>)", isCorrect: false },
+          { text: "Linker Tag (<linker>)", isCorrect: false },
+          { text: "Attach Tag (<attach>)", isCorrect: false }
+        ],
+        explanation: "The Anchor Tag <a> (with the href attribute) is used to create hyperlinks connecting one webpage to another!"
       },
+
+      // Q4: IMAGE TAG ATTRIBUTE MCQ
       {
-        id: "q-12",
-        category: "hard",
-        levelText: "Level 3 • Simple AI & Vision",
-        levelColor: "rose",
-        title: "12. Load Face Detection Haar Cascade Model",
-        description: "Write code that loads OpenCV's built-in face detection model `haarcascade_frontalface_default.xml` using `cv2.CascadeClassifier()`.",
-        solutionCode: `import cv2\n\n# Load pre-trained Haar Cascade face detection model\nface_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')\nprint("Face detector model loaded!")`
+        type: "mcq",
+        question: "Which attribute is connected to the <img> tag to specify the image path or link?",
+        options: [
+          { text: "src", isCorrect: true },
+          { text: "href", isCorrect: false },
+          { text: "url", isCorrect: false },
+          { text: "path", isCorrect: false }
+        ],
+        explanation: "The 'src' attribute stands for 'source' and tells the browser where to find the image file to display."
       },
+
+      // Q5: ROMAN NUMERALS LIST MCQ
       {
-        id: "q-13",
-        category: "hard",
-        levelText: "Level 3 • Simple AI & Vision",
-        levelColor: "rose",
-        title: "13. Draw Green Bounding Box Around Face",
-        description: "Given face coordinates `(x, y, w, h)`, write code using `cv2.rectangle()` to draw a green border box with thickness `2` around the face on `frame`.",
-        solutionCode: `import cv2\n\n# (x, y) = top-left corner, (x+w, y+h) = bottom-right corner\n# (0, 255, 0) = Green color in BGR, 2 = border thickness\ncv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)`
+        type: "mcq",
+        question: "If I want to create a list that uses Roman Numerals (I, II, III...), what type of list would it be?",
+        options: [
+          { text: "Ordered List (<ol>)", isCorrect: true },
+          { text: "Unordered List (<ul>)", isCorrect: false },
+          { text: "Roman List (<rl>)", isCorrect: false },
+          { text: "Bullet List (<bl>)", isCorrect: false }
+        ],
+        explanation: "Roman numerals have a strict numerical sequence (I, II, III), so they belong to an Ordered List (<ol type='I'>)!"
       },
+
+      // Q6: FILE NAME MCQ
       {
-        id: "q-14",
-        category: "hard",
-        levelText: "Level 3 • Simple AI & Vision",
-        levelColor: "rose",
-        title: "14. Load Smile Detection Model",
-        description: "Write code to load OpenCV's smile detector model `haarcascade_smile.xml` and detect smiles on `gray_frame` using `detectMultiScale()`.",
-        solutionCode: `import cv2\n\n# Load smile detection cascade model\nsmile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_smile.xml')\n\n# Detect smiles on grayscale frame\nsmiles = smile_cascade.detectMultiScale(gray_frame, scaleFactor=1.8, minNeighbors=20)`
+        type: "mcq",
+        question: "I want to connect a new page to my website named 'page2'. What should be the complete file name?",
+        options: [
+          { text: "page2.html", isCorrect: true },
+          { text: "page2.web", isCorrect: false },
+          { text: "page2.site", isCorrect: false },
+          { text: "page2.doc", isCorrect: false }
+        ],
+        explanation: "Webpages must end with the '.html' (or '.htm') file extension so web browsers recognize them as HTML documents!"
       },
+
+      // Q7: TRUE / FALSE COLOR REPRESENTATION
       {
-        id: "q-15",
-        category: "hard",
-        levelText: "Level 3 • Simple AI & Vision",
-        levelColor: "rose",
-        title: "15. Add Colored Border Frame to Image",
-        description: "Given image dimensions `width` and `height`, write code using `cv2.rectangle()` to draw a blue border frame around the outer edges of an image.",
-        solutionCode: `import cv2\n\nheight, width = frame.shape[:2]\n\n# Draw a blue border around the outer edge (255, 0, 0 = Blue BGR, 10 = thickness)\ncv2.rectangle(frame, (0, 0), (width, height), (255, 0, 0), 10)`
+        type: "tf",
+        question: "State True or False: To add color to a website styling, we can ONLY use color names within quotation marks.",
+        options: [
+          { text: "False", isCorrect: true },
+          { text: "True", isCorrect: false }
+        ],
+        explanation: "False! Besides color names (like 'pink'), we can also use Hex codes (like '#ff007f'), RGB values (like 'rgb(255,0,128)'), and HSL values!"
+      },
+
+      // Q8: TRUE / FALSE HEADING SIZES
+      {
+        type: "tf",
+        question: "State True or False: Out of all the heading tags, <h1> has the smallest font size.",
+        options: [
+          { text: "False", isCorrect: true },
+          { text: "True", isCorrect: false }
+        ],
+        explanation: "False! <h1> is the largest heading tag, while <h6> is the smallest heading tag."
+      },
+
+      // Q9: TRUE / FALSE BODY TAG HIERARCHY
+      {
+        type: "tf",
+        question: "State True or False: The <body> tag is created inside the <html> tag.",
+        options: [
+          { text: "True", isCorrect: true },
+          { text: "False", isCorrect: false }
+        ],
+        explanation: "True! <html> is the parent root tag that encloses the entire webpage structure, including <head> and <body>."
+      },
+
+      // Q10: TRUE / FALSE BR TAG NAME
+      {
+        type: "tf",
+        question: "State True or False: The <br> tag is named as the 'branch' tag.",
+        options: [
+          { text: "False", isCorrect: true },
+          { text: "True", isCorrect: false }
+        ],
+        explanation: "False! <br> stands for 'break' (line break), which drops the text down to a new line."
       }
     ];
 
-    // STATE
-    let submittedUserCode = {}; // Stores submitted text by ID
-    let currentCategoryFilter = 'all';
+    // Helper: Safely escape HTML characters
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-    // RENDER CHALLENGES
-    function renderChallenges() {
-      const container = document.getElementById('challenges-grid');
+    // STATE
+    let questionsList = [];
+    let currentIndex = 0;
+    let score = 0;
+    let timeLeft = 30;
+    let timerId = null;
+    let isAnswered = false;
+    let selectedMultiIndices = [];
+
+    // DOM
+    const qNumEl = document.getElementById('q-num');
+    const liveScoreEl = document.getElementById('live-score');
+    const timerTextEl = document.getElementById('timer-text');
+    const timerBarEl = document.getElementById('timer-bar');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsGrid = document.getElementById('options-grid');
+    const multiHint = document.getElementById('multi-hint');
+    const multiSubmitContainer = document.getElementById('multi-submit-container');
+    const multiSubmitBtn = document.getElementById('multi-submit-btn');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const nextBtn = document.getElementById('next-btn');
+
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const finalTotalScore = document.getElementById('final-total-score');
+    const teacherFeedbackText = document.getElementById('teacher-feedback-text');
+    const restartBtn = document.getElementById('restart-btn');
+
+    function createFlyingUnicorns() {
+      const container = document.getElementById('unicorns-container');
       container.innerHTML = '';
 
-      const filtered = challengesData.filter(item => {
-        if (currentCategoryFilter === 'all') return true;
-        return item.category === currentCategoryFilter;
-      });
+      const unicornSVG = `
+        <svg width="45" height="40" viewBox="0 0 64 64" fill="none">
+          <!-- Unicorn Body -->
+          <path d="M12 40 C12 28, 28 24, 40 28 C48 30, 52 38, 48 48 C44 54, 20 54, 12 40 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
+          <!-- Legs -->
+          <path d="M18 48 L16 60 M28 48 L28 60 M38 48 L40 60 M46 44 L48 58" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
+          <!-- Head & Neck -->
+          <path d="M38 30 C42 20, 48 12, 56 16 C60 18, 58 28, 50 32 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
+          <!-- Horn -->
+          <path d="M52 14 L62 2 L56 12 Z" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
+          <!-- Mane (Rainbow Pink/Purple) -->
+          <path d="M36 22 C32 16, 40 10, 48 12 C44 18, 42 22, 36 22 Z" fill="#e879f9"/>
+          <!-- Eye -->
+          <circle cx="53" cy="20" r="1.5" fill="#831843"/>
+          <!-- Wing -->
+          <path d="M26 32 C20 18, 36 14, 34 30 Z" fill="#f472b6" stroke="#db2777" stroke-width="1.5"/>
+        </svg>
+      `;
 
-      filtered.forEach((item) => {
-        const isSubmitted = !!submittedUserCode[item.id];
+      for (let i = 0; i < 5; i++) {
+        const unicorn = document.createElement('div');
+        unicorn.className = 'flying-unicorn';
+        unicorn.innerHTML = unicornSVG;
 
-        let borderBadge = "border-emerald-500/40 text-emerald-400 bg-emerald-500/10";
-        if (item.levelColor === "amber") borderBadge = "border-amber-500/40 text-amber-400 bg-amber-500/10";
-        if (item.levelColor === "rose") borderBadge = "border-rose-500/40 text-rose-400 bg-rose-500/10";
+        const topPos = 12 + i * 18;
+        const duration = 14 + Math.random() * 8;
+        const delay = i * 3.5;
 
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 transition shadow-lg relative";
-        
-        card.innerHTML = `
-          <!-- Header Bar -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-md border uppercase tracking-wider ${borderBadge}">
-                  ${item.levelText}
-                </span>
-                ${isSubmitted ? '<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Code Submitted ✓</span>' : ''}
-              </div>
-              <h3 class="font-bold text-base sm:text-lg text-slate-100 mt-1">
-                ${item.title}
-              </h3>
-            </div>
-          </div>
+        unicorn.style.top = `${topPos}%`;
+        unicorn.style.animationDuration = `${duration}s`;
+        unicorn.style.animationDelay = `${delay}s`;
 
-          <!-- Prompt Description -->
-          <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-            ${item.description}
-          </p>
-
-          <!-- Text Input Area for Code Submission -->
-          <div class="mt-4">
-            <label class="block text-xs font-semibold text-slate-400 mb-1">
-              Your Python Code Submission:
-            </label>
-            <textarea 
-              id="user-input-${item.id}"
-              rows="4" 
-              placeholder="# Type or paste your solution code here...\ndef solution():\n    pass" 
-              class="w-full bg-slate-950 text-purple-200 font-code text-xs p-3 rounded-xl border border-slate-800 focus:border-purple-500 focus:outline-none transition resize-y leading-relaxed"
-            >${submittedUserCode[item.id] || ''}</textarea>
-          </div>
-
-          <!-- Action Buttons: Submit & Unlock Solution -->
-          <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-            <button 
-              onclick="submitCode('${item.id}')" 
-              class="py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow transition transform active:scale-95 flex items-center gap-1.5"
-            >
-              <span>${isSubmitted ? 'Update Submission' : 'Submit Code'}</span>
-              <span>🚀</span>
-            </button>
-
-            <!-- Solution View Button (Unlocked after submit or clicked anytime) -->
-            <button 
-              onclick="toggleSolution('${item.id}')" 
-              id="sol-btn-${item.id}" 
-              class="${isSubmitted ? 'bg-slate-800 hover:bg-slate-700 text-amber-300 border-amber-500/40' : 'bg-slate-950/60 text-slate-500 border-slate-800'} py-2 px-4 rounded-xl text-xs font-bold border transition flex items-center gap-1.5"
-            >
-              <span>💡 View Reference Solution</span>
-              <span id="sol-arrow-${item.id}">▼</span>
-            </button>
-          </div>
-
-          <!-- Solution Reference Block (Hidden until toggled) -->
-          <div id="sol-box-${item.id}" class="hidden mt-4">
-            <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-3 relative">
-              <div class="flex justify-between items-center text-[11px] text-amber-400 font-code mb-1 pb-1 border-b border-slate-800">
-                <span>Reference Model Solution</span>
-                <span class="text-[10px] text-slate-500">Compare logic & syntax</span>
-              </div>
-              <pre class="font-code text-xs text-amber-200 overflow-x-auto leading-relaxed"><code>${escapeHTML(item.solutionCode)}</code></pre>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-
-      updateProgress();
-    }
-
-    function escapeHTML(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    function submitCode(id) {
-      const textarea = document.getElementById(`user-input-${id}`);
-      const codeVal = textarea.value.trim();
-
-      if (!codeVal) {
-        textarea.classList.add('border-rose-500');
-        setTimeout(() => textarea.classList.remove('border-rose-500'), 1500);
-        return;
+        container.appendChild(unicorn);
       }
-
-      submittedUserCode[id] = codeVal;
-      
-      // Auto-reveal reference solution so student can compare logic!
-      const solBox = document.getElementById(`sol-box-${id}`);
-      const solArrow = document.getElementById(`sol-arrow-${id}`);
-      if (solBox && solBox.classList.contains('hidden')) {
-        solBox.classList.remove('hidden');
-        if (solArrow) solArrow.textContent = '▲';
-      }
-
-      renderChallenges();
     }
 
-    function toggleSolution(id) {
-      const solBox = document.getElementById(`sol-box-${id}`);
-      const solArrow = document.getElementById(`sol-arrow-${id}`);
-      if (solBox.classList.contains('hidden')) {
-        solBox.classList.remove('hidden');
-        solArrow.textContent = '▲';
+    function prepareQuestions() {
+      questionsList = questionsRaw.map(q => {
+        const clonedOpts = [...q.options];
+        if (q.type !== 'tf') {
+          // Shuffle options for non True/False questions
+          for (let i = clonedOpts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
+          }
+        }
+        return {
+          type: q.type,
+          question: q.question,
+          options: clonedOpts.map(o => o.text),
+          correctIndices: clonedOpts.reduce((acc, curr, idx) => {
+            if (curr.isCorrect) acc.push(idx);
+            return acc;
+          }, []),
+          explanation: q.explanation
+        };
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timerId);
+      timeLeft = 30;
+      renderTimer();
+
+      timerId = setInterval(() => {
+        timeLeft--;
+        renderTimer();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          onTimeout();
+        }
+      }, 1000);
+    }
+
+    function renderTimer() {
+      timerTextEl.textContent = timeLeft;
+      const pct = (timeLeft / 30) * 100;
+      timerBarEl.style.width = `${pct}%`;
+
+      if (timeLeft <= 7) {
+        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-pink-400', 'via-fuchsia-400', 'to-rose-400');
+        timerBarEl.classList.add('from-rose-500', 'to-red-600');
       } else {
-        solBox.classList.add('hidden');
-        solArrow.textContent = '▼';
+        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
+        timerBarEl.classList.add('from-pink-400', 'via-fuchsia-400', 'to-rose-400');
       }
     }
 
-    function filterCategory(cat) {
-      currentCategoryFilter = cat;
+    function displayQuestion() {
+      isAnswered = false;
+      selectedMultiIndices = [];
+      const q = questionsList[currentIndex];
 
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('bg-purple-600', 'border-purple-400', 'text-white');
-        btn.classList.add('bg-slate-900', 'border-slate-700', 'text-slate-300');
+      qNumEl.textContent = currentIndex + 1;
+      liveScoreEl.textContent = `${score} / 10`;
+
+      explanationBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+
+      questionTextEl.textContent = q.question;
+      optionsGrid.innerHTML = '';
+
+      if (q.type === 'multi') {
+        multiHint.classList.remove('hidden');
+        multiSubmitContainer.classList.remove('hidden');
+        optionsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4";
+      } else if (q.type === 'tf') {
+        multiHint.classList.add('hidden');
+        multiSubmitContainer.classList.add('hidden');
+        optionsGrid.className = "grid grid-cols-2 gap-4 mb-5";
+      } else {
+        multiHint.classList.add('hidden');
+        multiSubmitContainer.classList.add('hidden');
+        optionsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5";
+      }
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.dataset.idx = idx;
+
+        if (q.type === 'multi') {
+          btn.className = "option-btn p-3.5 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 text-left text-pink-100 font-medium transition flex items-center justify-between shadow-sm";
+          btn.innerHTML = `
+            <span class="text-xs sm:text-sm font-code leading-snug">${escapeHTML(optText)}</span>
+            <span class="checkbox-indicator w-5 h-5 rounded-md border-2 border-pink-400/60 flex items-center justify-center text-xs font-bold shrink-0"></span>
+          `;
+          btn.addEventListener('click', () => toggleMultiChoice(idx, btn));
+        } else {
+          btn.className = "option-btn p-4 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 hover:border-pink-400 text-left text-pink-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
+          btn.innerHTML = `
+            <span class="w-8 h-8 rounded-lg bg-pink-950/80 border border-pink-500/40 text-pink-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
+            <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
+          `;
+          btn.addEventListener('click', () => handleSingleClick(idx));
+        }
+
+        optionsGrid.appendChild(btn);
       });
 
-      const activeBtn = document.getElementById(`btn-${cat}`);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-slate-900', 'border-slate-700', 'text-slate-300');
-        activeBtn.classList.add('bg-purple-600', 'border-purple-400', 'text-white');
-      }
-
-      renderChallenges();
+      startTimer();
     }
 
-    function updateProgress() {
-      const count = Object.keys(submittedUserCode).length;
-      const total = challengesData.length;
-      const pct = (count / total) * 100;
+    function toggleMultiChoice(idx, btnEl) {
+      if (isAnswered) return;
 
-      document.getElementById('progress-text').textContent = `${count} / ${total}`;
-      document.getElementById('progress-bar').style.width = `${pct}%`;
-    }
+      const pos = selectedMultiIndices.indexOf(idx);
+      const indicator = btnEl.querySelector('.checkbox-indicator');
 
-    function triggerFarewellModal() {
-      const modal = document.getElementById('farewell-modal');
-      const modalCard = document.getElementById('modal-card');
-      const submittedCount = Object.keys(submittedUserCode).length;
-
-      document.getElementById('modal-completed-count').textContent = `${submittedCount} / ${challengesData.length}`;
-
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        modalCard.classList.remove('scale-95');
-        modalCard.classList.add('scale-100');
-      }, 10);
-
-      // Trigger Confetti Burst
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+      if (pos === -1) {
+        selectedMultiIndices.push(idx);
+        btnEl.classList.remove('border-pink-500/30', 'bg-pink-900/60');
+        btnEl.classList.add('border-fuchsia-400', 'bg-fuchsia-950/80', 'ring-2', 'ring-fuchsia-400');
+        indicator.classList.remove('border-pink-400/60');
+        indicator.classList.add('border-fuchsia-300', 'bg-fuchsia-500', 'text-white');
+        indicator.textContent = '✓';
+      } else {
+        selectedMultiIndices.splice(pos, 1);
+        btnEl.classList.remove('border-fuchsia-400', 'bg-fuchsia-950/80', 'ring-2', 'ring-fuchsia-400');
+        btnEl.classList.add('border-pink-500/30', 'bg-pink-900/60');
+        indicator.classList.remove('border-fuchsia-300', 'bg-fuchsia-500', 'text-white');
+        indicator.classList.add('border-pink-400/60');
+        indicator.textContent = '';
       }
     }
 
-    function closeModal() {
-      const modal = document.getElementById('farewell-modal');
-      const modalCard = document.getElementById('modal-card');
+    multiSubmitBtn.addEventListener('click', () => {
+      if (isAnswered) return;
+      isAnswered = true;
+      clearInterval(timerId);
 
-      modal.classList.add('opacity-0');
-      modalCard.classList.remove('scale-100');
-      modalCard.classList.add('scale-95');
+      const q = questionsList[currentIndex];
+      const sortedCorrect = [...q.correctIndices].sort().join(',');
+      const sortedUser = [...selectedMultiIndices].sort().join(',');
 
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 300);
+      const isExactMatch = (sortedCorrect === sortedUser);
+
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        const isTargetCorrect = q.correctIndices.includes(idx);
+        const isUserSelected = selectedMultiIndices.includes(idx);
+
+        if (isTargetCorrect) {
+          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60', 'border-fuchsia-400', 'bg-fuchsia-950/80');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        } else if (isUserSelected && !isTargetCorrect) {
+          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60', 'border-fuchsia-400', 'bg-fuchsia-950/80');
+          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
+        }
+      });
+
+      if (isExactMatch) {
+        score += 1;
+        liveScoreEl.textContent = `${score} / 10`;
+        showExplanation(true, "Spot on! You selected all the right items. " + q.explanation);
+      } else {
+        showExplanation(false, "Not quite! Look closely at the highlighted correct choices. " + q.explanation);
+      }
+
+      multiSubmitContainer.classList.add('hidden');
+      nextBtn.classList.remove('hidden');
+    });
+
+    function handleSingleClick(selectedIdx) {
+      if (isAnswered) return;
+      isAnswered = true;
+      clearInterval(timerId);
+
+      const q = questionsList[currentIndex];
+      const correctIdx = q.correctIndices[0];
+      const isCorrect = (selectedIdx === correctIdx);
+
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctIdx) {
+          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60');
+          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
+        }
+      });
+
+      if (isCorrect) {
+        score += 1;
+        liveScoreEl.textContent = `${score} / 10`;
+        showExplanation(true, "Correct! " + q.explanation);
+      } else {
+        showExplanation(false, "Incorrect! " + q.explanation);
+      }
+
+      nextBtn.classList.remove('hidden');
     }
 
-    // INIT
-    renderChallenges();
+    function onTimeout() {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const q = questionsList[currentIndex];
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (q.correctIndices.includes(idx)) {
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        }
+      });
+
+      showExplanation(false, "⏳ Time's up! You had 30 seconds for this question. " + q.explanation);
+      multiSubmitContainer.classList.add('hidden');
+      nextBtn.classList.remove('hidden');
+    }
+
+    function showExplanation(isCorrect, message) {
+      explanationBox.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
+
+      if (isCorrect) {
+        explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
+        explanationIcon.textContent = "🦄";
+        explanationTitle.textContent = "Magical Job!";
+        explanationTitle.className = "font-bold text-base text-emerald-300";
+      } else {
+        explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
+        explanationIcon.textContent = "💡";
+        explanationTitle.textContent = "Solution & Concept";
+        explanationTitle.className = "font-bold text-base text-rose-300";
+      }
+
+      explanationText.textContent = message;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex++;
+      if (currentIndex < questionsList.length) {
+        displayQuestion();
+      } else {
+        showTeacherReport();
+      }
+    });
+
+    function showTeacherReport() {
+      quizScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
+
+      finalTotalScore.textContent = `${score} / 10`;
+
+      let feedback = "";
+      if (score >= 9) {
+        feedback = `Fantastic achievement! 🦄 You scored ${score} out of 10! You showed outstanding mastery in identifying HTML attributes, CSS properties, link tags, and structural hierarchy. You think like a true frontend developer!`;
+      } else if (score >= 7) {
+        note = `Great job! 🦄 You scored ${score} out of 10! You have a solid understanding of how HTML tags and CSS properties work inside style attributes. Review the quick reference table below to get 10/10 next time!`;
+      } else if (score >= 5) {
+        note = `Good effort! 🦄 You scored ${score} out of 10! You got most of the single-choice questions right! Just remember that HTML attributes sit inside tags, while CSS properties sit inside the style attribute!`;
+      } else {
+        note = `Nice try! 🦄 You scored ${score} out of 10. Web coding takes practice! Check the rules table below and give the revision quiz another try!`;
+      }
+
+      teacherFeedbackText.textContent = feedback || note;
+    }
+
+    restartBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      score = 0;
+      prepareQuestions();
+      resultScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      displayQuestion();
+    });
+
+    createFlyingUnicorns();
+    prepareQuestions();
+    displayQuestion();
   </script>
 </body>
 </html>
