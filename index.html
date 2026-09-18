@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HTML Revision</title>
+  <title>Python Revision</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Caveat for teacher's feedback, Fira Code for code, Outfit for UI -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Flying Unicorns Animation */
+    /* Flying Unicorns Background Animation */
     .flying-unicorn {
       position: fixed;
       pointer-events: none;
@@ -50,7 +50,7 @@
       }
     }
 
-    /* Notebook sheet background for feedback */
+    /* Notebook sheet background for teacher feedback */
     .feedback-sheet {
       background-color: #fff5f8;
       background-image: linear-gradient(#fbcfe8 1px, transparent 1px);
@@ -69,18 +69,18 @@
 </head>
 <body class="bg-gradient-to-br from-pink-900 via-fuchsia-950 to-rose-950 text-white min-h-screen relative flex flex-col justify-between selection:bg-pink-400 selection:text-pink-950">
 
-  <!-- Background Flying Unicorns Container -->
+  <!-- Flying Unicorns Container -->
   <div id="unicorns-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-  <!-- Main Container -->
+  <!-- Main Application Container -->
   <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-    <!-- Header (Strictly "HTML Revision") -->
+    <!-- Header (Strictly "Python Revision") -->
     <header class="text-center mb-6">
       <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-200 to-fuchsia-200 tracking-tight drop-shadow-md">
-        HTML Revision
+        Python Revision
       </h1>
-      <p class="text-xs sm:text-sm font-semibold text-pink-300/80 mt-1">Tags, Attributes, Properties & Rules</p>
+      <p class="text-xs sm:text-sm font-semibold text-pink-300/80 mt-1">Loops, Lists & Conditions Practice</p>
     </header>
 
     <!-- QUIZ SCREEN -->
@@ -90,7 +90,7 @@
       <div class="bg-pink-950/80 backdrop-blur-md border border-pink-500/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
         <div class="flex justify-between items-center gap-3">
           
-          <!-- Question Number Tracker -->
+          <!-- Question Counter -->
           <div>
             <span class="text-xs uppercase font-bold text-pink-300 tracking-wider block">Question</span>
             <div class="text-xl sm:text-2xl font-black text-pink-100 font-code">
@@ -98,13 +98,13 @@
             </div>
           </div>
 
-          <!-- Live Score -->
+          <!-- Score -->
           <div class="text-center bg-pink-900/80 px-4 py-2 rounded-xl border border-pink-500/30 shadow-inner">
             <span class="text-[11px] uppercase tracking-wider text-pink-300 block font-bold">Score</span>
             <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
           </div>
 
-          <!-- 30-Second Timer -->
+          <!-- Timer -->
           <div class="flex items-center gap-2">
             <div class="relative w-14 h-14 flex items-center justify-center bg-pink-900/90 rounded-full border-2 border-pink-400 shadow-inner">
               <span id="timer-text" class="text-xl font-black text-pink-200 font-code">30</span>
@@ -113,39 +113,31 @@
           </div>
         </div>
 
-        <!-- Timer Progress Bar -->
+        <!-- Progress Bar -->
         <div class="w-full bg-pink-950 h-2.5 rounded-full mt-3 overflow-hidden border border-pink-800">
           <div id="timer-bar" class="h-full bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
-      <!-- Question Box -->
+      <!-- Question Card -->
       <div class="bg-pink-950/85 backdrop-blur-md border border-pink-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
         
-        <!-- Multi-select Hint Banner (Conditional) -->
-        <div id="multi-hint" class="hidden mb-3 p-2.5 rounded-xl bg-fuchsia-500/20 border border-fuchsia-400/40 text-fuchsia-200 text-xs font-semibold flex items-center gap-2">
-          <span>✨</span>
-          <span>This question has <strong>multiple correct answers</strong>! Click all options that apply, then click <strong>Submit Selection</strong>.</span>
-        </div>
-
-        <!-- Question Scenario / Text -->
+        <!-- Question Scenario / Prompt -->
         <h2 id="question-text" class="text-base sm:text-lg font-bold text-pink-100 leading-relaxed mb-4">
           Question loading...
         </h2>
 
-        <!-- Options Container -->
+        <!-- Code Snippet Container -->
+        <div id="code-container" class="mb-5 hidden">
+          <pre class="bg-pink-950/90 text-pink-200 border border-pink-500/40 rounded-xl p-4 font-code text-sm sm:text-base overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+        </div>
+
+        <!-- 4 Option Buttons Grid -->
         <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           <!-- Options rendered dynamically -->
         </div>
 
-        <!-- Multi-select Submit Button -->
-        <div id="multi-submit-container" class="hidden mb-5">
-          <button id="multi-submit-btn" class="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-400 hover:to-fuchsia-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">
-            Submit Selection 🦄
-          </button>
-        </div>
-
-        <!-- Explanation Container (Placed Directly Below Buttons) -->
+        <!-- Explanation Container (Under Buttons) -->
         <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-5 shadow-md">
           <div class="flex items-start gap-3">
             <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
@@ -177,7 +169,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-pink-300 pb-4 mb-6">
           <div>
             <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-pink-950">Teacher's Feedback</h2>
-            <p class="text-xs text-pink-800 font-semibold tracking-wide uppercase mt-1">HTML Attributes, Properties & Syntax Review</p>
+            <p class="text-xs text-pink-800 font-semibold tracking-wide uppercase mt-1">Python Loops, Lists & Conditions Revision</p>
           </div>
           <div class="mt-3 sm:mt-0 bg-pink-100 border-2 border-pink-400 rounded-xl px-4 py-2 text-center shadow-sm">
             <span class="text-[11px] uppercase tracking-wider text-pink-900 font-bold block">Final Score</span>
@@ -185,22 +177,23 @@
           </div>
         </div>
 
-        <!-- Teacher's Feedback Body (Handwritten Font) -->
+        <!-- Teacher's Feedback Body (Handwritten Style) -->
         <div class="mb-6 bg-white/80 p-6 rounded-xl border border-pink-200 shadow-sm">
           <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-pink-950 leading-relaxed">
             Generating feedback note...
           </p>
         </div>
 
-        <!-- Quick HTML Reference Box -->
+        <!-- Summary Box -->
         <div class="mb-6 p-4 rounded-xl bg-pink-100/70 border border-pink-300">
           <h3 class="font-bold text-xs text-pink-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Key HTML & CSS Rules to Remember:
+            <span>📌</span> Key Python Rules to Remember:
           </h3>
           <ul class="text-xs sm:text-sm text-pink-900 space-y-1.5 leading-relaxed">
-            <li>• <strong>HTML Attributes</strong>: Written inside the opening tag (e.g. <code class="bg-pink-200 px-1 rounded font-code">src</code>, <code class="bg-pink-200 px-1 rounded font-code">href</code>, <code class="bg-pink-200 px-1 rounded font-code">style</code>, <code class="bg-pink-200 px-1 rounded font-code">type</code>, <code class="bg-pink-200 px-1 rounded font-code">bgcolor</code>).</li>
-            <li>• <strong>CSS Properties</strong>: Written inside the <code class="bg-pink-200 px-1 rounded font-code">style="..."</code> attribute (e.g. <code class="bg-pink-200 px-1 rounded font-code">color</code>, <code class="bg-pink-200 px-1 rounded font-code">textAlign</code>, <code class="bg-pink-200 px-1 rounded font-code">border</code>).</li>
-            <li>• <strong>Tags</strong>: Structural elements like <code class="bg-pink-200 px-1 rounded font-code">&lt;a&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;br&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;h1&gt;</code>, <code class="bg-pink-200 px-1 rounded font-code">&lt;body&gt;</code>.</li>
+            <li>• <strong>List Indexing</strong>: First item is always index 0 (e.g., <code class="bg-pink-200 px-1 rounded font-code">items[0]</code>).</li>
+            <li>• <strong>List .append()</strong>: Adds a new item to the very end of the list.</li>
+            <li>• <strong>Colons (:)</strong>: Always put a colon at the end of <code class="bg-pink-200 px-1 rounded font-code">if</code>, <code class="bg-pink-200 px-1 rounded font-code">else</code>, <code class="bg-pink-200 px-1 rounded font-code">for</code>, and <code class="bg-pink-200 px-1 rounded font-code">while</code> lines.</li>
+            <li>• <strong>Logical Operators</strong>: <code class="bg-pink-200 px-1 rounded font-code">and</code> needs both sides True; <code class="bg-pink-200 px-1 rounded font-code">or</code> needs only one side True!</li>
           </ul>
         </div>
 
@@ -219,140 +212,143 @@
 
   <!-- Footer -->
   <footer class="relative z-10 py-3 text-center text-xs text-pink-300/80 bg-pink-950/80 border-t border-pink-900/50">
-    <p>HTML Revision • Flying Unicorns Edition 🦄</p>
+    <p>Python Revision • Loops, Lists & Conditions 🦄</p>
   </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 10 QUESTIONS SPECIFIED BY USER
+    // 10 EASY & ACCESSIBLE QUESTIONS FOR A 14-YEAR-OLD STUDENT
     // -------------------------------------------------------------
     const questionsRaw = [
-
-      // Q1: MULTI-SELECT ATTRIBUTES
+      
+      // Q1: Loop Execution Count with List
       {
-        type: "multi",
-        question: "Click on ALL the items in the list below that are HTML Attributes:",
+        question: "Loop Count: A music player loops through a list of songs. How many times will this for-loop run?",
+        code: "playlist = ['Song A', 'Song B', 'Song C', 'Song D']\nfor song in playlist:\n    print('Playing:', song)",
         options: [
-          { text: "bgcolor", isCorrect: true },
-          { text: "backgroundcolor", isCorrect: false },
-          { text: "type", isCorrect: true },
-          { text: "border", isCorrect: false }, // border is a CSS property (and deprecated table attribute, user specified properties as border)
-          { text: "style", isCorrect: true },
-          { text: "src", isCorrect: true },
-          { text: "href", isCorrect: true }
+          { text: "4 times", isCorrect: true },
+          { text: "3 times", isCorrect: false },
+          { text: "5 times", isCorrect: false },
+          { text: "1 time", isCorrect: false }
         ],
-        explanation: "Correct attributes: 'bgcolor', 'type', 'style', 'src', and 'href'! ('backgroundcolor' does not exist in standard HTML, and 'border' is primarily a CSS property)."
+        explanation: "The playlist has 4 songs, so the for-loop runs exactly 4 times (once for each song in the list)!"
       },
 
-      // Q2: MULTI-SELECT PROPERTIES
+      // Q2: List Indexing
       {
-        type: "multi",
-        question: "Click on ALL the items in the list below that are CSS Properties (used inside style):",
+        question: "List Indexing: A video game keeps track of top scores. What will `scores[1]` output?",
+        code: "scores = [120, 250, 310, 450]\nprint(scores[1])",
         options: [
-          { text: "textAlign", isCorrect: true },
-          { text: "br", isCorrect: false },
-          { text: "color", isCorrect: true },
-          { text: "h1", isCorrect: false },
-          { text: "border", isCorrect: true },
-          { text: "body", isCorrect: false }
+          { text: "250", isCorrect: true },
+          { text: "120", isCorrect: false },
+          { text: "310", isCorrect: false },
+          { text: "450", isCorrect: false }
         ],
-        explanation: "Correct properties: 'textAlign', 'color', and 'border'! ('br', 'h1', and 'body' are HTML tags, not CSS properties)."
+        explanation: "Python list indices start at 0! Index 0 is 120, and index 1 is 250."
       },
 
-      // Q3: LINK TAG MCQ
+      // Q3: If/Else Condition
       {
-        type: "mcq",
-        question: "Which tag is used to link another webpage to your website?",
+        question: "Condition Check: A amusement park checks a rider's height. What will this code print if height is 135 cm?",
+        code: "height = 135\nif height >= 120:\n    print('Can ride! 🎢')\nelse:\n    print('Too short ❌')",
         options: [
-          { text: "Anchor Tag (<a>)", isCorrect: true },
-          { text: "Action Tag (<action>)", isCorrect: false },
-          { text: "Linker Tag (<linker>)", isCorrect: false },
-          { text: "Attach Tag (<attach>)", isCorrect: false }
+          { text: "Can ride! 🎢", isCorrect: true },
+          { text: "Too short ❌", isCorrect: false },
+          { text: "135", isCorrect: false },
+          { text: "Nothing", isCorrect: false }
         ],
-        explanation: "The Anchor Tag <a> (with the href attribute) is used to create hyperlinks connecting one webpage to another!"
+        explanation: "Since 135 is greater than or equal to 120, the condition is True, so it prints 'Can ride! 🎢'."
       },
 
-      // Q4: IMAGE TAG ATTRIBUTE MCQ
+      // Q4: Loop Accumulation (Summing List)
       {
-        type: "mcq",
-        question: "Which attribute is connected to the <img> tag to specify the image path or link?",
+        question: "Predict Output: A player collects bonus coins worth [5, 10, 15] points. What is the final total score printed?",
+        code: "total = 0\ncoins = [5, 10, 15]\nfor coin in coins:\n    total = total + coin\nprint(total)",
         options: [
-          { text: "src", isCorrect: true },
-          { text: "href", isCorrect: false },
-          { text: "url", isCorrect: false },
-          { text: "path", isCorrect: false }
+          { text: "30", isCorrect: true },
+          { text: "15", isCorrect: false },
+          { text: "3", isCorrect: false },
+          { text: "35", isCorrect: false }
         ],
-        explanation: "The 'src' attribute stands for 'source' and tells the browser where to find the image file to display."
+        explanation: "total starts at 0. It adds each coin value in order: 0 + 5 + 10 + 15 = 30!"
       },
 
-      // Q5: ROMAN NUMERALS LIST MCQ
+      // Q5: While Loop Iterations
       {
-        type: "mcq",
-        question: "If I want to create a list that uses Roman Numerals (I, II, III...), what type of list would it be?",
+        question: "While Loop Count: A phone battery charges from 0% in steps of 20%. How many times will this while-loop run?",
+        code: "battery = 0\nsteps = 0\nwhile battery < 60:\n    battery = battery + 20\n    steps = steps + 1\nprint(steps)",
         options: [
-          { text: "Ordered List (<ol>)", isCorrect: true },
-          { text: "Unordered List (<ul>)", isCorrect: false },
-          { text: "Roman List (<rl>)", isCorrect: false },
-          { text: "Bullet List (<bl>)", isCorrect: false }
+          { text: "3 times", isCorrect: true },
+          { text: "6 times", isCorrect: false },
+          { text: "4 times", isCorrect: false },
+          { text: "2 times", isCorrect: false }
         ],
-        explanation: "Roman numerals have a strict numerical sequence (I, II, III), so they belong to an Ordered List (<ol type='I'>)!"
+        explanation: "Battery values: 0➔20 (step 1), 20➔40 (step 2), 40➔60 (step 3). When battery reaches 60, battery < 60 becomes False and the loop stops after 3 times!"
       },
 
-      // Q6: FILE NAME MCQ
+      // Q6: List Method (.append)
       {
-        type: "mcq",
-        question: "I want to connect a new page to my website named 'page2'. What should be the complete file name?",
+        question: "List Update: A shopping cart starts with ['apple', 'milk']. We add 'bread' using .append(). What is `len(cart)` now?",
+        code: "cart = ['apple', 'milk']\ncart.append('bread')\nprint(len(cart))",
         options: [
-          { text: "page2.html", isCorrect: true },
-          { text: "page2.web", isCorrect: false },
-          { text: "page2.site", isCorrect: false },
-          { text: "page2.doc", isCorrect: false }
+          { text: "3", isCorrect: true },
+          { text: "2", isCorrect: false },
+          { text: "4", isCorrect: false },
+          { text: "1", isCorrect: false }
         ],
-        explanation: "Webpages must end with the '.html' (or '.htm') file extension so web browsers recognize them as HTML documents!"
+        explanation: ".append('bread') adds 1 item to the cart list. Now the cart has 3 items: ['apple', 'milk', 'bread']."
       },
 
-      // Q7: TRUE / FALSE COLOR REPRESENTATION
+      // Q7: Logical Operator (AND)
       {
-        type: "tf",
-        question: "State True or False: To add color to a website styling, we can ONLY use color names within quotation marks.",
+        question: "Logical Condition: A game checks if you have enough energy AND a key to open a chest. What is the output?",
+        code: "energy = 80\nhas_key = True\nif energy > 50 and has_key == True:\n    print('Chest Unlocked! 🔓')\nelse:\n    print('Locked 🔒')",
         options: [
-          { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
-        ],
-        explanation: "False! Besides color names (like 'pink'), we can also use Hex codes (like '#ff007f'), RGB values (like 'rgb(255,0,128)'), and HSL values!"
-      },
-
-      // Q8: TRUE / FALSE HEADING SIZES
-      {
-        type: "tf",
-        question: "State True or False: Out of all the heading tags, <h1> has the smallest font size.",
-        options: [
-          { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
-        ],
-        explanation: "False! <h1> is the largest heading tag, while <h6> is the smallest heading tag."
-      },
-
-      // Q9: TRUE / FALSE BODY TAG HIERARCHY
-      {
-        type: "tf",
-        question: "State True or False: The <body> tag is created inside the <html> tag.",
-        options: [
-          { text: "True", isCorrect: true },
+          { text: "Chest Unlocked! 🔓", isCorrect: true },
+          { text: "Locked 🔒", isCorrect: false },
+          { text: "True", isCorrect: false },
           { text: "False", isCorrect: false }
         ],
-        explanation: "True! <html> is the parent root tag that encloses the entire webpage structure, including <head> and <body>."
+        explanation: "energy > 50 is True (80 > 50) AND has_key is True. With 'and', because BOTH sides are True, the code prints 'Chest Unlocked! 🔓'."
       },
 
-      // Q10: TRUE / FALSE BR TAG NAME
+      // Q8: Logical Operator (OR)
       {
-        type: "tf",
-        question: "State True or False: The <br> tag is named as the 'branch' tag.",
+        question: "Logical Condition: A scanner grants access if you have a Student Pass OR a Teacher Pass. What will be printed?",
+        code: "has_student_pass = False\nhas_teacher_pass = True\nif has_student_pass or has_teacher_pass:\n    print('Access Granted 🚪')\nelse:\n    print('Access Denied 🚫')",
         options: [
-          { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
+          { text: "Access Granted 🚪", isCorrect: true },
+          { text: "Access Denied 🚫", isCorrect: false },
+          { text: "False", isCorrect: false },
+          { text: "Error", isCorrect: false }
         ],
-        explanation: "False! <br> stands for 'break' (line break), which drops the text down to a new line."
+        explanation: "With 'or', if at least ONE side is True, the whole statement is True! Since has_teacher_pass is True, it prints 'Access Granted 🚪'."
+      },
+
+      // Q9: Spot the Error (Missing Colon)
+      {
+        question: "Spot the Error: What is wrong with this if-statement in Python?",
+        code: "score = 100\nif score == 100\n    print('Perfect Score!')",
+        options: [
+          { text: "Missing colon (:) at the end of the if line", isCorrect: true },
+          { text: "The word print is spelled wrong", isCorrect: false },
+          { text: "100 should be inside quotes", isCorrect: false },
+          { text: "There is no error in this code", isCorrect: false }
+        ],
+        explanation: "In Python, every 'if', 'else', 'for', and 'while' line MUST end with a colon (:), like this: if score == 100:"
+      },
+
+      // Q10: Spot the Error (List Index Out of Bounds)
+      {
+        question: "Spot the Error: Why does Python give an error when trying to run this code?",
+        code: "colors = ['red', 'blue']\nprint(colors[2])",
+        options: [
+          { text: "Index 2 does not exist (list only has index 0 and 1)", isCorrect: true },
+          { text: "List items must be numbers", isCorrect: false },
+          { text: "Square brackets are not allowed", isCorrect: false },
+          { text: "colors must be written in capital letters", isCorrect: false }
+        ],
+        explanation: "colors has only 2 items: index 0 ('red') and index 1 ('blue'). Trying to access index 2 causes an IndexError because it's out of range!"
       }
     ];
 
@@ -373,18 +369,16 @@
     let timeLeft = 30;
     let timerId = null;
     let isAnswered = false;
-    let selectedMultiIndices = [];
 
-    // DOM
+    // DOM ELEMENTS
     const qNumEl = document.getElementById('q-num');
     const liveScoreEl = document.getElementById('live-score');
     const timerTextEl = document.getElementById('timer-text');
     const timerBarEl = document.getElementById('timer-bar');
     const questionTextEl = document.getElementById('question-text');
+    const codeContainer = document.getElementById('code-container');
+    const codeSnippetEl = document.getElementById('code-snippet');
     const optionsGrid = document.getElementById('options-grid');
-    const multiHint = document.getElementById('multi-hint');
-    const multiSubmitContainer = document.getElementById('multi-submit-container');
-    const multiSubmitBtn = document.getElementById('multi-submit-btn');
     const explanationBox = document.getElementById('explanation-box');
     const explanationTitle = document.getElementById('explanation-title');
     const explanationText = document.getElementById('explanation-text');
@@ -403,19 +397,12 @@
 
       const unicornSVG = `
         <svg width="45" height="40" viewBox="0 0 64 64" fill="none">
-          <!-- Unicorn Body -->
           <path d="M12 40 C12 28, 28 24, 40 28 C48 30, 52 38, 48 48 C44 54, 20 54, 12 40 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
-          <!-- Legs -->
           <path d="M18 48 L16 60 M28 48 L28 60 M38 48 L40 60 M46 44 L48 58" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
-          <!-- Head & Neck -->
           <path d="M38 30 C42 20, 48 12, 56 16 C60 18, 58 28, 50 32 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
-          <!-- Horn -->
           <path d="M52 14 L62 2 L56 12 Z" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
-          <!-- Mane (Rainbow Pink/Purple) -->
           <path d="M36 22 C32 16, 40 10, 48 12 C44 18, 42 22, 36 22 Z" fill="#e879f9"/>
-          <!-- Eye -->
           <circle cx="53" cy="20" r="1.5" fill="#831843"/>
-          <!-- Wing -->
           <path d="M26 32 C20 18, 36 14, 34 30 Z" fill="#f472b6" stroke="#db2777" stroke-width="1.5"/>
         </svg>
       `;
@@ -440,21 +427,16 @@
     function prepareQuestions() {
       questionsList = questionsRaw.map(q => {
         const clonedOpts = [...q.options];
-        if (q.type !== 'tf') {
-          // Shuffle options for non True/False questions
-          for (let i = clonedOpts.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
-          }
+        // Fisher-Yates shuffle options so the correct answer isn't always in position A
+        for (let i = clonedOpts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
         }
         return {
-          type: q.type,
           question: q.question,
+          code: q.code || null,
           options: clonedOpts.map(o => o.text),
-          correctIndices: clonedOpts.reduce((acc, curr, idx) => {
-            if (curr.isCorrect) acc.push(idx);
-            return acc;
-          }, []),
+          correctIndex: clonedOpts.findIndex(o => o.isCorrect),
           explanation: q.explanation
         };
       });
@@ -494,7 +476,6 @@
 
     function displayQuestion() {
       isAnswered = false;
-      selectedMultiIndices = [];
       const q = questionsList[currentIndex];
 
       qNumEl.textContent = currentIndex + 1;
@@ -504,41 +485,26 @@
       nextBtn.classList.add('hidden');
 
       questionTextEl.textContent = q.question;
-      optionsGrid.innerHTML = '';
 
-      if (q.type === 'multi') {
-        multiHint.classList.remove('hidden');
-        multiSubmitContainer.classList.remove('hidden');
-        optionsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4";
-      } else if (q.type === 'tf') {
-        multiHint.classList.add('hidden');
-        multiSubmitContainer.classList.add('hidden');
-        optionsGrid.className = "grid grid-cols-2 gap-4 mb-5";
+      if (q.code) {
+        codeSnippetEl.textContent = q.code;
+        codeContainer.classList.remove('hidden');
       } else {
-        multiHint.classList.add('hidden');
-        multiSubmitContainer.classList.add('hidden');
-        optionsGrid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5";
+        codeContainer.classList.add('hidden');
       }
+
+      optionsGrid.innerHTML = '';
 
       q.options.forEach((optText, idx) => {
         const btn = document.createElement('button');
         btn.dataset.idx = idx;
 
-        if (q.type === 'multi') {
-          btn.className = "option-btn p-3.5 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 text-left text-pink-100 font-medium transition flex items-center justify-between shadow-sm";
-          btn.innerHTML = `
-            <span class="text-xs sm:text-sm font-code leading-snug">${escapeHTML(optText)}</span>
-            <span class="checkbox-indicator w-5 h-5 rounded-md border-2 border-pink-400/60 flex items-center justify-center text-xs font-bold shrink-0"></span>
-          `;
-          btn.addEventListener('click', () => toggleMultiChoice(idx, btn));
-        } else {
-          btn.className = "option-btn p-4 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 hover:border-pink-400 text-left text-pink-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
-          btn.innerHTML = `
-            <span class="w-8 h-8 rounded-lg bg-pink-950/80 border border-pink-500/40 text-pink-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
-            <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
-          `;
-          btn.addEventListener('click', () => handleSingleClick(idx));
-        }
+        btn.className = "option-btn p-4 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 hover:border-pink-400 text-left text-pink-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg bg-pink-950/80 border border-pink-500/40 text-pink-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
+        `;
+        btn.addEventListener('click', () => handleOptionClick(idx));
 
         optionsGrid.appendChild(btn);
       });
@@ -546,80 +512,18 @@
       startTimer();
     }
 
-    function toggleMultiChoice(idx, btnEl) {
-      if (isAnswered) return;
-
-      const pos = selectedMultiIndices.indexOf(idx);
-      const indicator = btnEl.querySelector('.checkbox-indicator');
-
-      if (pos === -1) {
-        selectedMultiIndices.push(idx);
-        btnEl.classList.remove('border-pink-500/30', 'bg-pink-900/60');
-        btnEl.classList.add('border-fuchsia-400', 'bg-fuchsia-950/80', 'ring-2', 'ring-fuchsia-400');
-        indicator.classList.remove('border-pink-400/60');
-        indicator.classList.add('border-fuchsia-300', 'bg-fuchsia-500', 'text-white');
-        indicator.textContent = '✓';
-      } else {
-        selectedMultiIndices.splice(pos, 1);
-        btnEl.classList.remove('border-fuchsia-400', 'bg-fuchsia-950/80', 'ring-2', 'ring-fuchsia-400');
-        btnEl.classList.add('border-pink-500/30', 'bg-pink-900/60');
-        indicator.classList.remove('border-fuchsia-300', 'bg-fuchsia-500', 'text-white');
-        indicator.classList.add('border-pink-400/60');
-        indicator.textContent = '';
-      }
-    }
-
-    multiSubmitBtn.addEventListener('click', () => {
+    function handleOptionClick(selectedIdx) {
       if (isAnswered) return;
       isAnswered = true;
       clearInterval(timerId);
 
       const q = questionsList[currentIndex];
-      const sortedCorrect = [...q.correctIndices].sort().join(',');
-      const sortedUser = [...selectedMultiIndices].sort().join(',');
-
-      const isExactMatch = (sortedCorrect === sortedUser);
+      const isCorrect = (selectedIdx === q.correctIndex);
 
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
-        const isTargetCorrect = q.correctIndices.includes(idx);
-        const isUserSelected = selectedMultiIndices.includes(idx);
-
-        if (isTargetCorrect) {
-          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60', 'border-fuchsia-400', 'bg-fuchsia-950/80');
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
-        } else if (isUserSelected && !isTargetCorrect) {
-          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60', 'border-fuchsia-400', 'bg-fuchsia-950/80');
-          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
-        }
-      });
-
-      if (isExactMatch) {
-        score += 1;
-        liveScoreEl.textContent = `${score} / 10`;
-        showExplanation(true, "Spot on! You selected all the right items. " + q.explanation);
-      } else {
-        showExplanation(false, "Not quite! Look closely at the highlighted correct choices. " + q.explanation);
-      }
-
-      multiSubmitContainer.classList.add('hidden');
-      nextBtn.classList.remove('hidden');
-    });
-
-    function handleSingleClick(selectedIdx) {
-      if (isAnswered) return;
-      isAnswered = true;
-      clearInterval(timerId);
-
-      const q = questionsList[currentIndex];
-      const correctIdx = q.correctIndices[0];
-      const isCorrect = (selectedIdx === correctIdx);
-
-      const buttons = optionsGrid.querySelectorAll('.option-btn');
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === correctIdx) {
+        if (idx === q.correctIndex) {
           btn.classList.remove('border-pink-500/30', 'bg-pink-900/60');
           btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         } else if (idx === selectedIdx && !isCorrect) {
@@ -633,7 +537,7 @@
         liveScoreEl.textContent = `${score} / 10`;
         showExplanation(true, "Correct! " + q.explanation);
       } else {
-        showExplanation(false, "Incorrect! " + q.explanation);
+        showExplanation(false, "Not quite! " + q.explanation);
       }
 
       nextBtn.classList.remove('hidden');
@@ -647,13 +551,12 @@
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
-        if (q.correctIndices.includes(idx)) {
+        if (idx === q.correctIndex) {
           btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         }
       });
 
-      showExplanation(false, "⏳ Time's up! You had 30 seconds for this question. " + q.explanation);
-      multiSubmitContainer.classList.add('hidden');
+      showExplanation(false, "⏳ Time is up! You had 30 seconds for this question. " + q.explanation);
       nextBtn.classList.remove('hidden');
     }
 
@@ -663,12 +566,12 @@
       if (isCorrect) {
         explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
         explanationIcon.textContent = "🦄";
-        explanationTitle.textContent = "Magical Job!";
+        explanationTitle.textContent = "Great Job!";
         explanationTitle.className = "font-bold text-base text-emerald-300";
       } else {
         explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
         explanationIcon.textContent = "💡";
-        explanationTitle.textContent = "Solution & Concept";
+        explanationTitle.textContent = "Let's Learn";
         explanationTitle.className = "font-bold text-base text-rose-300";
       }
 
@@ -692,16 +595,16 @@
 
       let feedback = "";
       if (score >= 9) {
-        feedback = `Fantastic achievement! 🦄 You scored ${score} out of 10! You showed outstanding mastery in identifying HTML attributes, CSS properties, link tags, and structural hierarchy. You think like a true frontend developer!`;
+        feedback = `Awesome work! 🦄 You scored ${score} out of 10! You did a fantastic job understanding loops, list indexing, and condition checks. Your Python logic is getting very strong! Keep up the brilliant coding!`;
       } else if (score >= 7) {
-        note = `Great job! 🦄 You scored ${score} out of 10! You have a solid understanding of how HTML tags and CSS properties work inside style attributes. Review the quick reference table below to get 10/10 next time!`;
+        feedback = `Great job! 🦄 You scored ${score} out of 10! You understand how loops iterate and how lists store items starting at index 0. Keep practicing to hit 10 out of 10 next time!`;
       } else if (score >= 5) {
-        note = `Good effort! 🦄 You scored ${score} out of 10! You got most of the single-choice questions right! Just remember that HTML attributes sit inside tags, while CSS properties sit inside the style attribute!`;
+        note = `Good effort! 🦄 You scored ${score} out of 10! You got many questions right. Remember to always put colons (:) at the end of 'if' lines and check list indices carefully!`;
       } else {
-        note = `Nice try! 🦄 You scored ${score} out of 10. Web coding takes practice! Check the rules table below and give the revision quiz another try!`;
+        note = `Nice try! 🦄 You scored ${score} out of 10. Python takes time and practice to master. Review the key rules below and take another turn!`;
       }
 
-      teacherFeedbackText.textContent = feedback || note;
+      teacherFeedbackText.textContent = feedback;
     }
 
     restartBtn.addEventListener('click', () => {
@@ -713,6 +616,7 @@
       displayQuestion();
     });
 
+    // INIT
     createFlyingUnicorns();
     prepareQuestions();
     displayQuestion();
