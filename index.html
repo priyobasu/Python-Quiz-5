@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Revision</title>
+  <title>Python Revision - 30 Question Challenge</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Caveat for tutor note, Fira Code for code blocks, Outfit for general UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,127 +23,126 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Flying Unicorns Background Animation */
-    .flying-unicorn {
+    /* Falling Umbrellas Animation */
+    .falling-umbrella {
       position: fixed;
+      top: -60px;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.75;
-      animation: floatUnicorn linear infinite;
+      animation: fallDown linear infinite;
     }
 
-    @keyframes floatUnicorn {
+    @keyframes fallDown {
       0% {
-        transform: translateX(-120px) translateY(0px) rotate(0deg) scale(0.9);
-      }
-      25% {
-        transform: translateX(25vw) translateY(-25px) rotate(4deg) scale(1.05);
+        transform: translateY(-20px) rotate(0deg) translateX(0px);
+        opacity: 0.95;
       }
       50% {
-        transform: translateX(50vw) translateY(15px) rotate(-3deg) scale(0.95);
-      }
-      75% {
-        transform: translateX(75vw) translateY(-20px) rotate(3deg) scale(1.02);
+        transform: translateY(50vh) rotate(180deg) translateX(30px);
+        opacity: 0.85;
       }
       100% {
-        transform: translateX(105vw) translateY(0px) rotate(0deg) scale(0.9);
+        transform: translateY(105vh) rotate(360deg) translateX(-25px);
+        opacity: 0;
       }
     }
 
-    /* Notebook sheet background for teacher feedback */
-    .feedback-sheet {
-      background-color: #fff5f8;
-      background-image: linear-gradient(#fbcfe8 1px, transparent 1px);
+    /* Report Card Notebook Paper */
+    .report-paper {
+      background-color: #fffdf0;
+      background-image: linear-gradient(#fcd34d 1px, transparent 1px);
       background-size: 100% 2.1rem;
-      border-left: 5px double #db2777;
+      border-left: 5px double #b45309;
     }
 
     pre::-webkit-scrollbar {
       height: 6px;
     }
     pre::-webkit-scrollbar-thumb {
-      background: #ec4899;
+      background: #d97706;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-pink-900 via-fuchsia-950 to-rose-950 text-white min-h-screen relative flex flex-col justify-between selection:bg-pink-400 selection:text-pink-950">
+<body class="bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 text-slate-900 min-h-screen relative flex flex-col justify-between selection:bg-amber-800 selection:text-white">
 
-  <!-- Flying Unicorns Container -->
-  <div id="unicorns-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+  <!-- Falling Umbrellas Background Container -->
+  <div id="umbrellas-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-  <!-- Main Application Container -->
+  <!-- Main Application Wrapper -->
   <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-    <!-- Header (Strictly "Python Revision") -->
+    <!-- Global Header -->
     <header class="text-center mb-6">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-200 to-fuchsia-200 tracking-tight drop-shadow-md">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-amber-950 tracking-tight drop-shadow-sm">
         Python Revision
       </h1>
-      <p class="text-xs sm:text-sm font-semibold text-pink-300/80 mt-1">Loops, Lists & Conditions Practice</p>
+      <p class="text-xs sm:text-sm font-semibold text-amber-900 mt-1">30 Questions • 50 Seconds Per Question</p>
     </header>
 
     <!-- QUIZ SCREEN -->
     <div id="quiz-screen" class="w-full">
       
-      <!-- Top Info Bar: Question Counter, Live Score, 30s Timer -->
-      <div class="bg-pink-950/80 backdrop-blur-md border border-pink-500/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
-        <div class="flex justify-between items-center gap-3">
+      <!-- Top Info Bar -->
+      <div class="bg-amber-100/90 backdrop-blur-md border border-amber-400/60 rounded-2xl p-4 sm:p-5 mb-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
           
-          <!-- Question Counter -->
+          <!-- Section Badge & Question Counter -->
           <div>
-            <span class="text-xs uppercase font-bold text-pink-300 tracking-wider block">Question</span>
-            <div class="text-xl sm:text-2xl font-black text-pink-100 font-code">
-              <span id="q-num">1</span> <span class="text-pink-400 text-lg font-normal">/ 10</span>
+            <span id="section-badge" class="px-3 py-1 text-xs font-bold rounded-full bg-amber-500 text-amber-950 uppercase tracking-wider">
+              Section 1: Spot the Error
+            </span>
+            <div class="text-2xl font-black text-amber-950 font-code mt-1">
+              Question <span id="q-num">1</span> <span class="text-amber-800 text-lg font-normal">/ 30</span>
             </div>
           </div>
 
-          <!-- Score -->
-          <div class="text-center bg-pink-900/80 px-4 py-2 rounded-xl border border-pink-500/30 shadow-inner">
-            <span class="text-[11px] uppercase tracking-wider text-pink-300 block font-bold">Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
-          </div>
+          <!-- Live Score & Timer -->
+          <div class="flex items-center gap-4">
+            <div class="text-right">
+              <span class="text-[11px] uppercase tracking-wider text-amber-900 font-bold block">Score</span>
+              <span id="live-score" class="text-xl font-extrabold text-amber-950 font-code">0 / 30</span>
+            </div>
 
-          <!-- Timer -->
-          <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-pink-900/90 rounded-full border-2 border-pink-400 shadow-inner">
-              <span id="timer-text" class="text-xl font-black text-pink-200 font-code">30</span>
-              <span class="text-[8px] text-pink-300 absolute bottom-1 font-bold">sec</span>
+            <!-- 50-Second Countdown Badge -->
+            <div class="relative w-14 h-14 flex items-center justify-center bg-amber-200 rounded-full border-2 border-amber-600 shadow-inner">
+              <span id="timer-text" class="text-xl font-black text-amber-950 font-code">50</span>
+              <span class="text-[8px] text-amber-900 absolute bottom-1 font-bold">sec</span>
             </div>
           </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-pink-950 h-2.5 rounded-full mt-3 overflow-hidden border border-pink-800">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 transition-all duration-1000 ease-linear w-full"></div>
+        <!-- Timer Progress Bar -->
+        <div class="w-full bg-amber-200 h-2.5 rounded-full mt-3 overflow-hidden border border-amber-400">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-amber-600 via-amber-700 to-amber-900 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
       <!-- Question Card -->
-      <div class="bg-pink-950/85 backdrop-blur-md border border-pink-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
+      <div class="bg-white/95 backdrop-blur-md border border-amber-300 rounded-2xl p-5 sm:p-7 shadow-xl relative">
         
         <!-- Question Scenario / Prompt -->
-        <h2 id="question-text" class="text-base sm:text-lg font-bold text-pink-100 leading-relaxed mb-4">
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed mb-4">
           Question loading...
         </h2>
 
-        <!-- Code Snippet Container -->
-        <div id="code-container" class="mb-5 hidden">
-          <pre class="bg-pink-950/90 text-pink-200 border border-pink-500/40 rounded-xl p-4 font-code text-sm sm:text-base overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+        <!-- Code Snippet Area -->
+        <div id="code-container" class="mb-5">
+          <pre class="bg-amber-950 text-amber-100 border border-amber-800 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
         </div>
 
         <!-- 4 Option Buttons Grid -->
-        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
-          <!-- Options rendered dynamically -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <!-- Rendered dynamically -->
         </div>
 
-        <!-- Explanation Container (Under Buttons) -->
-        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-5 shadow-md">
+        <!-- Explanation Container (Under Option Buttons) -->
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-sm">
           <div class="flex items-start gap-3">
             <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
             <div>
               <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
-              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-pink-100">
+              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-800">
                 Explanation text appears here.
               </p>
             </div>
@@ -152,7 +151,7 @@
 
         <!-- Next Question Button -->
         <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-pink-400 via-fuchsia-400 to-rose-400 hover:from-pink-300 hover:to-rose-300 text-pink-950 font-black rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
             <span>Next Question</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
@@ -161,47 +160,63 @@
       </div>
     </div>
 
-    <!-- RESULT SCREEN -->
+    <!-- REPORT CARD SCREEN -->
     <div id="result-screen" class="hidden w-full my-4">
-      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-2xl text-pink-950 border-t-8 border-pink-600 relative overflow-hidden">
+      <div class="report-paper rounded-2xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-amber-700 relative overflow-hidden">
         
-        <!-- Result Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-pink-300 pb-4 mb-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-amber-300 pb-4 mb-6">
           <div>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-pink-950">Teacher's Feedback</h2>
-            <p class="text-xs text-pink-800 font-semibold tracking-wide uppercase mt-1">Python Loops, Lists & Conditions Revision</p>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-amber-950">Student Report Card</h2>
+            <p class="text-xs text-amber-800 font-semibold tracking-wide uppercase mt-1">Python 30-Question Assessment</p>
           </div>
-          <div class="mt-3 sm:mt-0 bg-pink-100 border-2 border-pink-400 rounded-xl px-4 py-2 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-pink-900 font-bold block">Final Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-pink-950 font-code">0 / 10</span>
+          <div class="mt-3 sm:mt-0 bg-amber-100 border-2 border-amber-400 rounded-xl px-5 py-2.5 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-amber-900 font-bold block">Overall Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-amber-950 font-code">0 / 30</span>
           </div>
         </div>
 
-        <!-- Teacher's Feedback Body (Handwritten Style) -->
-        <div class="mb-6 bg-white/80 p-6 rounded-xl border border-pink-200 shadow-sm">
-          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-pink-950 leading-relaxed">
+        <!-- Level Scores Breakdown Grid -->
+        <div class="mb-6">
+          <h3 class="font-bold text-sm text-amber-950 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <span>📊</span> Section Score Breakdown:
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            
+            <div class="bg-white/80 p-4 rounded-xl border border-amber-200 text-center shadow-sm">
+              <span class="text-xs text-amber-900 font-bold uppercase block">Section 1</span>
+              <span class="text-xs text-slate-600 block mt-0.5">Spot the Error</span>
+              <span id="score-sec-1" class="text-2xl font-black text-amber-900 font-code mt-1 block">0 / 10</span>
+            </div>
+
+            <div class="bg-white/80 p-4 rounded-xl border border-amber-200 text-center shadow-sm">
+              <span class="text-xs text-amber-900 font-bold uppercase block">Section 2</span>
+              <span class="text-xs text-slate-600 block mt-0.5">Predict Output</span>
+              <span id="score-sec-2" class="text-2xl font-black text-amber-900 font-code mt-1 block">0 / 10</span>
+            </div>
+
+            <div class="bg-white/80 p-4 rounded-xl border border-amber-200 text-center shadow-sm">
+              <span class="text-xs text-amber-900 font-bold uppercase block">Section 3</span>
+              <span class="text-xs text-slate-600 block mt-0.5">Logic & Functions</span>
+              <span id="score-sec-3" class="text-2xl font-black text-amber-900 font-code mt-1 block">0 / 10</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Teacher's Handwritten Note -->
+        <div class="mb-6 bg-amber-50/90 p-5 rounded-xl border border-amber-300 shadow-sm">
+          <h3 class="font-handwriting text-3xl font-bold text-amber-950 mb-1">Teacher's Note 📝</h3>
+          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-900 leading-relaxed">
             Generating feedback note...
           </p>
         </div>
 
-        <!-- Summary Box -->
-        <div class="mb-6 p-4 rounded-xl bg-pink-100/70 border border-pink-300">
-          <h3 class="font-bold text-xs text-pink-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Key Python Rules to Remember:
-          </h3>
-          <ul class="text-xs sm:text-sm text-pink-900 space-y-1.5 leading-relaxed">
-            <li>• <strong>List Indexing</strong>: First item is always index 0 (e.g., <code class="bg-pink-200 px-1 rounded font-code">items[0]</code>).</li>
-            <li>• <strong>List .append()</strong>: Adds a new item to the very end of the list.</li>
-            <li>• <strong>Colons (:)</strong>: Always put a colon at the end of <code class="bg-pink-200 px-1 rounded font-code">if</code>, <code class="bg-pink-200 px-1 rounded font-code">else</code>, <code class="bg-pink-200 px-1 rounded font-code">for</code>, and <code class="bg-pink-200 px-1 rounded font-code">while</code> lines.</li>
-            <li>• <strong>Logical Operators</strong>: <code class="bg-pink-200 px-1 rounded font-code">and</code> needs both sides True; <code class="bg-pink-200 px-1 rounded font-code">or</code> needs only one side True!</li>
-          </ul>
-        </div>
-
-        <!-- Retake Button -->
-        <div class="flex justify-center border-t border-pink-300 pt-5">
-          <button id="restart-btn" class="py-3 px-8 bg-pink-700 hover:bg-pink-800 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+        <!-- Action Button -->
+        <div class="flex justify-center border-t border-amber-300 pt-5">
+          <button id="restart-btn" class="py-3 px-8 bg-amber-700 hover:bg-amber-800 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            <span>Retake Revision</span>
+            <span>Retake Challenge</span>
           </button>
         </div>
 
@@ -211,148 +226,545 @@
   </div>
 
   <!-- Footer -->
-  <footer class="relative z-10 py-3 text-center text-xs text-pink-300/80 bg-pink-950/80 border-t border-pink-900/50">
-    <p>Python Revision • Loops, Lists & Conditions 🦄</p>
+  <footer class="relative z-10 py-3 text-center text-xs text-amber-950 bg-amber-400/80 border-t border-amber-500">
+    <p>Python Revision Quest • Yellow Umbrella Edition ☂️</p>
   </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 10 EASY & ACCESSIBLE QUESTIONS FOR A 14-YEAR-OLD STUDENT
+    // 30 QUESTIONS FOR 11-YEAR-OLD PYTHON REVISION
     // -------------------------------------------------------------
-    const questionsRaw = [
-      
-      // Q1: Loop Execution Count with List
+    const rawQuestionsDatabase = [
+
+      // ==========================================
+      // SECTION 1: SPOT THE ERROR (Q1 - Q10)
+      // ==========================================
       {
-        question: "Loop Count: A music player loops through a list of songs. How many times will this for-loop run?",
-        code: "playlist = ['Song A', 'Song B', 'Song C', 'Song D']\nfor song in playlist:\n    print('Playing:', song)",
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: What is wrong with this if-condition statement in Python?",
+        code: "score = 85\nelse if score > 50:\n    print('You passed!')",
         options: [
-          { text: "4 times", isCorrect: true },
-          { text: "3 times", isCorrect: false },
-          { text: "5 times", isCorrect: false },
-          { text: "1 time", isCorrect: false }
+          { text: "Python uses 'elif', not 'else if'", isCorrect: true },
+          { text: "The word print is spelled wrong", isCorrect: false },
+          { text: "score must be inside quotes", isCorrect: false },
+          { text: "There is no error in this code", isCorrect: false }
         ],
-        explanation: "The playlist has 4 songs, so the for-loop runs exactly 4 times (once for each song in the list)!"
+        explanation: "In Python, 'else if' is written as 'elif'! 'else if' causes a SyntaxError."
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: Why does Python give an error on line 2?",
+        code: "age = 11\nif age >= 10\n    print('Welcome to the club!')",
+        options: [
+          { text: "Missing colon (:) at the end of the 'if' line", isCorrect: true },
+          { text: "Missing quotes around 10", isCorrect: false },
+          { text: "The variable age must be capitalized", isCorrect: false },
+          { text: "Indentation is not allowed", isCorrect: false }
+        ],
+        explanation: "Every 'if', 'elif', 'else', 'for', and 'while' line MUST end with a colon (:)."
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: What mistake was made when checking if energy equals 100?",
+        code: "energy = 100\nif energy = 100:\n    print('Full Power!')",
+        options: [
+          { text: "Use '==' for comparing values instead of single '='", isCorrect: true },
+          { text: "Single '=' is only allowed in loops", isCorrect: false },
+          { text: "energy must be in brackets", isCorrect: false },
+          { text: "100 needs to be a string", isCorrect: false }
+        ],
+        explanation: "Single '=' sets a variable value. To CHECK if two things are equal, always use double '=='!"
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: Why does Python throw an error in this logical condition?",
+        code: "has_key = True\nhas_coin = True\nif has_key and and has_coin:\n    print('Chest opened!')",
+        options: [
+          { text: "Double 'and and' is invalid syntax", isCorrect: true },
+          { text: "has_key must be False", isCorrect: false },
+          { text: "True must be written in lowercase", isCorrect: false },
+          { text: "Chest opened needs brackets", isCorrect: false }
+        ],
+        explanation: "You only need a single 'and' between two conditions. Typing 'and and' is a SyntaxError."
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: What error happens when running this list index code?",
+        code: "colors = ['red', 'blue']\nprint(colors[2])",
+        options: [
+          { text: "IndexError (list only has index 0 and 1)", isCorrect: true },
+          { text: "TypeError (colors must be numbers)", isCorrect: false },
+          { text: "SyntaxError (square brackets are invalid)", isCorrect: false },
+          { text: "NameError (colors is not defined)", isCorrect: false }
+        ],
+        explanation: "List indices start at 0! Index 0 is 'red' and index 1 is 'blue'. Index 2 doesn't exist, causing an IndexError!"
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: Which variable name is invalid in Python?",
+        code: "1st_player = 'Alex'\nplayer_2 = 'Sam'",
+        options: [
+          { text: "'1st_player' starts with a number", isCorrect: true },
+          { text: "'player_2' uses an underscore", isCorrect: false },
+          { text: "'Alex' is inside single quotes", isCorrect: false },
+          { text: "Both variable names are valid", isCorrect: false }
+        ],
+        explanation: "Variable names in Python CANNOT start with a number! They must start with a letter or underscore."
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: Why does Python report an IndentationError here?",
+        code: "for i in range(3):\nprint('Looping!')",
+        options: [
+          { text: "The print line inside the loop is not indented", isCorrect: true },
+          { text: "range(3) must be range(3):", isCorrect: false },
+          { text: "'Looping!' needs double quotes only", isCorrect: false },
+          { text: "i is an invalid variable", isCorrect: false }
+        ],
+        explanation: "Code inside a loop or if-statement MUST be indented (shifted right by spaces)!"
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: What happens when trying to look up the key in this dictionary?",
+        code: "pet = {'name': 'Buddy', 'age': 3}\nprint(pet['color'])",
+        options: [
+          { text: "KeyError ('color' does not exist in pet)", isCorrect: true },
+          { text: "Prints None", isCorrect: false },
+          { text: "Prints Buddy", isCorrect: false },
+          { text: "SyntaxError", isCorrect: false }
+        ],
+        explanation: "Looking up a dictionary key that isn't inside the dictionary raises a KeyError!"
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: Why does line 2 cause a TypeError?",
+        code: "coins = 5\nmsg = 'Coins: ' + coins\nprint(msg)",
+        options: [
+          { text: "Cannot add string and int directly without str(coins)", isCorrect: true },
+          { text: "coins variable is spelled wrong", isCorrect: false },
+          { text: "Plus sign '+' is not allowed in Python", isCorrect: false },
+          { text: "msg must be capitalized", isCorrect: false }
+        ],
+        explanation: "You cannot join text and a number with '+' unless you convert the number to text using str(coins)."
+      },
+      {
+        section: "Section 1: Spot the Error",
+        question: "Spot the Error: The programmer wanted to print the student's name, but what actually prints?",
+        code: "student_name = 'Leo'\nprint('student_name')",
+        options: [
+          { text: "It prints the literal text 'student_name', not 'Leo'", isCorrect: true },
+          { text: "It prints Leo", isCorrect: false },
+          { text: "It causes a NameError", isCorrect: false },
+          { text: "It prints 0", isCorrect: false }
+        ],
+        explanation: "Putting quotes around 'student_name' prints the text literally instead of evaluating the variable!"
       },
 
-      // Q2: List Indexing
+      // ==========================================
+      // SECTION 2: PREDICT THE OUTPUT (Q11 - Q20)
+      // ==========================================
       {
-        question: "List Indexing: A video game keeps track of top scores. What will `scores[1]` output?",
-        code: "scores = [120, 250, 310, 450]\nprint(scores[1])",
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What will be the final number printed by this loop?",
+        code: "total = 0\nfor x in range(1, 4):\n    total += x\nprint(total)",
         options: [
-          { text: "250", isCorrect: true },
-          { text: "120", isCorrect: false },
-          { text: "310", isCorrect: false },
-          { text: "450", isCorrect: false }
+          { text: "6", isCorrect: true },
+          { text: "4", isCorrect: false },
+          { text: "10", isCorrect: false },
+          { text: "3", isCorrect: false }
         ],
-        explanation: "Python list indices start at 0! Index 0 is 120, and index 1 is 250."
+        explanation: "range(1, 4) produces 1, 2, 3. Total starts at 0 ➔ 0 + 1 + 2 + 3 = 6!"
       },
-
-      // Q3: If/Else Condition
       {
-        question: "Condition Check: A amusement park checks a rider's height. What will this code print if height is 135 cm?",
-        code: "height = 135\nif height >= 120:\n    print('Can ride! 🎢')\nelse:\n    print('Too short ❌')",
-        options: [
-          { text: "Can ride! 🎢", isCorrect: true },
-          { text: "Too short ❌", isCorrect: false },
-          { text: "135", isCorrect: false },
-          { text: "Nothing", isCorrect: false }
-        ],
-        explanation: "Since 135 is greater than or equal to 120, the condition is True, so it prints 'Can ride! 🎢'."
-      },
-
-      // Q4: Loop Accumulation (Summing List)
-      {
-        question: "Predict Output: A player collects bonus coins worth [5, 10, 15] points. What is the final total score printed?",
-        code: "total = 0\ncoins = [5, 10, 15]\nfor coin in coins:\n    total = total + coin\nprint(total)",
-        options: [
-          { text: "30", isCorrect: true },
-          { text: "15", isCorrect: false },
-          { text: "3", isCorrect: false },
-          { text: "35", isCorrect: false }
-        ],
-        explanation: "total starts at 0. It adds each coin value in order: 0 + 5 + 10 + 15 = 30!"
-      },
-
-      // Q5: While Loop Iterations
-      {
-        question: "While Loop Count: A phone battery charges from 0% in steps of 20%. How many times will this while-loop run?",
-        code: "battery = 0\nsteps = 0\nwhile battery < 60:\n    battery = battery + 20\n    steps = steps + 1\nprint(steps)",
-        options: [
-          { text: "3 times", isCorrect: true },
-          { text: "6 times", isCorrect: false },
-          { text: "4 times", isCorrect: false },
-          { text: "2 times", isCorrect: false }
-        ],
-        explanation: "Battery values: 0➔20 (step 1), 20➔40 (step 2), 40➔60 (step 3). When battery reaches 60, battery < 60 becomes False and the loop stops after 3 times!"
-      },
-
-      // Q6: List Method (.append)
-      {
-        question: "List Update: A shopping cart starts with ['apple', 'milk']. We add 'bread' using .append(). What is `len(cart)` now?",
-        code: "cart = ['apple', 'milk']\ncart.append('bread')\nprint(len(cart))",
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What is the output of `len(toys)` after appending?",
+        code: "toys = ['car', 'robot']\ntoys.append('ball')\nprint(len(toys))",
         options: [
           { text: "3", isCorrect: true },
           { text: "2", isCorrect: false },
           { text: "4", isCorrect: false },
           { text: "1", isCorrect: false }
         ],
-        explanation: ".append('bread') adds 1 item to the cart list. Now the cart has 3 items: ['apple', 'milk', 'bread']."
+        explanation: ".append('ball') adds 1 item. The list now has 3 items: ['car', 'robot', 'ball']."
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What value will be printed from the dictionary?",
+        code: "scores = {'Alex': 10, 'Maya': 20}\nscores['Alex'] = 15\nprint(scores['Alex'])",
+        options: [
+          { text: "15", isCorrect: true },
+          { text: "10", isCorrect: false },
+          { text: "25", isCorrect: false },
+          { text: "20", isCorrect: false }
+        ],
+        explanation: "Updating scores['Alex'] = 15 overwrites Alex's old score of 10 with 15!"
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: How many times will this while-loop execute?",
+        code: "count = 0\nwhile count < 3:\n    count += 1\nprint(count)",
+        options: [
+          { text: "3", isCorrect: true },
+          { text: "2", isCorrect: false },
+          { text: "4", isCorrect: false },
+          { text: "0", isCorrect: false }
+        ],
+        explanation: "count goes 0➔1 (1st), 1➔2 (2nd), 2➔3 (3rd). At 3, 3 < 3 is False and loop stops!"
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What will be printed by this loop over fruits?",
+        code: "fruits = ['apple', 'banana']\nfor f in fruits:\n    print(f)",
+        options: [
+          { text: "apple then banana on new lines", isCorrect: true },
+          { text: "['apple', 'banana']", isCorrect: false },
+          { text: "2", isCorrect: false },
+          { text: "banana then apple", isCorrect: false }
+        ],
+        explanation: "The loop iterates through each item in order and prints 'apple', then 'banana'."
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What is the first item in the list after pop(0)?",
+        code: "items = ['shield', 'sword', 'potion']\nitems.pop(0)\nprint(items[0])",
+        options: [
+          { text: "'sword'", isCorrect: true },
+          { text: "'shield'", isCorrect: false },
+          { text: "'potion'", isCorrect: false },
+          { text: "IndexError", isCorrect: false }
+        ],
+        explanation: "pop(0) removes 'shield'. Now 'sword' shifts to index 0!"
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What does this if-else condition print?",
+        code: "level = 12\nif level > 10:\n    print('Pro')\nelse:\n    print('Rookie')",
+        options: [
+          { text: "Pro", isCorrect: true },
+          { text: "Rookie", isCorrect: false },
+          { text: "12", isCorrect: false },
+          { text: "Nothing", isCorrect: false }
+        ],
+        explanation: "Since 12 is greater than 10, the condition is True, printing 'Pro'."
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What value is returned by calling this function?",
+        code: "def double_num(n):\n    return n * 2\n\nresult = double_num(7)\nprint(result)",
+        options: [
+          { text: "14", isCorrect: true },
+          { text: "7", isCorrect: false },
+          { text: "72", isCorrect: false },
+          { text: "9", isCorrect: false }
+        ],
+        explanation: "Calling double_num(7) returns 7 * 2 = 14."
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What is printed when checking modulo inside the loop?",
+        code: "evens = 0\nfor i in [2, 3, 4]:\n    if i % 2 == 0:\n        evens += 1\nprint(evens)",
+        options: [
+          { text: "2", isCorrect: true },
+          { text: "3", isCorrect: false },
+          { text: "1", isCorrect: false },
+          { text: "0", isCorrect: false }
+        ],
+        explanation: "2 and 4 are even numbers (% 2 == 0). That makes 2 even numbers total!"
+      },
+      {
+        section: "Section 2: Predict Output",
+        question: "Predict Output: What element is at index 1 in this list?",
+        code: "animals = ['cat', 'dog', 'bird']\nprint(animals[1])",
+        options: [
+          { text: "'dog'", isCorrect: true },
+          { text: "'cat'", isCorrect: false },
+          { text: "'bird'", isCorrect: false },
+          { text: "1", isCorrect: false }
+        ],
+        explanation: "Index 0 is 'cat', index 1 is 'dog', and index 2 is 'bird'!"
       },
 
-      // Q7: Logical Operator (AND)
+      // ==========================================
+      // SECTION 3: LOGIC & FUNCTIONS IN STORIES (Q21 - Q30)
+      // ==========================================
       {
-        question: "Logical Condition: A game checks if you have enough energy AND a key to open a chest. What is the output?",
-        code: "energy = 80\nhas_key = True\nif energy > 50 and has_key == True:\n    print('Chest Unlocked! 🔓')\nelse:\n    print('Locked 🔒')",
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: You want to check if two player scores are NOT equal to each other in Python. Which symbol fills in the blank?",
+        code: "if player1_score ___ player2_score:\n    print('Scores are different!')",
         options: [
-          { text: "Chest Unlocked! 🔓", isCorrect: true },
-          { text: "Locked 🔒", isCorrect: false },
-          { text: "True", isCorrect: false },
-          { text: "False", isCorrect: false }
+          { text: "! = ", isCorrect: true },
+          { text: "==", isCorrect: false },
+          { text: "not=", isCorrect: false },
+          { text: "<>", isCorrect: false }
         ],
-        explanation: "energy > 50 is True (80 > 50) AND has_key is True. With 'and', because BOTH sides are True, the code prints 'Chest Unlocked! 🔓'."
+        explanation: "In Python, the '!=' symbol stands for 'not equal to'."
       },
-
-      // Q8: Logical Operator (OR)
       {
-        question: "Logical Condition: A scanner grants access if you have a Student Pass OR a Teacher Pass. What will be printed?",
-        code: "has_student_pass = False\nhas_teacher_pass = True\nif has_student_pass or has_teacher_pass:\n    print('Access Granted 🚪')\nelse:\n    print('Access Denied 🚫')",
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: A game grants a speed boost if score > 50 OR if the player has a magic star. Which operator checks if AT LEAST ONE condition is True?",
+        code: "if score > 50 ___ has_star == True:\n    print('Speed Boost Active!')",
         options: [
-          { text: "Access Granted 🚪", isCorrect: true },
-          { text: "Access Denied 🚫", isCorrect: false },
-          { text: "False", isCorrect: false },
-          { text: "Error", isCorrect: false }
+          { text: "or", isCorrect: true },
+          { text: "and", isCorrect: false },
+          { text: "not", isCorrect: false },
+          { text: "plus", isCorrect: false }
         ],
-        explanation: "With 'or', if at least ONE side is True, the whole statement is True! Since has_teacher_pass is True, it prints 'Access Granted 🚪'."
+        explanation: "The 'or' operator returns True if at least one of the conditions is True!"
       },
-
-      // Q9: Spot the Error (Missing Colon)
       {
-        question: "Spot the Error: What is wrong with this if-statement in Python?",
-        code: "score = 100\nif score == 100\n    print('Perfect Score!')",
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: A player buys a new item `'shield'`. Which list method attaches `'shield'` to the end of the `inventory` list?",
+        code: "inventory = ['sword']\ninventory.___('shield')",
         options: [
-          { text: "Missing colon (:) at the end of the if line", isCorrect: true },
-          { text: "The word print is spelled wrong", isCorrect: false },
-          { text: "100 should be inside quotes", isCorrect: false },
-          { text: "There is no error in this code", isCorrect: false }
+          { text: ".append('shield')", isCorrect: true },
+          { text: ".add('shield')", isCorrect: false },
+          { text: ".push('shield')", isCorrect: false },
+          { text: ".insert_end('shield')", isCorrect: false }
         ],
-        explanation: "In Python, every 'if', 'else', 'for', and 'while' line MUST end with a colon (:), like this: if score == 100:"
+        explanation: "In Python, .append() is the standard method used to add a new item to the end of a list!"
       },
-
-      // Q10: Spot the Error (List Index Out of Bounds)
       {
-        question: "Spot the Error: Why does Python give an error when trying to run this code?",
-        code: "colors = ['red', 'blue']\nprint(colors[2])",
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: An online store wants to count how many total items are inside the `cart` list. Which built-in function returns the length of a list?",
+        code: "cart = ['book', 'pen', 'ruler']\ntotal_items = ___(cart)",
         options: [
-          { text: "Index 2 does not exist (list only has index 0 and 1)", isCorrect: true },
-          { text: "List items must be numbers", isCorrect: false },
-          { text: "Square brackets are not allowed", isCorrect: false },
-          { text: "colors must be written in capital letters", isCorrect: false }
+          { text: "len(cart)", isCorrect: true },
+          { text: "count(cart)", isCorrect: false },
+          { text: "size(cart)", isCorrect: false },
+          { text: "total(cart)", isCorrect: false }
         ],
-        explanation: "colors has only 2 items: index 0 ('red') and index 1 ('blue'). Trying to access index 2 causes an IndexError because it's out of range!"
+        explanation: "The len() function returns the total number of items stored in a list or dictionary!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: A high score leaderboard wants to sort a list of numbers `[45, 12, 89, 33]` from lowest to highest. Which list method sorts a list?",
+        code: "scores = [45, 12, 89, 33]\nscores.___()",
+        options: [
+          { text: ".sort()", isCorrect: true },
+          { text: ".order()", isCorrect: false },
+          { text: ".arrange()", isCorrect: false },
+          { text: ".clean()", isCorrect: false }
+        ],
+        explanation: "The .sort() method rearranges items in a list in ascending order!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: You want to check if a player is NOT ready before starting the game match. Which operator flips a Boolean value from True to False?",
+        code: "if ___ is_ready:\n    print('Waiting for player...')",
+        options: [
+          { text: "not", isCorrect: true },
+          { text: "and", isCorrect: false },
+          { text: "or", isCorrect: false },
+          { text: "no", isCorrect: false }
+        ],
+        explanation: "The 'not' operator inverts a boolean: 'not False' becomes True, and 'not True' becomes False!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: A game needs to roll a 6-sided dice by generating a random integer from 1 to 6. Which `random` module function fills the blank?",
+        code: "import random\ndice_roll = random.___(1, 6)",
+        options: [
+          { text: "randint(1, 6)", isCorrect: true },
+          { text: "random(1, 6)", isCorrect: false },
+          { text: "choice(1, 6)", isCorrect: false },
+          { text: "range(1, 6)", isCorrect: false }
+        ],
+        explanation: "random.randint(a, b) generates a random integer between a and b (inclusive)!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: Inside a loop, a game detects that `lives == 0`. Which keyword exits and breaks out of the loop immediately?",
+        code: "while lives > 0:\n    if lives == 0:\n        ___",
+        options: [
+          { text: "break", isCorrect: true },
+          { text: "stop", isCorrect: false },
+          { text: "exit", isCorrect: false },
+          { text: "end", isCorrect: false }
+        ],
+        explanation: "The 'break' keyword stops the loop execution immediately!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: A user enters their age into a text box, returning string `'12'`. Which function converts string `'12'` into integer `12` so you can do math?",
+        code: "user_input = '12'\nage = ___(user_input)",
+        options: [
+          { text: "int()", isCorrect: true },
+          { text: "str()", isCorrect: false },
+          { text: "float()", isCorrect: false },
+          { text: "num()", isCorrect: false }
+        ],
+        explanation: "The int() function converts a text string of digits into a real integer number!"
+      },
+      {
+        section: "Section 3: Logic & Functions",
+        question: "Story Situation: You want to safely look up a student's score in `ages = {'Leo': 11}`. If the name isn't found, you want it to return `'Not Found'` without crashing. Which method helps?",
+        code: "ages = {'Leo': 11}\nprint(ages.___('Sam', 'Not Found'))",
+        options: [
+          { text: ".get()", isCorrect: true },
+          { text: ".search()", isCorrect: false },
+          { text: ".find()", isCorrect: false },
+          { text: ".check()", isCorrect: false }
+        ],
+        explanation: "The .get(key, default) method safely looks up a dictionary key or returns a default value if missing!"
       }
     ];
 
-    // Helper: Safely escape HTML characters
+    // Shuffle options so correct answers aren't predictable
+    let questionsDatabase = [];
+
+    function prepareQuestions() {
+      questionsDatabase = rawQuestionsDatabase.map(q => {
+        const clonedOptions = [...q.options];
+        for (let i = clonedOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [clonedOptions[i], clonedOptions[j]] = [clonedOptions[j], clonedOptions[i]];
+        }
+        return {
+          ...q,
+          options: clonedOptions.map(o => o.text),
+          correctAnswer: clonedOptions.findIndex(o => o.isCorrect)
+        };
+      });
+    }
+
+    // STATE VARIABLES
+    let currentQuestionIdx = 0;
+    let totalScore = 0;
+    let timerInterval = null;
+    let timeLeft = 50;
+    let questionAnswered = false;
+
+    // Track Scores per section
+    const sectionScores = {
+      "Section 1: Spot the Error": 0,
+      "Section 2: Predict Output": 0,
+      "Section 3: Logic & Functions": 0
+    };
+
+    // DOM ELEMENTS
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const qNumEl = document.getElementById('q-num');
+    const sectionBadgeEl = document.getElementById('section-badge');
+    const liveScoreEl = document.getElementById('live-score');
+    const timerTextEl = document.getElementById('timer-text');
+    const timerBarEl = document.getElementById('timer-bar');
+    const questionTextEl = document.getElementById('question-text');
+    const codeSnippetEl = document.getElementById('code-snippet');
+    const optionsGrid = document.getElementById('options-grid');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const nextBtn = document.getElementById('next-btn');
+
+    const scoreSec1El = document.getElementById('score-sec-1');
+    const scoreSec2El = document.getElementById('score-sec-2');
+    const scoreSec3El = document.getElementById('score-sec-3');
+    const finalTotalScoreEl = document.getElementById('final-total-score');
+    const tutorFeedbackTextEl = document.getElementById('tutor-feedback-text');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // Generate Falling Umbrellas
+    function createFallingUmbrellas() {
+      const container = document.getElementById('umbrellas-container');
+      container.innerHTML = '';
+
+      const umbrellaSVGs = [
+        // Bright Red Umbrella
+        `<svg width="36" height="36" viewBox="0 0 64 64" fill="none"><path d="M32 8 C16 8, 8 24, 8 32 L56 32 C56 24, 48 8, 32 8 Z" fill="#ef4444"/><path d="M32 32 L32 52 C32 56, 26 56, 26 52" stroke="#b91c1c" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="7" r="2.5" fill="#b91c1c"/></svg>`,
+        // Sky Blue Umbrella
+        `<svg width="32" height="32" viewBox="0 0 64 64" fill="none"><path d="M32 8 C16 8, 8 24, 8 32 L56 32 C56 24, 48 8, 32 8 Z" fill="#0284c7"/><path d="M32 32 L32 52 C32 56, 26 56, 26 52" stroke="#0369a1" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="7" r="2.5" fill="#0369a1"/></svg>`,
+        // Emerald Umbrella
+        `<svg width="38" height="38" viewBox="0 0 64 64" fill="none"><path d="M32 8 C16 8, 8 24, 8 32 L56 32 C56 24, 48 8, 32 8 Z" fill="#10b981"/><path d="M32 32 L32 52 C32 56, 26 56, 26 52" stroke="#047857" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="7" r="2.5" fill="#047857"/></svg>`,
+        // Purple Umbrella
+        `<svg width="30" height="30" viewBox="0 0 64 64" fill="none"><path d="M32 8 C16 8, 8 24, 8 32 L56 32 C56 24, 48 8, 32 8 Z" fill="#8b5cf6"/><path d="M32 32 L32 52 C32 56, 26 56, 26 52" stroke="#6d28d9" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="7" r="2.5" fill="#6d28d9"/></svg>`
+      ];
+
+      for (let i = 0; i < 22; i++) {
+        const umbrella = document.createElement('div');
+        umbrella.className = 'falling-umbrella';
+        umbrella.innerHTML = umbrellaSVGs[i % umbrellaSVGs.length];
+
+        const leftPos = Math.random() * 100;
+        const duration = Math.random() * 6 + 7; // 7s to 13s
+        const delay = Math.random() * 8;
+        const scale = (Math.random() * 0.4 + 0.7).toFixed(2);
+
+        umbrella.style.left = `${leftPos}%`;
+        umbrella.style.animationDuration = `${duration}s`;
+        umbrella.style.animationDelay = `${delay}s`;
+        umbrella.style.transform = `scale(${scale})`;
+
+        container.appendChild(umbrella);
+      }
+    }
+
+    // Timer Logic
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 50;
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      timerTextEl.textContent = timeLeft;
+      const percentage = (timeLeft / 50) * 100;
+      timerBarEl.style.width = `${percentage}%`;
+
+      if (timeLeft <= 10) {
+        timerTextEl.classList.add('text-rose-600', 'animate-pulse');
+        timerBarEl.classList.remove('from-amber-600', 'via-amber-700', 'to-amber-900');
+        timerBarEl.classList.add('from-rose-600', 'to-red-800');
+      } else {
+        timerTextEl.classList.remove('text-rose-600', 'animate-pulse');
+        timerBarEl.classList.remove('from-rose-600', 'to-red-800');
+        timerBarEl.classList.add('from-amber-600', 'via-amber-700', 'to-amber-900');
+      }
+    }
+
+    function loadQuestion() {
+      questionAnswered = false;
+      const q = questionsDatabase[currentQuestionIdx];
+
+      qNumEl.textContent = currentQuestionIdx + 1;
+      sectionBadgeEl.textContent = q.section;
+      liveScoreEl.textContent = `${totalScore} / 30`;
+
+      explanationBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+
+      questionTextEl.textContent = q.question;
+      codeSnippetEl.textContent = q.code;
+      optionsGrid.innerHTML = '';
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.dataset.idx = idx;
+        btn.className = "option-btn p-4 rounded-xl border border-amber-300 bg-amber-50/80 hover:bg-amber-200/80 hover:border-amber-500 text-left text-slate-900 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-sm";
+
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg bg-amber-200 border border-amber-400 text-amber-950 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
+        `;
+
+        btn.addEventListener('click', () => handleOptionClick(idx));
+        optionsGrid.appendChild(btn);
+      });
+
+      startTimer();
+    }
+
     function escapeHTML(str) {
       return str
         .replace(/&/g, '&amp;')
@@ -362,179 +774,30 @@
         .replace(/'/g, '&#039;');
     }
 
-    // STATE
-    let questionsList = [];
-    let currentIndex = 0;
-    let score = 0;
-    let timeLeft = 30;
-    let timerId = null;
-    let isAnswered = false;
-
-    // DOM ELEMENTS
-    const qNumEl = document.getElementById('q-num');
-    const liveScoreEl = document.getElementById('live-score');
-    const timerTextEl = document.getElementById('timer-text');
-    const timerBarEl = document.getElementById('timer-bar');
-    const questionTextEl = document.getElementById('question-text');
-    const codeContainer = document.getElementById('code-container');
-    const codeSnippetEl = document.getElementById('code-snippet');
-    const optionsGrid = document.getElementById('options-grid');
-    const explanationBox = document.getElementById('explanation-box');
-    const explanationTitle = document.getElementById('explanation-title');
-    const explanationText = document.getElementById('explanation-text');
-    const explanationIcon = document.getElementById('explanation-icon');
-    const nextBtn = document.getElementById('next-btn');
-
-    const quizScreen = document.getElementById('quiz-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const finalTotalScore = document.getElementById('final-total-score');
-    const teacherFeedbackText = document.getElementById('teacher-feedback-text');
-    const restartBtn = document.getElementById('restart-btn');
-
-    function createFlyingUnicorns() {
-      const container = document.getElementById('unicorns-container');
-      container.innerHTML = '';
-
-      const unicornSVG = `
-        <svg width="45" height="40" viewBox="0 0 64 64" fill="none">
-          <path d="M12 40 C12 28, 28 24, 40 28 C48 30, 52 38, 48 48 C44 54, 20 54, 12 40 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
-          <path d="M18 48 L16 60 M28 48 L28 60 M38 48 L40 60 M46 44 L48 58" stroke="#ec4899" stroke-width="3" stroke-linecap="round"/>
-          <path d="M38 30 C42 20, 48 12, 56 16 C60 18, 58 28, 50 32 Z" fill="#fbcfe8" stroke="#f472b6" stroke-width="2"/>
-          <path d="M52 14 L62 2 L56 12 Z" fill="#fde047" stroke="#eab308" stroke-width="1.5"/>
-          <path d="M36 22 C32 16, 40 10, 48 12 C44 18, 42 22, 36 22 Z" fill="#e879f9"/>
-          <circle cx="53" cy="20" r="1.5" fill="#831843"/>
-          <path d="M26 32 C20 18, 36 14, 34 30 Z" fill="#f472b6" stroke="#db2777" stroke-width="1.5"/>
-        </svg>
-      `;
-
-      for (let i = 0; i < 5; i++) {
-        const unicorn = document.createElement('div');
-        unicorn.className = 'flying-unicorn';
-        unicorn.innerHTML = unicornSVG;
-
-        const topPos = 12 + i * 18;
-        const duration = 14 + Math.random() * 8;
-        const delay = i * 3.5;
-
-        unicorn.style.top = `${topPos}%`;
-        unicorn.style.animationDuration = `${duration}s`;
-        unicorn.style.animationDelay = `${delay}s`;
-
-        container.appendChild(unicorn);
-      }
-    }
-
-    function prepareQuestions() {
-      questionsList = questionsRaw.map(q => {
-        const clonedOpts = [...q.options];
-        // Fisher-Yates shuffle options so the correct answer isn't always in position A
-        for (let i = clonedOpts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
-        }
-        return {
-          question: q.question,
-          code: q.code || null,
-          options: clonedOpts.map(o => o.text),
-          correctIndex: clonedOpts.findIndex(o => o.isCorrect),
-          explanation: q.explanation
-        };
-      });
-    }
-
-    function startTimer() {
-      clearInterval(timerId);
-      timeLeft = 30;
-      renderTimer();
-
-      timerId = setInterval(() => {
-        timeLeft--;
-        renderTimer();
-
-        if (timeLeft <= 0) {
-          clearInterval(timerId);
-          onTimeout();
-        }
-      }, 1000);
-    }
-
-    function renderTimer() {
-      timerTextEl.textContent = timeLeft;
-      const pct = (timeLeft / 30) * 100;
-      timerBarEl.style.width = `${pct}%`;
-
-      if (timeLeft <= 7) {
-        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-pink-400', 'via-fuchsia-400', 'to-rose-400');
-        timerBarEl.classList.add('from-rose-500', 'to-red-600');
-      } else {
-        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
-        timerBarEl.classList.add('from-pink-400', 'via-fuchsia-400', 'to-rose-400');
-      }
-    }
-
-    function displayQuestion() {
-      isAnswered = false;
-      const q = questionsList[currentIndex];
-
-      qNumEl.textContent = currentIndex + 1;
-      liveScoreEl.textContent = `${score} / 10`;
-
-      explanationBox.classList.add('hidden');
-      nextBtn.classList.add('hidden');
-
-      questionTextEl.textContent = q.question;
-
-      if (q.code) {
-        codeSnippetEl.textContent = q.code;
-        codeContainer.classList.remove('hidden');
-      } else {
-        codeContainer.classList.add('hidden');
-      }
-
-      optionsGrid.innerHTML = '';
-
-      q.options.forEach((optText, idx) => {
-        const btn = document.createElement('button');
-        btn.dataset.idx = idx;
-
-        btn.className = "option-btn p-4 rounded-xl border border-pink-500/30 bg-pink-900/60 hover:bg-pink-800/80 hover:border-pink-400 text-left text-pink-100 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-md";
-        btn.innerHTML = `
-          <span class="w-8 h-8 rounded-lg bg-pink-950/80 border border-pink-500/40 text-pink-300 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-xs sm:text-sm leading-snug font-code">${escapeHTML(optText)}</span>
-        `;
-        btn.addEventListener('click', () => handleOptionClick(idx));
-
-        optionsGrid.appendChild(btn);
-      });
-
-      startTimer();
-    }
-
     function handleOptionClick(selectedIdx) {
-      if (isAnswered) return;
-      isAnswered = true;
-      clearInterval(timerId);
+      if (questionAnswered) return;
+      questionAnswered = true;
+      clearInterval(timerInterval);
 
-      const q = questionsList[currentIndex];
-      const isCorrect = (selectedIdx === q.correctIndex);
+      const q = questionsDatabase[currentQuestionIdx];
+      const isCorrect = (selectedIdx === q.correctAnswer);
 
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60');
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        if (idx === q.correctAnswer) {
+          btn.classList.remove('border-amber-300', 'bg-amber-50/80');
+          btn.classList.add('border-emerald-500', 'bg-emerald-100', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
         } else if (idx === selectedIdx && !isCorrect) {
-          btn.classList.remove('border-pink-500/30', 'bg-pink-900/60');
-          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
+          btn.classList.remove('border-amber-300', 'bg-amber-50/80');
+          btn.classList.add('border-rose-500', 'bg-rose-100', 'text-rose-950', 'ring-2', 'ring-rose-500');
         }
       });
 
       if (isCorrect) {
-        score += 1;
-        liveScoreEl.textContent = `${score} / 10`;
+        totalScore += 1;
+        sectionScores[q.section] += 1;
+        liveScoreEl.textContent = `${totalScore} / 30`;
         showExplanation(true, "Correct! " + q.explanation);
       } else {
         showExplanation(false, "Not quite! " + q.explanation);
@@ -543,83 +806,94 @@
       nextBtn.classList.remove('hidden');
     }
 
-    function onTimeout() {
-      if (isAnswered) return;
-      isAnswered = true;
+    function handleTimeout() {
+      if (questionAnswered) return;
+      questionAnswered = true;
 
-      const q = questionsList[currentIndex];
+      const q = questionsDatabase[currentQuestionIdx];
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        if (idx === q.correctAnswer) {
+          btn.classList.add('border-emerald-500', 'bg-emerald-100', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
         }
       });
 
-      showExplanation(false, "⏳ Time is up! You had 30 seconds for this question. " + q.explanation);
+      showExplanation(false, "⏳ Time is up! You had 50 seconds for this question. " + q.explanation);
       nextBtn.classList.remove('hidden');
     }
 
     function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
+      explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
 
       if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
-        explanationIcon.textContent = "🦄";
+        explanationBox.classList.add('bg-emerald-50', 'border-emerald-400');
+        explanationIcon.textContent = "🎉";
         explanationTitle.textContent = "Great Job!";
-        explanationTitle.className = "font-bold text-base text-emerald-300";
+        explanationTitle.className = "font-bold text-base text-emerald-800";
       } else {
-        explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
+        explanationBox.classList.add('bg-rose-50', 'border-rose-400');
         explanationIcon.textContent = "💡";
-        explanationTitle.textContent = "Let's Learn";
-        explanationTitle.className = "font-bold text-base text-rose-300";
+        explanationTitle.textContent = "Solution Breakdown";
+        explanationTitle.className = "font-bold text-base text-rose-800";
       }
 
       explanationText.textContent = message;
     }
 
     nextBtn.addEventListener('click', () => {
-      currentIndex++;
-      if (currentIndex < questionsList.length) {
-        displayQuestion();
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questionsDatabase.length) {
+        loadQuestion();
       } else {
-        showTeacherReport();
+        showResultsScreen();
       }
     });
 
-    function showTeacherReport() {
+    function showResultsScreen() {
       quizScreen.classList.add('hidden');
       resultScreen.classList.remove('hidden');
 
-      finalTotalScore.textContent = `${score} / 10`;
+      finalTotalScoreEl.textContent = `${totalScore} / 30`;
 
-      let feedback = "";
-      if (score >= 9) {
-        feedback = `Awesome work! 🦄 You scored ${score} out of 10! You did a fantastic job understanding loops, list indexing, and condition checks. Your Python logic is getting very strong! Keep up the brilliant coding!`;
-      } else if (score >= 7) {
-        feedback = `Great job! 🦄 You scored ${score} out of 10! You understand how loops iterate and how lists store items starting at index 0. Keep practicing to hit 10 out of 10 next time!`;
-      } else if (score >= 5) {
-        note = `Good effort! 🦄 You scored ${score} out of 10! You got many questions right. Remember to always put colons (:) at the end of 'if' lines and check list indices carefully!`;
+      const sec1 = sectionScores["Section 1: Spot the Error"];
+      const sec2 = sectionScores["Section 2: Predict Output"];
+      const sec3 = sectionScores["Section 3: Logic & Functions"];
+
+      scoreSec1El.textContent = `${sec1} / 10`;
+      scoreSec2El.textContent = `${sec2} / 10`;
+      scoreSec3El.textContent = `${sec3} / 10`;
+
+      let note = "";
+      if (totalScore >= 25) {
+        note = `Fantastic job! 🎉 You scored ${totalScore} out of 30! You showed super sharp skills in finding tricky Python bugs, tracing loops, and picking the right functions in stories. You are well on your way to becoming a master Python coder!`;
+      } else if (totalScore >= 18) {
+        note = `Great effort! ☂️ You scored ${totalScore} out of 30! You did really well on output predictions and story logic. Remember to double-check colons (:) and list index bounds to score even higher next time!`;
+      } else if (totalScore >= 12) {
+        note = `Good work! 🌟 You scored ${totalScore} out of 30! You know your core loops and list functions well. Keep practicing tracing while-loops and dictionary lookups on paper to boost your score!`;
       } else {
-        note = `Nice try! 🦄 You scored ${score} out of 10. Python takes time and practice to master. Review the key rules below and take another turn!`;
+        note = `Nice try! ☀️ You scored ${totalScore} out of 30. Python takes practice to master! Review the spot-the-error rules (colons, double equals, and list indices) and take another turn!`;
       }
 
-      teacherFeedbackText.textContent = feedback;
+      tutorFeedbackTextEl.textContent = note;
     }
 
     restartBtn.addEventListener('click', () => {
-      currentIndex = 0;
-      score = 0;
+      currentQuestionIdx = 0;
+      totalScore = 0;
+      for (const key in sectionScores) {
+        sectionScores[key] = 0;
+      }
       prepareQuestions();
       resultScreen.classList.add('hidden');
       quizScreen.classList.remove('hidden');
-      displayQuestion();
+      loadQuestion();
     });
 
     // INIT
-    createFlyingUnicorns();
+    createFallingUmbrellas();
     prepareQuestions();
-    displayQuestion();
+    loadQuestion();
   </script>
 </body>
 </html>
