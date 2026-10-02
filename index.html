@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HTML Revision</title>
+  <title>Python Revision - 30 Question Quest</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Caveat for tutor feedback, Outfit for UI, Fira Code for HTML code -->
+  <!-- Google Fonts: Caveat for Teacher's Feedback, Fira Code for Code, Outfit for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -23,116 +23,128 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Floating Blue Snails Animation */
-    .floating-snail {
+    /* Flying Robots Animation */
+    .flying-robot {
       position: fixed;
+      top: -80px;
       pointer-events: none;
       z-index: 1;
-      animation: floatSnail linear infinite;
+      animation: floatDown linear infinite;
     }
 
-    @keyframes floatSnail {
+    @keyframes floatDown {
       0% {
-        transform: translateY(100vh) translateX(0px) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
+        transform: translateY(-20px) rotate(0deg) translateX(0px);
         opacity: 0.85;
       }
       50% {
-        transform: translateY(50vh) translateX(35px) rotate(12deg);
-        opacity: 0.9;
-      }
-      90% {
-        opacity: 0.85;
+        transform: translateY(50vh) rotate(15deg) translateX(30px);
+        opacity: 0.7;
       }
       100% {
-        transform: translateY(-80px) translateX(-25px) rotate(-10deg);
+        transform: translateY(105vh) rotate(-15deg) translateX(-25px);
         opacity: 0;
       }
     }
 
-    /* Notebook Sheet for Tutor Feedback */
+    /* Notebook Paper Background for Teacher Feedback */
     .feedback-sheet {
-      background-color: #f7fdf9;
-      background-image: linear-gradient(#d1fae5 1px, transparent 1px);
+      background-color: #f0fdf4;
+      background-image: linear-gradient(#bbf7d0 1px, transparent 1px);
       background-size: 100% 2.1rem;
-      border-left: 5px double #059669;
+      border-left: 5px double #0284c7;
+    }
+
+    pre::-webkit-scrollbar {
+      height: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #0284c7;
+      border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-emerald-50 via-green-100 to-lime-100 text-slate-800 min-h-screen relative flex flex-col justify-between selection:bg-emerald-300 selection:text-emerald-950">
+<body class="bg-gradient-to-br from-sky-950 via-sky-900 to-indigo-950 text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-cyan-400 selection:text-sky-950">
 
-  <!-- Floating Blue Snails Background Container -->
-  <div id="snails-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+  <!-- Background Flying Robots Container -->
+  <div id="robots-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-  <!-- Main Container -->
+  <!-- Main Application Wrapper -->
   <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-    <!-- Header (Strictly HTML Revision) -->
+    <!-- Global Quiz Header -->
     <header class="text-center mb-6">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-emerald-900 tracking-tight drop-shadow-sm">
-        HTML Revision
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold uppercase tracking-widest mb-2">
+        <span>🤖 Python Explorer Quest</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-cyan-300 to-blue-200 tracking-tight drop-shadow-md">
+        Python Revision
       </h1>
-      <p class="text-xs sm:text-sm font-semibold text-emerald-700 mt-1">Tags, Attributes & Styling Properties</p>
+      <p class="text-xs sm:text-sm text-sky-300/80 mt-1 font-medium">30 Questions • 50 Seconds Per Question</p>
     </header>
 
     <!-- QUIZ SCREEN -->
     <div id="quiz-screen" class="w-full">
       
-      <!-- Top Info Bar: Question Counter, Live Score, Timer -->
-      <div class="bg-emerald-900/90 text-white border border-emerald-700/50 rounded-2xl p-4 sm:p-5 mb-5 shadow-xl backdrop-blur-md">
+      <!-- Top Status Info Bar -->
+      <div class="bg-sky-900/80 backdrop-blur-md border border-sky-400/30 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
         <div class="flex justify-between items-center gap-3">
           
-          <!-- Question Number Tracker -->
+          <!-- Category & Question Tracker -->
           <div>
-            <span class="text-xs uppercase font-bold text-emerald-300 tracking-wider block">Question</span>
-            <div class="text-2xl font-black text-emerald-100 font-code">
-              <span id="q-num">1</span> <span class="text-emerald-400 text-lg font-normal">/ 10</span>
+            <span id="section-badge" class="text-[11px] uppercase font-bold text-cyan-300 tracking-wider block">Section 1: Spot Correct Syntax</span>
+            <div class="text-xl sm:text-2xl font-black text-slate-100 font-code mt-0.5">
+              Question <span id="q-num" class="text-cyan-400">1</span> <span class="text-sky-400/70 text-base font-normal">/ 30</span>
             </div>
           </div>
 
           <!-- Live Score -->
-          <div class="text-center bg-emerald-950/80 px-4 py-2 rounded-xl border border-emerald-700/60 shadow-inner">
-            <span class="text-[11px] uppercase tracking-wider text-emerald-300 block font-bold">Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 10</span>
+          <div class="bg-sky-950/80 px-4 py-2 rounded-xl border border-sky-500/30 text-center shadow-inner">
+            <span class="text-[10px] uppercase tracking-wider text-sky-300 font-bold block">Live Score</span>
+            <span id="live-score" class="text-xl font-extrabold text-amber-300 font-code">0 / 30</span>
           </div>
 
-          <!-- 30-Second Timer -->
+          <!-- 50s Timer Circle -->
           <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-emerald-950 rounded-full border-2 border-emerald-400 shadow-inner">
-              <span id="timer-text" class="text-xl font-black text-emerald-300 font-code">30</span>
-              <span class="text-[8px] text-emerald-400 absolute bottom-1 font-bold">sec</span>
+            <div class="relative w-14 h-14 flex items-center justify-center bg-sky-950 rounded-full border-2 border-cyan-400 shadow-inner">
+              <span id="timer-text" class="text-xl font-black text-cyan-300 font-code">50</span>
+              <span class="text-[8px] text-sky-400 absolute bottom-1 font-bold">sec</span>
             </div>
           </div>
+
         </div>
 
         <!-- Timer Progress Bar -->
-        <div class="w-full bg-emerald-950 h-2.5 rounded-full mt-3 overflow-hidden border border-emerald-700/60">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 transition-all duration-1000 ease-linear w-full"></div>
+        <div class="w-full bg-sky-950 h-2.5 rounded-full mt-3 overflow-hidden border border-sky-700/50">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
-      <!-- Question Box -->
-      <div class="bg-white/90 backdrop-blur-md border border-emerald-200 rounded-2xl p-5 sm:p-7 shadow-xl relative">
+      <!-- Question Card -->
+      <div class="bg-sky-900/85 backdrop-blur-md border border-sky-500/30 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
         
-        <!-- Question Text -->
-        <h2 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-relaxed mb-6">
-          Question loading...
+        <!-- Question Title / Prompt -->
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-100 leading-relaxed mb-4">
+          Question text loading...
         </h2>
 
-        <!-- 4 Options Grid -->
-        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <!-- Options rendered dynamically -->
+        <!-- Optional Main Code Snippet Area -->
+        <div id="code-container" class="mb-5 hidden">
+          <pre class="bg-sky-950 text-cyan-200 border border-cyan-500/30 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
         </div>
 
-        <!-- Explanation Container (Under Buttons) -->
-        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-sm">
+        <!-- Option Buttons Stack (Vertical 1-column layout for easy reading) -->
+        <div id="options-grid" class="flex flex-col gap-3 mb-6">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Explanation Container (Under Option Buttons) -->
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
           <div class="flex items-start gap-3">
             <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
             <div>
-              <h4 id="explanation-title" class="font-bold text-base">Explanation</h4>
-              <p id="explanation-text" class="text-sm mt-1 leading-relaxed text-slate-800">
+              <h4 id="explanation-title" class="font-bold text-sm sm:text-base">Explanation</h4>
+              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-200">
                 Explanation text appears here.
               </p>
             </div>
@@ -141,9 +153,9 @@
 
         <!-- Next Question Button -->
         <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-sky-950 font-black text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <span>Next Question</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
         </div>
 
@@ -152,41 +164,40 @@
 
     <!-- RESULT SCREEN -->
     <div id="result-screen" class="hidden w-full my-4">
-      <div class="feedback-sheet rounded-2xl p-6 sm:p-9 shadow-xl text-slate-900 border-t-8 border-emerald-700 relative overflow-hidden">
+      <div class="feedback-sheet rounded-3xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-sky-600 relative overflow-hidden">
         
         <!-- Result Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-emerald-200 pb-4 mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-sky-200 pb-4 mb-6">
           <div>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-emerald-950">Tutor Feedback</h2>
-            <p class="text-xs text-emerald-800 font-semibold tracking-wide uppercase mt-1">HTML Revision & Concept Review</p>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-sky-950">Teacher's Feedback</h2>
+            <p class="text-xs text-sky-800 font-semibold tracking-wide uppercase mt-1">Python 30-Question Revision Summary</p>
           </div>
-          <div class="mt-3 sm:mt-0 bg-emerald-100/80 border-2 border-emerald-400 rounded-xl px-4 py-2 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-emerald-950 font-bold block">Final Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-emerald-950 font-code">0 / 10</span>
+          <div class="mt-3 sm:mt-0 bg-sky-100 border-2 border-sky-400 rounded-2xl px-5 py-2.5 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-sky-900 font-bold block">Final Total Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-sky-950 font-code">0 / 30</span>
           </div>
         </div>
 
-        <!-- Tutor Feedback Body -->
-        <div class="mb-6 bg-white/90 p-6 rounded-xl border border-emerald-200 shadow-sm">
-          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed">
-            Generating tutor note...
+        <!-- Handwritten Feedback Note -->
+        <div class="mb-6 bg-white/90 p-5 rounded-2xl border border-sky-200 shadow-sm">
+          <p id="teacher-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed">
+            Generating teacher feedback...
           </p>
         </div>
 
-        <!-- Key Rule Summary Card -->
-        <div class="mb-6 p-4 rounded-xl bg-emerald-100/60 border border-emerald-300">
-          <h3 class="font-bold text-sm text-emerald-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Attribute vs Property Quick Rule:
+        <!-- Section Scores Breakdown Grid -->
+        <div class="mb-6">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-sky-900 mb-3 flex items-center gap-2">
+            <span>📊</span> Section-by-Section Performance
           </h3>
-          <ul class="text-xs sm:text-sm text-emerald-900 space-y-1.5 leading-relaxed">
-            <li>• <strong>Attribute</strong>: Written directly in opening tags (like <code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">style="..."</code> or <code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">src="..."</code>). Uses equals sign (<code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">=</code>).</li>
-            <li>• <strong>Property</strong>: Written <em>inside</em> the style attribute (like <code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">color</code>, <code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">border-radius</code>, <code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">background-color</code>). Followed by colon (<code class="bg-emerald-200/80 px-1.5 py-0.5 rounded font-code font-bold">:</code>).</li>
-          </ul>
+          <div id="sections-breakdown" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Dynamically populated -->
+          </div>
         </div>
 
         <!-- Retake Button -->
-        <div class="flex justify-center border-t border-emerald-200 pt-5">
-          <button id="restart-btn" class="py-3 px-8 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
+        <div class="flex justify-center border-t border-sky-200 pt-5">
+          <button id="restart-btn" class="py-3.5 px-8 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             <span>Retake Revision</span>
           </button>
@@ -198,154 +209,415 @@
   </div>
 
   <!-- Footer -->
-  <footer class="relative z-10 py-3 text-center text-xs text-emerald-800 bg-emerald-100/80 border-t border-emerald-200">
-    <p>HTML Revision Quiz • Floating Blue Snails Edition 🐌</p>
+  <footer class="relative z-10 py-3 text-center text-xs text-sky-400/80 bg-sky-950/80 border-t border-sky-900/50">
+    <p>Python Revision Quest • Sky Blue Robot Edition 🤖</p>
   </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 10 QUESTIONS DATASET
+    // 30 QUESTIONS DATABASE (10 Syntax + 10 Story Logic + 10 Prediction)
     // -------------------------------------------------------------
     const rawQuestionsDatabase = [
-      // Q1: Identifying self-closing tags
+      
+      // =========================================================
+      // SECTION 1: SPOT CORRECT SYNTAX (Q1 - Q10)
+      // Options show 2-3 lines of code. Student picks the CORRECT syntax!
+      // =========================================================
       {
-        question: "Out of the options below, which one lists the two **empty tags** (tags that do NOT have a separate closing tag)?",
+        section: "Spot Correct Syntax",
+        question: "1. Which option shows the CORRECT syntax to define a function that welcomes a user?",
+        code: null,
         options: [
-          { text: "**<br>** and **<img>**", isCorrect: true },
-          { text: "**<html>** and **<head>**", isCorrect: false },
-          { text: "**<li>** and **<h2>**", isCorrect: false },
-          { text: "**<html>** and **<img>**", isCorrect: false }
+          { text: "def welcome_user(name):\n    print('Hello ' + name)", isCorrect: true },
+          { text: "function welcome_user(name)\n    print('Hello ' + name)", isCorrect: false },
+          { text: "def welcome_user(name)\n    print('Hello ' + name)", isCorrect: false },
+          { text: "define welcome_user(name):\n    print('Hello ' + name)", isCorrect: false }
         ],
-        explanation: "**<br>** (line break) and **<img>** (image) are empty / self-closing tags in HTML. They do not require a closing tag like **</br>** or **</img>**!"
+        explanation: "Python functions must start with the keyword `def`, followed by parentheses, and end with a colon (`:`)."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "2. Which option correctly checks if a number `x` is positive, zero, or negative using `if/elif/else`?",
+        code: null,
+        options: [
+          { text: "if x > 0:\n    print('Positive')\nelif x == 0:\n    print('Zero')\nelse:\n    print('Negative')", isCorrect: true },
+          { text: "if x > 0:\n    print('Positive')\nelse if x == 0:\n    print('Zero')\nelse:\n    print('Negative')", isCorrect: false },
+          { text: "if x > 0\n    print('Positive')\nelif x = 0\n    print('Zero')", isCorrect: false },
+          { text: "if (x > 0) {\n    print('Positive')\n} else {\n    print('Negative')\n}", isCorrect: false }
+        ],
+        explanation: "Python uses `elif` (not `else if`), double equals (`==`) for checking equality, and colons (`:`) at the end of each header."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "3. Which option shows the CORRECT syntax to loop 4 times using a `for` loop?",
+        code: null,
+        options: [
+          { text: "for i in range(4):\n    print('Robot Step')", isCorrect: true },
+          { text: "for (i = 0; i < 4; i++):\n    print('Robot Step')", isCorrect: false },
+          { text: "for i in 4:\n    print('Robot Step')", isCorrect: false },
+          { text: "for range(4) as i:\n    print('Robot Step')", isCorrect: false }
+        ],
+        explanation: "To repeat a loop a specific number of times in Python, use `for i in range(count):` with a colon."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "4. Which option shows the CORRECT syntax to create a dictionary and access the `'level'` key?",
+        code: null,
+        options: [
+          { text: "hero = {'name': 'Alex', 'level': 5}\nprint(hero['level'])", isCorrect: true },
+          { text: "hero = (name = 'Alex', level = 5)\nprint(hero['level'])", isCorrect: false },
+          { text: "hero = {'name': 'Alex', 'level': 5}\nprint(hero[level])", isCorrect: false },
+          { text: "hero = ['name': 'Alex', 'level': 5]\nprint(hero.level)", isCorrect: false }
+        ],
+        explanation: "Dictionaries use curly braces `{}` with key-value pairs separated by colons. Keys must be inside quotes when indexing like `hero['level']`."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "5. Which option shows the CORRECT syntax for a `while` loop that counts from 1 up to 3?",
+        code: null,
+        options: [
+          { text: "count = 1\nwhile count <= 3:\n    print(count)\n    count += 1", isCorrect: true },
+          { text: "count = 1\nwhile count <= 3\n    print(count)\n    count += 1", isCorrect: false },
+          { text: "count = 1\nwhile (count <= 3) {\n    print(count);\n}", isCorrect: false },
+          { text: "count = 1\nrepeat while count <= 3:\n    print(count)", isCorrect: false }
+        ],
+        explanation: "A `while` loop needs a condition ending with a colon (`:`), indented code underneath, and an update line like `count += 1` to avoid an infinite loop."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "6. Which option correctly defines a function that calculates total score with a return value?",
+        code: null,
+        options: [
+          { text: "def get_total(a, b):\n    result = a + b\n    return result", isCorrect: true },
+          { text: "def get_total(a, b) {\n    result = a + b;\n    return result;\n}", isCorrect: false },
+          { text: "function get_total(a, b):\n    return a + b", isCorrect: false },
+          { text: "def get_total a, b:\n    return a + b", isCorrect: false }
+        ],
+        explanation: "Parameters inside `def` must be inside parentheses `(a, b)`, followed by a colon, with `return` indented inside."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "7. Which option shows the CORRECT way to add an item to a list and print the list length?",
+        code: null,
+        options: [
+          { text: "items = ['shield']\nitems.append('sword')\nprint(len(items))", isCorrect: true },
+          { text: "items = ['shield']\nitems.add('sword')\nprint(items.length())", isCorrect: false },
+          { text: "items = ['shield']\nitems.push('sword')\nprint(len(items))", isCorrect: false },
+          { text: "items = ['shield']\nitems.insert_end('sword')\nprint(size(items))", isCorrect: false }
+        ],
+        explanation: "Python lists use `.append()` to add an item to the end, and `len(list)` to find the total number of items."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "8. Which option shows the CORRECT syntax to check if a variable `score` is EXACTLY equal to 100?",
+        code: null,
+        options: [
+          { text: "if score == 100:\n    print('Perfect!')", isCorrect: true },
+          { text: "if score = 100:\n    print('Perfect!')", isCorrect: false },
+          { text: "if score === 100:\n    print('Perfect!')", isCorrect: false },
+          { text: "if score equals 100:\n    print('Perfect!')", isCorrect: false }
+        ],
+        explanation: "In Python, double equals (`==`) is used to compare if two values are equal. Single equals (`=`) is only for assigning variables!"
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "9. Which option shows the CORRECT syntax to update an existing key in a dictionary?",
+        code: null,
+        options: [
+          { text: "player = {'coins': 10}\nplayer['coins'] = 20", isCorrect: true },
+          { text: "player = {'coins': 10}\nplayer.update_key('coins' = 20)", isCorrect: false },
+          { text: "player = {'coins': 10}\nplayer['coins'] == 20", isCorrect: false },
+          { text: "player = {'coins': 10}\nplayer{coins} = 20", isCorrect: false }
+        ],
+        explanation: "To update or assign a dictionary key's value, use square brackets with the key name in quotes: `dictionary['key'] = new_value`."
+      },
+      {
+        section: "Spot Correct Syntax",
+        question: "10. Which option shows the CORRECT syntax to get a sub-list slice of the first 2 items?",
+        code: null,
+        options: [
+          { text: "fruits = ['apple', 'banana', 'cherry']\nfirst_two = fruits[0:2]", isCorrect: true },
+          { text: "fruits = ['apple', 'banana', 'cherry']\nfirst_two = fruits(0:2)", isCorrect: false },
+          { text: "fruits = ['apple', 'banana', 'cherry']\nfirst_two = fruits{0, 2}", isCorrect: false },
+          { text: "fruits = ['apple', 'banana', 'cherry']\nfirst_two = fruits[0..2]", isCorrect: false }
+        ],
+        explanation: "List slicing in Python uses square brackets with a colon `[start:stop]`, stopping before index `stop`."
       },
 
-      // Q2: True or False on attribute syntax
+      // =========================================================
+      // SECTION 2: STORY-BASED LOGIC IMPLEMENTATION (Q11 - Q20)
+      // =========================================================
       {
-        question: "State True or False: **Attributes** inside tags are followed with a colon (e.g. **style:** ).",
+        section: "Story-Based Logic",
+        question: "11. Calculator App: A student inputs math operations (`+`, `-`, `*`, `/`). But if the user types `?`, what logic handles this unexpected input?",
+        code: null,
+        options: [
+          { text: "An `else:` block that prints 'Invalid Operator!'", isCorrect: true },
+          { text: "A `while` loop that multiplies by zero", isCorrect: false },
+          { text: "An `elif op == '?'` block that crashes the program", isCorrect: false },
+          { text: "A `def` function without parameters", isCorrect: false }
+        ],
+        explanation: "When none of the expected `if` or `elif` conditions match (like `+` or `-`), the fallback `else:` block catches invalid inputs safely!"
+      },
+      {
+        section: "Story-Based Logic",
+        question: "12. Arcade Game: A player starts with 3 lives. Every time they crash into an obstacle, lives drop. Which loop condition keeps the game running until lives hit zero?",
+        code: null,
+        options: [
+          { text: "while lives > 0:", isCorrect: true },
+          { text: "while lives == 0:", isCorrect: false },
+          { text: "if lives < 3:", isCorrect: false },
+          { text: "for lives in range(0):", isCorrect: false }
+        ],
+        explanation: "`while lives > 0:` ensures the game loop runs as long as the player has at least 1 remaining life."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "13. Theme Park Entry: Children under 5 get free entry, ages 5 to 12 pay $10, and everyone else pays $15. Which structure best handles these 3 branches?",
+        code: null,
+        options: [
+          { text: "An `if / elif / else` block", isCorrect: true },
+          { text: "A single `while` loop with no conditions", isCorrect: false },
+          { text: "A dictionary with only 1 item", isCorrect: false },
+          { text: "A list `.append()` method", isCorrect: false }
+        ],
+        explanation: "When you have 3 mutually exclusive decision paths, `if / elif / else` is the standard Python structure to use."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "14. Pet Care Robot: A robot feeder dispenses food if `time == '8 AM'` OR if the owner presses the `manual_feed` button. Which operator connects these conditions?",
+        code: null,
+        options: [
+          { text: "The `or` logical operator", isCorrect: true },
+          { text: "The `and` logical operator", isCorrect: false },
+          { text: "The `not` operator", isCorrect: false },
+          { text: "The `==` assignment operator", isCorrect: false }
+        ],
+        explanation: "`or` returns True if AT LEAST ONE of the conditions is met (either 8 AM or button pressed)."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "15. Shopping Cart: A store system has a list `cart = [12, 5, 25]`. To process and add tax to EVERY item one by one, which loop is best?",
+        code: null,
+        options: [
+          { text: "for item in cart:", isCorrect: true },
+          { text: "while cart == True:", isCorrect: false },
+          { text: "if item in cart:", isCorrect: false },
+          { text: "def process_cart():", isCorrect: false }
+        ],
+        explanation: "`for item in cart:` automatically iterates through each item in a list from start to end."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "16. Smart Door Lock: A security lock allows up to 3 failed PIN attempts. What logic increases the count inside the retry loop?",
+        code: null,
+        options: [
+          { text: "failed_attempts += 1", isCorrect: true },
+          { text: "failed_attempts = 0", isCorrect: false },
+          { text: "failed_attempts == 3", isCorrect: false },
+          { text: "return failed_attempts", isCorrect: false }
+        ],
+        explanation: "`failed_attempts += 1` increments the counter by 1 on each wrong guess so the while loop can eventually stop."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "17. Cinema Booking: A PG-13 movie allows entry ONLY IF `age >= 13` AND `has_ticket == True`. Which operator enforces BOTH requirements?",
+        code: null,
+        options: [
+          { text: "The `and` logical operator", isCorrect: true },
+          { text: "The `or` logical operator", isCorrect: false },
+          { text: "The `not` operator", isCorrect: false },
+          { text: "The `+` operator", isCorrect: false }
+        ],
+        explanation: "`and` requires BOTH conditions to evaluate to True for the whole statement to pass."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "18. RPG Inventory Check: A hero wants to open a chest. What statement checks if `'Key'` exists inside `inventory = ['Torch', 'Key', 'Map']`?",
+        code: null,
+        options: [
+          { text: "if 'Key' in inventory:", isCorrect: true },
+          { text: "if inventory.has('Key'):", isCorrect: false },
+          { text: "while 'Key' == inventory:", isCorrect: false },
+          { text: "for 'Key' in inventory:", isCorrect: false }
+        ],
+        explanation: "The `in` keyword checks if an element exists inside a list or container."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "19. Game Power-Up: A player collects a star that doubles their current `score`. How do you express doubling the score?",
+        code: null,
+        options: [
+          { text: "score = score * 2", isCorrect: true },
+          { text: "score = score + 2", isCorrect: false },
+          { text: "score == 2", isCorrect: false },
+          { text: "score.double()", isCorrect: false }
+        ],
+        explanation: "To double a numeric variable, multiply it by 2 (`score * 2`) and assign it back to `score`."
+      },
+      {
+        section: "Story-Based Logic",
+        question: "20. Factory Scanner: A conveyor belt inspects boxes in a loop. If a box is defective, what keyword immediately stops the loop?",
+        code: null,
+        options: [
+          { text: "The `break` keyword", isCorrect: true },
+          { text: "The `stop` keyword", isCorrect: false },
+          { text: "The `exit` keyword", isCorrect: false },
+          { text: "The `return` keyword outside a function", isCorrect: false }
+        ],
+        explanation: "`break` immediately terminates the nearest enclosing `for` or `while` loop."
+      },
+
+      // =========================================================
+      // SECTION 3: OUTPUT PREDICTION (Q21 - Q30)
+      // (Loops, Conditions, Lists, Tuples, and Dictionaries)
+      // NO recursion, NO string methods on lists!
+      // =========================================================
+      {
+        section: "Output Prediction",
+        question: "21. Loop Accumulator: What is the final value of `total` printed by this loop?",
+        code: "total = 10\nfor i in range(3):\n    total = total + i\n\nprint(total)",
+        options: [
+          { text: "13", isCorrect: true },
+          { text: "10", isCorrect: false },
+          { text: "16", isCorrect: false },
+          { text: "15", isCorrect: false }
+        ],
+        explanation: "Loop steps: `i = 0` (total = 10), `i = 1` (total = 11), `i = 2` (total = 13). Range(3) stops before 3!"
+      },
+      {
+        section: "Output Prediction",
+        question: "22. List Slicing: What list slice does this code print?",
+        code: "numbers = [10, 20, 30, 40, 50]\nprint(numbers[1:4])",
+        options: [
+          { text: "[20, 30, 40]", isCorrect: true },
+          { text: "[10, 20, 30]", isCorrect: false },
+          { text: "[20, 30, 40, 50]", isCorrect: false },
+          { text: "[30, 40]", isCorrect: false }
+        ],
+        explanation: "Slice `[1:4]` starts at index 1 (value 20) and stops before index 4 (value 50), giving `[20, 30, 40]`."
+      },
+      {
+        section: "Output Prediction",
+        question: "23. Tuple Index Addition: What is the output of accessing items in this tuple?",
+        code: "point = (5, 12, 20)\nprint(point[0] + point[2])",
+        options: [
+          { text: "25", isCorrect: true },
+          { text: "17", isCorrect: false },
+          { text: "37", isCorrect: false },
+          { text: "512", isCorrect: false }
+        ],
+        explanation: "`point[0]` is 5 and `point[2]` is 20. Adding `5 + 20` gives 25!"
+      },
+      {
+        section: "Output Prediction",
+        question: "24. Dictionary Length: What is printed after adding a new key-value pair?",
+        code: "inventory = {'apples': 5, 'bananas': 2}\ninventory['oranges'] = 4\nprint(len(inventory))",
+        options: [
+          { text: "3", isCorrect: true },
+          { text: "2", isCorrect: false },
+          { text: "11", isCorrect: false },
+          { text: "4", isCorrect: false }
+        ],
+        explanation: "The dictionary starts with 2 key-value pairs. Adding `'oranges': 4` increases the key count to 3!"
+      },
+      {
+        section: "Output Prediction",
+        question: "25. Condition Prediction: What boolean value is output by this conditional statement?",
+        code: "x = 12\ny = 5\nprint(x > 10 and y < 3)",
         options: [
           { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
+          { text: "True", isCorrect: false },
+          { text: "12", isCorrect: false },
+          { text: "Error", isCorrect: false }
         ],
-        explanation: "False! **Attributes** inside HTML tags use an equals sign **=** (e.g. **style=\"...\"** or **src=\"...\"**). Colons **:** are used inside CSS **properties**!"
+        explanation: "`x > 10` is True (12 > 10), but `y < 3` is False (5 is not < 3). With `and`, both must be True, so the result is `False`!"
       },
-
-      // Q3: True or False on bgcolor
       {
-        question: "State True or False: **bgcolor** is a CSS **property**.",
+        section: "Output Prediction",
+        question: "26. Tuple Length & Indexing: What is the output of this tuple calculation?",
+        code: "scores = (90, 85, 78, 92)\nprint(len(scores) + scores[1])",
         options: [
-          { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
+          { text: "89", isCorrect: true },
+          { text: "94", isCorrect: false },
+          { text: "88", isCorrect: false },
+          { text: "92", isCorrect: false }
         ],
-        explanation: "False! **bgcolor** is an old HTML **attribute** (e.g. **<body bgcolor=\"pink\">**). The modern CSS **property** used inside a style attribute is **background-color**."
+        explanation: "`len(scores)` is 4 (total items). `scores[1]` is 85. Adding `4 + 85` gives 89!"
       },
-
-      // Q4: True or False on button styling
       {
-        question: "State True or False: A **<button>** tag cannot be styled.",
+        section: "Output Prediction",
+        question: "27. While Loop Multiplication: What is the final value of `val` printed?",
+        code: "val = 2\nwhile val < 10:\n    val = val * 2\n\nprint(val)",
         options: [
-          { text: "False", isCorrect: true },
-          { text: "True", isCorrect: false }
+          { text: "16", isCorrect: true },
+          { text: "8", isCorrect: false },
+          { text: "10", isCorrect: false },
+          { text: "12", isCorrect: false }
         ],
-        explanation: "False! A **<button>** tag can easily be styled with CSS using properties like **background-color**, **color**, **border**, and **border-radius**!"
+        explanation: "Value steps: start at 2 ➔ 4 ➔ 8 ➔ 16. At 16, `16 < 10` is False, so the loop exits and prints 16."
       },
-
-      // Q5: Image syntax
       {
-        question: "Which is the correct syntax to display an image on your webpage?",
+        section: "Output Prediction",
+        question: "28. List Loop Math: What will `total` contain at the end of this loop?",
+        code: "numbers = [1, 2, 3]\ntotal = 0\nfor n in numbers:\n    total += n * 2\n\nprint(total)",
         options: [
-          { text: "<img **src**=\"puppy.jpg\" />", isCorrect: true },
-          { text: "<img **href**=\"puppy.jpg\" />", isCorrect: false },
-          { text: "<img **url**=\"puppy.jpg\" />", isCorrect: false },
-          { text: "<img **link**=\"puppy.jpg\" />", isCorrect: false }
+          { text: "12", isCorrect: true },
+          { text: "6", isCorrect: false },
+          { text: "18", isCorrect: false },
+          { text: "24", isCorrect: false }
         ],
-        explanation: "The **src** (source) **attribute** specifies the file location of the image. The **href** attribute is used with anchor tags (**<a>**), not image tags!"
+        explanation: "The loop calculates `(1 * 2) + (2 * 2) + (3 * 2) = 2 + 4 + 6 = 12`!"
       },
-
-      // Q6: Body background color syntax
       {
-        question: "Which is the correct syntax to set the background color of the body to pink using inline styling?",
+        section: "Output Prediction",
+        question: "29. Function Grading Logic: What code number is returned for a score of 85?",
+        code: "def check_grade(score):\n    if score >= 90:\n        return 1\n    elif score >= 70:\n        return 2\n    return 3\n\nprint(check_grade(85))",
         options: [
-          { text: "<body **style**=\"**background-color**: pink;\">", isCorrect: true },
-          { text: "<body **backgroundcolor**=\"pink\">", isCorrect: false },
-          { text: "<body **color**=\"pink\">", isCorrect: false },
-          { text: "<body **style**=\"**bg-color**: pink;\">", isCorrect: false }
+          { text: "2", isCorrect: true },
+          { text: "1", isCorrect: false },
+          { text: "3", isCorrect: false },
+          { text: "85", isCorrect: false }
         ],
-        explanation: "Inside the **style** attribute, the correct CSS **property** to change background color is **background-color**."
+        explanation: "85 >= 90 is False, but 85 >= 70 is True, so it executes `return 2`!"
       },
-
-      // Q7: Anchor tag navigation
       {
-        question: "Which tag helps you navigate from one webpage to another?",
+        section: "Output Prediction",
+        question: "30. Dictionary Value Subtraction: What number is output by accessing dictionary values?",
+        code: "coins = {'gold': 10, 'silver': 5}\nprint(coins['gold'] - coins['silver'])",
         options: [
-          { text: "Anchor tag (**<a>**)", isCorrect: true },
-          { text: "Link tag (**<link>**)", isCorrect: false },
-          { text: "Navigation tag (**<nav>**)", isCorrect: false },
-          { text: "Button tag (**<button>**)", isCorrect: false }
+          { text: "5", isCorrect: true },
+          { text: "15", isCorrect: false },
+          { text: "10", isCorrect: false },
+          { text: "50", isCorrect: false }
         ],
-        explanation: "The Anchor tag (**<a>**) with the **href** attribute creates clickable hyperlinks to navigate between web pages!"
-      },
-
-      // Q8: HTML hierarchy True or False
-      {
-        question: "State True or False: The **<body>** tag is created inside the **<html>** tag.",
-        options: [
-          { text: "True", isCorrect: true },
-          { text: "False", isCorrect: false }
-        ],
-        explanation: "True! **<html>** is the root element that holds the entire document, and the **<body>** tag lives directly inside it."
-      },
-
-      // Q9: Border radius attribute vs property
-      {
-        question: "What do I do to make the border rounded in an image?",
-        options: [
-          { text: "Use **border-radius property** inside the **style attribute**", isCorrect: true },
-          { text: "Use **border-radius attribute** directly on the image tag", isCorrect: false },
-          { text: "Use **corner-radius property** inside the **style attribute**", isCorrect: false },
-          { text: "Use **round-border attribute** directly on the image tag", isCorrect: false }
-        ],
-        explanation: "**border-radius** is a CSS **property** written inside the **style attribute** (e.g. **style=\"border-radius: 12px;\"**), not an HTML attribute!"
-      },
-
-      // Q10: Font color property vs attribute
-      {
-        question: "What do I do to add color to the font / text?",
-        options: [
-          { text: "Use **color property** inside the **style attribute**", isCorrect: true },
-          { text: "Use **font-colour property** inside the **style attribute**", isCorrect: false },
-          { text: "Use **text-color attribute** directly on the text tag", isCorrect: false },
-          { text: "Use **font-color property** inside the **style attribute**", isCorrect: false }
-        ],
-        explanation: "In CSS, **color** is the exact **property** name used inside **style=\"...\"** to change text color (e.g. **style=\"color: blue;\"**)."
+        explanation: "`coins['gold']` is 10 and `coins['silver']` is 5. `10 - 5 = 5`."
       }
     ];
 
-    // Helper: Escape HTML and convert **markdown** into bold formatted spans
-    function renderFormattedText(str) {
-      if (!str) return '';
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/\*\*(.*?)\*\*/g, '<b class="font-extrabold text-emerald-950 bg-emerald-200/90 px-1.5 py-0.5 rounded font-code">$1</b>');
-    }
+    // Track score breakdown by section
+    const sectionScores = {
+      "Spot Correct Syntax": { correct: 0, total: 10 },
+      "Story-Based Logic": { correct: 0, total: 10 },
+      "Output Prediction": { correct: 0, total: 10 }
+    };
 
-    // STATE VARIABLES
-    let questionsList = [];
+    let questionsDatabase = [];
     let currentIndex = 0;
     let score = 0;
-    let timeLeft = 30;
     let timerId = null;
+    let timeLeft = 50;
     let isAnswered = false;
 
-    // DOM ELEMENTS
+    // DOM Elements
     const qNumEl = document.getElementById('q-num');
     const liveScoreEl = document.getElementById('live-score');
     const timerTextEl = document.getElementById('timer-text');
     const timerBarEl = document.getElementById('timer-bar');
+    const sectionBadgeEl = document.getElementById('section-badge');
     const questionTextEl = document.getElementById('question-text');
+    const codeContainer = document.getElementById('code-container');
+    const codeSnippetEl = document.getElementById('code-snippet');
     const optionsGrid = document.getElementById('options-grid');
     const explanationBox = document.getElementById('explanation-box');
     const explanationTitle = document.getElementById('explanation-title');
@@ -356,20 +628,82 @@
     const quizScreen = document.getElementById('quiz-screen');
     const resultScreen = document.getElementById('result-screen');
     const finalTotalScore = document.getElementById('final-total-score');
-    const tutorFeedbackText = document.getElementById('tutor-feedback-text');
+    const teacherFeedbackText = document.getElementById('teacher-feedback-text');
+    const sectionsBreakdownEl = document.getElementById('sections-breakdown');
     const restartBtn = document.getElementById('restart-btn');
 
-    // Shuffle options dynamically for each question
+    // Escape HTML string
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function createFlyingRobots() {
+      const container = document.getElementById('robots-container');
+      container.innerHTML = '';
+
+      // 3 Different SVG Robot Designs
+      const robotSVGs = [
+        // Box Robot 1
+        `<svg width="50" height="50" viewBox="0 0 64 64" fill="none">
+          <rect x="16" y="20" width="32" height="28" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+          <circle cx="26" cy="30" r="4" fill="#0284c7"/><circle cx="38" cy="30" r="4" fill="#0284c7"/>
+          <rect x="24" y="40" width="16" height="3" fill="#0284c7"/>
+          <line x1="32" y1="20" x2="32" y2="10" stroke="#38bdf8" stroke-width="3"/>
+          <circle cx="32" cy="8" r="4" fill="#f59e0b"/>
+        </svg>`,
+        // Dome Robot 2
+        `<svg width="45" height="45" viewBox="0 0 64 64" fill="none">
+          <path d="M16 32 C16 18, 48 18, 48 32 L48 46 L16 46 Z" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+          <circle cx="32" cy="30" r="6" fill="#fef08a"/>
+          <line x1="12" y1="36" x2="16" y2="36" stroke="#0891b2" stroke-width="3"/>
+          <line x1="48" y1="36" x2="52" y2="36" stroke="#0891b2" stroke-width="3"/>
+          <circle cx="32" cy="12" r="3" fill="#ec4899"/>
+          <line x1="32" y1="20" x2="32" y2="15" stroke="#06b6d4" stroke-width="2"/>
+        </svg>`,
+        // Cute Pet Bot 3
+        `<svg width="40" height="40" viewBox="0 0 64 64" fill="none">
+          <rect x="18" y="24" width="28" height="24" rx="6" fill="#818cf8" stroke="#4f46e5" stroke-width="2"/>
+          <circle cx="26" cy="34" r="3" fill="#ffffff"/><circle cx="38" cy="34" r="3" fill="#ffffff"/>
+          <path d="M28 42 Q32 45 36 42" stroke="#ffffff" stroke-width="2" fill="none"/>
+          <rect x="12" y="16" width="6" height="12" rx="2" fill="#818cf8"/>
+          <rect x="46" y="16" width="6" height="12" rx="2" fill="#818cf8"/>
+        </svg>`
+      ];
+
+      for (let i = 0; i < 18; i++) {
+        const bot = document.createElement('div');
+        bot.className = 'flying-robot';
+        bot.innerHTML = robotSVGs[i % robotSVGs.length];
+
+        const leftPos = Math.random() * 95;
+        const duration = Math.random() * 8 + 8; // 8s to 16s
+        const delay = Math.random() * 10;
+
+        bot.style.left = `${leftPos}%`;
+        bot.style.animationDuration = `${duration}s`;
+        bot.style.animationDelay = `${delay}s`;
+
+        container.appendChild(bot);
+      }
+    }
+
+    // Shuffle options dynamically for every question
     function prepareQuestions() {
-      questionsList = rawQuestionsDatabase.map(q => {
+      questionsDatabase = rawQuestionsDatabase.map(q => {
         const clonedOpts = [...q.options];
-        // Fisher-Yates shuffle options so answer positions are randomized
         for (let i = clonedOpts.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
         }
         return {
+          section: q.section,
           question: q.question,
+          code: q.code || null,
           options: clonedOpts.map(o => o.text),
           correctIndex: clonedOpts.findIndex(o => o.isCorrect),
           explanation: q.explanation
@@ -377,56 +711,10 @@
       });
     }
 
-    // FLOATING BLUE SNAILS ANIMATION
-    function createFloatingBlueSnails() {
-      const container = document.getElementById('snails-container');
-      container.innerHTML = '';
-
-      const snailSVGs = [
-        `<svg width="45" height="38" viewBox="0 0 64 52" fill="none">
-          <path d="M12 40 C12 40, 2 40, 2 45 C2 50, 10 50, 52 50 C58 50, 62 45, 58 40 C54 35, 46 38, 40 40 Z" fill="#38bdf8"/>
-          <circle cx="10" cy="35" r="2.5" fill="#0284c7"/>
-          <line x1="8" y1="35" x2="4" y2="28" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="12" y1="35" x2="10" y2="27" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="4" cy="27" r="2" fill="#0284c7"/>
-          <circle cx="10" cy="26" r="2" fill="#0284c7"/>
-          <circle cx="36" cy="30" r="18" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
-          <path d="M36 18 C42 18, 46 22, 46 28 C46 34, 40 38, 34 36 C30 34, 30 28, 34 26" stroke="#bfdbfe" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        </svg>`,
-        `<svg width="40" height="34" viewBox="0 0 64 52" fill="none">
-          <path d="M12 40 C12 40, 2 40, 2 45 C2 50, 10 50, 52 50 C58 50, 62 45, 58 40 C54 35, 46 38, 40 40 Z" fill="#7dd3fc"/>
-          <line x1="8" y1="35" x2="4" y2="28" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="12" y1="35" x2="10" y2="27" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="4" cy="27" r="2" fill="#0369a1"/>
-          <circle cx="10" cy="26" r="2" fill="#0369a1"/>
-          <circle cx="36" cy="30" r="16" fill="#0284c7" stroke="#0369a1" stroke-width="2"/>
-          <path d="M36 20 C41 20, 44 23, 44 28 C44 33, 39 36, 34 35" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        </svg>`
-      ];
-
-      for (let i = 0; i < 16; i++) {
-        const snail = document.createElement('div');
-        snail.className = 'floating-snail';
-        snail.innerHTML = snailSVGs[i % snailSVGs.length];
-
-        const leftPos = Math.random() * 92;
-        const duration = Math.random() * 8 + 9;
-        const delay = Math.random() * 9;
-        const scale = (Math.random() * 0.4 + 0.75).toFixed(2);
-
-        snail.style.left = `${leftPos}%`;
-        snail.style.animationDuration = `${duration}s`;
-        snail.style.animationDelay = `${delay}s`;
-        snail.style.transform = `scale(${scale})`;
-
-        container.appendChild(snail);
-      }
-    }
-
-    // TIMER ENGINE (30 SECONDS)
+    // 50-second timer logic
     function startTimer() {
       clearInterval(timerId);
-      timeLeft = 30;
+      timeLeft = 50;
       renderTimer();
 
       timerId = setInterval(() => {
@@ -442,42 +730,51 @@
 
     function renderTimer() {
       timerTextEl.textContent = timeLeft;
-      const pct = (timeLeft / 30) * 100;
+      const pct = (timeLeft / 50) * 100;
       timerBarEl.style.width = `${pct}%`;
 
-      if (timeLeft <= 7) {
+      if (timeLeft <= 10) {
         timerTextEl.classList.add('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-emerald-400', 'via-teal-300', 'to-cyan-300');
+        timerBarEl.classList.remove('from-cyan-400', 'via-sky-400', 'to-blue-500');
         timerBarEl.classList.add('from-rose-500', 'to-red-600');
       } else {
         timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
         timerBarEl.classList.remove('from-rose-500', 'to-red-600');
-        timerBarEl.classList.add('from-emerald-400', 'via-teal-300', 'to-cyan-300');
+        timerBarEl.classList.add('from-cyan-400', 'via-sky-400', 'to-blue-500');
       }
     }
 
-    // DISPLAY QUESTION
     function displayQuestion() {
       isAnswered = false;
-      const q = questionsList[currentIndex];
+      const q = questionsDatabase[currentIndex];
 
       qNumEl.textContent = currentIndex + 1;
-      liveScoreEl.textContent = `${score} / 10`;
+      liveScoreEl.textContent = `${score} / 30`;
+      sectionBadgeEl.textContent = q.section;
 
       explanationBox.classList.add('hidden');
       nextBtn.classList.add('hidden');
 
-      questionTextEl.innerHTML = renderFormattedText(q.question);
+      questionTextEl.textContent = q.question;
+
+      if (q.code) {
+        codeSnippetEl.textContent = q.code;
+        codeContainer.classList.remove('hidden');
+      } else {
+        codeContainer.classList.add('hidden');
+      }
+
       optionsGrid.innerHTML = '';
 
       q.options.forEach((optText, idx) => {
         const btn = document.createElement('button');
         btn.dataset.idx = idx;
-        btn.className = "option-btn p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 hover:border-emerald-400 text-left text-slate-800 font-medium transition transform active:scale-98 flex items-center gap-3 shadow-sm";
 
+        btn.className = "option-btn p-4 rounded-xl border border-sky-400/30 bg-sky-950/80 hover:bg-sky-800/80 hover:border-cyan-400 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-start gap-3 shadow-md w-full";
+        
         btn.innerHTML = `
-          <span class="w-8 h-8 rounded-lg bg-emerald-200 border border-emerald-300 text-emerald-900 font-bold text-sm flex items-center justify-center font-code shrink-0">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-sm sm:text-base leading-snug font-code">${renderFormattedText(optText)}</span>
+          <span class="w-8 h-8 rounded-lg bg-sky-900 border border-sky-500/40 text-cyan-300 font-bold text-sm flex items-center justify-center font-code shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
+          <pre class="font-code text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-cyan-100">${escapeHTML(optText)}</pre>
         `;
 
         btn.addEventListener('click', () => handleOptionClick(idx));
@@ -487,31 +784,35 @@
       startTimer();
     }
 
-    // HANDLE OPTION CLICK
     function handleOptionClick(selectedIdx) {
       if (isAnswered) return;
       isAnswered = true;
       clearInterval(timerId);
 
-      const q = questionsList[currentIndex];
+      const q = questionsDatabase[currentIndex];
       const isCorrect = (selectedIdx === q.correctIndex);
 
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          btn.classList.remove('border-emerald-200', 'bg-emerald-50/60');
-          btn.classList.add('border-emerald-500', 'bg-emerald-600', 'text-white', 'ring-2', 'ring-emerald-400');
+          btn.classList.remove('border-sky-400/30', 'bg-sky-950/80');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         } else if (idx === selectedIdx && !isCorrect) {
-          btn.classList.remove('border-emerald-200', 'bg-emerald-50/60');
-          btn.classList.add('border-rose-500', 'bg-rose-600', 'text-white', 'ring-2', 'ring-rose-400');
+          btn.classList.remove('border-sky-400/30', 'bg-sky-950/80');
+          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
         }
       });
 
       if (isCorrect) {
         score += 1;
-        liveScoreEl.textContent = `${score} / 10`;
-        showExplanation(true, "Correct! " + q.explanation);
+        liveScoreEl.textContent = `${score} / 30`;
+
+        if (q.section && sectionScores[q.section]) {
+          sectionScores[q.section].correct += 1;
+        }
+
+        showExplanation(true, "Great Spot! " + q.explanation);
       } else {
         showExplanation(false, "Not quite! " + q.explanation);
       }
@@ -523,70 +824,88 @@
       if (isAnswered) return;
       isAnswered = true;
 
-      const q = questionsList[currentIndex];
+      const q = questionsDatabase[currentIndex];
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-500', 'bg-emerald-600', 'text-white', 'ring-2', 'ring-emerald-400');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
         }
       });
 
-      showExplanation(false, "⏳ Time is up! You had 30 seconds for this question. " + q.explanation);
+      showExplanation(false, "⏳ Time is up! You had 50 seconds for this question. " + q.explanation);
       nextBtn.classList.remove('hidden');
     }
 
     function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
+      explanationBox.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
 
       if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-50', 'border-emerald-400');
-        explanationIcon.textContent = "🐌";
-        explanationTitle.textContent = "Great Spot!";
-        explanationTitle.className = "font-bold text-base text-emerald-800";
+        explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
+        explanationIcon.textContent = "🤖";
+        explanationTitle.textContent = "Awesome Job!";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-emerald-300";
       } else {
-        explanationBox.classList.add('bg-rose-50', 'border-rose-400');
+        explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
         explanationIcon.textContent = "💡";
-        explanationTitle.textContent = "Key Concept";
-        explanationTitle.className = "font-bold text-base text-rose-800";
+        explanationTitle.textContent = "Let's Learn";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-rose-300";
       }
 
-      explanationText.innerHTML = renderFormattedText(message);
+      explanationText.textContent = message;
     }
 
     nextBtn.addEventListener('click', () => {
       currentIndex++;
-      if (currentIndex < questionsList.length) {
+      if (currentIndex < questionsDatabase.length) {
         displayQuestion();
       } else {
         showTeacherReport();
       }
     });
 
-    // FINAL REPORT & TUTOR FEEDBACK
     function showTeacherReport() {
       quizScreen.classList.add('hidden');
       resultScreen.classList.remove('hidden');
 
-      finalTotalScore.textContent = `${score} / 10`;
+      finalTotalScore.textContent = `${score} / 30`;
 
       let feedback = "";
-      if (score >= 9) {
-        feedback = `Awesome work! 🌟 You scored an impressive ${score} out of 10! You showed total clarity on HTML self-closing tags, image src attributes, anchor navigation, and CSS properties like border-radius and color inside the style attribute. Fantastic web development skills!`;
-      } else if (score >= 7) {
-        feedback = `Great job! 🚀 You scored ${score} out of 10! You have a really solid grasp on HTML tags and attributes. Just remember that attributes inside HTML tags use equals signs (=), while CSS properties inside style="..." use colons (:).`;
-      } else if (score >= 5) {
-        feedback = `Good effort! 🐌 You scored ${score} out of 10! You know your primary tags well. Take a quick moment to review the rule card below: attributes sit in opening tags, and properties sit inside the style attribute!`;
+      if (score >= 26) {
+        feedback = `Incredible performance! 🚀 You scored ${score} out of 30! You mastered Python syntax, logical operations, tuples, lists, and dictionaries effortlessly. Your code problem-solving skills are top-notch! Keep building awesome robot programs!`;
+      } else if (score >= 20) {
+        feedback = `Great work! 🎉 You scored ${score} out of 30! You showed a really strong understanding of Python loops, if-else branches, tuples, and dictionary lookups. Keep practicing and you will be unstoppable!`;
+      } else if (score >= 14) {
+        feedback = `Good effort! 💡 You scored ${score} out of 30! You got many story-logic and syntax questions right. Keep practicing your loop bounds and dictionary methods to reach an even higher score next time!`;
       } else {
-        feedback = `Nice try! 💡 You scored ${score} out of 10. Web development takes practice! Remember that self-closing tags like <br> and <img> do not need a closing tag. Review the key rules below and give it another shot!`;
+        feedback = `Nice try! 🤖 You scored ${score} out of 30. Python takes time and practice to master. Review the section breakdown below and give it another shot!`;
       }
 
-      tutorFeedbackText.textContent = feedback;
+      teacherFeedbackText.textContent = feedback;
+
+      // Populate Section Breakdown
+      sectionsBreakdownEl.innerHTML = '';
+      for (const [secTitle, data] of Object.entries(sectionScores)) {
+        const pct = Math.round((data.correct / data.total) * 100);
+        const card = document.createElement('div');
+        card.className = "bg-white p-3.5 rounded-2xl border border-sky-200 shadow-sm flex flex-col justify-between";
+        card.innerHTML = `
+          <span class="text-[11px] font-bold text-sky-800 uppercase tracking-wider">${secTitle}</span>
+          <div class="flex justify-between items-baseline mt-2">
+            <span class="text-xl font-black text-sky-950 font-code">${data.correct} / ${data.total}</span>
+            <span class="text-xs font-bold ${pct >= 70 ? 'text-emerald-600' : 'text-amber-600'} font-code">${pct}%</span>
+          </div>
+        `;
+        sectionsBreakdownEl.appendChild(card);
+      }
     }
 
     restartBtn.addEventListener('click', () => {
       currentIndex = 0;
       score = 0;
+      for (const sec in sectionScores) {
+        sectionScores[sec].correct = 0;
+      }
       prepareQuestions();
       resultScreen.classList.add('hidden');
       quizScreen.classList.remove('hidden');
@@ -594,7 +913,7 @@
     });
 
     // INIT
-    createFloatingBlueSnails();
+    createFlyingRobots();
     prepareQuestions();
     displayQuestion();
   </script>
