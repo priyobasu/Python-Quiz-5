@@ -1,971 +1,795 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python & AI Explorer Quiz ✈️🤖</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Caveat (Handwritten) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python & AI Revision - Tutor Priyadarshini</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Outfit for UI, Fira Code for code blocks, Caveat for Tutor feedback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e0f2fe;
-            user-select: none;
-            overflow-x: hidden;
-        }
-        .font-handwriting {
-            font-family: 'Caveat', cursive;
-        }
-        .font-code {
-            font-family: 'Fira Code', monospace;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        /* Floating animation for cards */
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-        }
-        .animate-float {
-            animation: floatSlow 4s ease-in-out infinite;
-        }
-        /* Pulse border animation */
-        @keyframes pulseGlow {
-            0%, 100% { border-color: rgba(59, 130, 246, 0.6); }
-            50% { border-color: rgba(147, 197, 253, 1); }
-        }
-        .pulse-border {
-            animation: pulseGlow 2s infinite;
-        }
-    </style>
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      overflow-x: hidden;
+    }
+    .font-code {
+      font-family: 'Fira Code', monospace;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+
+    /* Ambient cyber grid background */
+    .bg-grid-tech {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+    }
+
+    /* Lined Notebook Sheet for Tutor Priyadarshini's Feedback */
+    .tutor-note-paper {
+      background-color: #fefdf9;
+      background-image: linear-gradient(#e0e7ff 1px, transparent 1px);
+      background-size: 100% 2.2rem;
+      border-left: 6px double #6366f1;
+    }
+
+    pre::-webkit-scrollbar {
+      height: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #6366f1;
+      border-radius: 4px;
+    }
+  </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
+<body class="bg-slate-950 bg-grid-tech text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
-    <!-- Background Canvas for Flying Airplanes and Clouds -->
-    <canvas id="airplaneCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+  <!-- Ambient Glow Blobs -->
+  <div class="fixed top-12 left-10 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none z-0"></div>
+  <div class="fixed bottom-10 right-10 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none z-0"></div>
 
-    <!-- Main Container -->
-    <div class="relative z-10 flex-grow flex flex-col items-center justify-center p-3 sm:p-6">
+  <!-- Main Application Wrapper -->
+  <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
+
+    <!-- Global Quiz Header -->
+    <header class="text-center mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-widest mb-2">
+        <span>🚀 Python & AI Revision Challenge</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-indigo-200 to-violet-300 tracking-tight">
+        Python & Computer Vision Quiz
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
+        10 Questions • 30 Seconds Per Question • Curated by Tutor Priyadarshini
+      </p>
+    </header>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="w-full">
+      
+      <!-- Top Info Bar: Question Counter, Live Score, Timer -->
+      <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
+        <div class="flex justify-between items-center gap-3">
+          
+          <!-- Category Badge & Question Number -->
+          <div>
+            <span id="section-badge" class="text-[11px] uppercase font-bold text-indigo-400 tracking-wider block">Part 1: AI & Vision Concepts</span>
+            <div class="text-xl sm:text-2xl font-black text-slate-100 font-code mt-0.5">
+              Question <span id="q-num" class="text-indigo-400">1</span> <span class="text-slate-500 text-base font-normal">/ 10</span>
+            </div>
+          </div>
+
+          <!-- Live Score Badge -->
+          <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 text-right">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Live Score</span>
+            <span id="live-score" class="text-xl font-extrabold text-amber-400 font-code">0 / 10</span>
+          </div>
+
+          <!-- 30s Timer Circle -->
+          <div class="flex items-center gap-2">
+            <div class="relative w-14 h-14 flex items-center justify-center bg-slate-950 rounded-full border-2 border-indigo-400 shadow-inner">
+              <span id="timer-text" class="text-xl font-black text-indigo-300 font-code">30</span>
+              <span class="text-[8px] text-slate-400 absolute bottom-1 font-bold">sec</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Timer Progress Bar -->
+        <div class="w-full bg-slate-950 h-2.5 rounded-full mt-3 overflow-hidden border border-slate-800">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-indigo-400 to-violet-500 transition-all duration-1000 ease-linear w-full"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
         
-        <!-- Header Bar -->
-        <header class="w-full max-w-4xl flex items-center justify-between bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg mb-4 border border-sky-100">
-            <div class="flex items-center space-x-3">
-                <div class="bg-sky-500 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
-                    <i class="fa-solid fa-code text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg sm:text-xl font-bold text-sky-900 leading-tight">Python Revision</h1>
-                    <p class="text-xs text-sky-600 font-medium">10 Questions • 30 Seconds Each</p>
-                </div>
+        <!-- Question Scenario Text -->
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-100 leading-relaxed mb-4">
+          Question loading...
+        </h2>
+
+        <!-- Code Snippet Area (Only used when prediction/snippet is needed) -->
+        <div id="code-container" class="mb-5 hidden">
+          <pre class="bg-slate-950 text-indigo-200 border border-indigo-500/30 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+        </div>
+
+        <!-- 4 Options Grid -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <!-- Options rendered dynamically -->
+        </div>
+
+        <!-- Explanation Box (Under Buttons) -->
+        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
+          <div class="flex items-start gap-3">
+            <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
+            <div>
+              <h4 id="explanation-title" class="font-bold text-sm sm:text-base">Explanation</h4>
+              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-200">
+                Explanation text appears here.
+              </p>
             </div>
+          </div>
+        </div>
 
-            <!-- Quiz Stats Pill -->
-            <div id="topStatsPill" class="hidden flex items-center space-x-3 bg-sky-50 px-3.5 py-1.5 rounded-xl border border-sky-200">
-                <div class="text-center">
-                    <span class="text-xs text-slate-500 block uppercase font-semibold">Question</span>
-                    <span id="questionCounter" class="text-sm font-bold text-sky-700">1 / 10</span>
-                </div>
-                <div class="h-6 w-px bg-sky-200"></div>
-                <div class="text-center">
-                    <span class="text-xs text-slate-500 block uppercase font-semibold">Score</span>
-                    <span id="currentScoreDisplay" class="text-sm font-bold text-emerald-600">0 pts</span>
-                </div>
-            </div>
-        </header>
+        <!-- Next Question Button -->
+        <div class="flex justify-end">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+            <span>Next Question</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
 
-        <!-- START SCREEN -->
-        <section id="startScreen" class="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl p-8 sm:p-12 shadow-xl border border-sky-100 text-center animate-float">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-100 text-sky-600 rounded-full mb-6 shadow-inner">
-                <i class="fa-brands fa-python text-4xl"></i>
-            </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-800 mb-8">Python Revision</h2>
+      </div>
+    </div>
 
-            <!-- Start Button -->
-            <button id="startBtn" class="w-full py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-sky-300/50 transition-all transform active:scale-95 flex items-center justify-center space-x-3 mx-auto">
-                <span>Start Quiz</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </section>
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="hidden w-full my-4">
+      
+      <!-- Tutor Priyadarshini Feedback Sheet -->
+      <div class="tutor-note-paper rounded-3xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-indigo-600 relative overflow-hidden mb-6">
+        
+        <!-- Result Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-indigo-200 pb-4 mb-6">
+          <div>
+            <span class="text-xs text-indigo-700 font-bold uppercase tracking-widest block">Official Assessment Review</span>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-indigo-950 mt-0.5">Feedback from Tutor Priyadarshini</h2>
+          </div>
+          <div class="mt-3 sm:mt-0 bg-indigo-100 border-2 border-indigo-400 rounded-2xl px-5 py-2.5 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-indigo-900 font-bold block">Final Total Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-indigo-950 font-code">0 / 10</span>
+          </div>
+        </div>
 
-        <!-- QUIZ CONTAINER (Hidden by default) -->
-        <main id="quizScreen" class="hidden w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-8 shadow-2xl border border-sky-100 transition-all">
-            
-            <!-- Question Top Bar: Section Badge & Timer -->
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
-                <span id="sectionBadge" class="px-3.5 py-1 bg-sky-100 text-sky-700 text-xs font-bold rounded-full uppercase tracking-wider">
-                    Computer Vision & Gestures
-                </span>
+        <!-- Handwritten Feedback Note -->
+        <div class="mb-6 bg-white/95 p-6 rounded-2xl border border-indigo-200 shadow-sm">
+          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed">
+            Generating feedback note from Tutor Priyadarshini...
+          </p>
+        </div>
 
-                <!-- Timer Bar & Countdown -->
-                <div class="flex items-center space-x-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-                    <i class="fa-solid fa-clock text-amber-500 text-sm"></i>
-                    <div class="w-24 sm:w-32 bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                        <div id="timerProgressBar" class="bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear"></div>
-                    </div>
-                    <span id="timerText" class="text-xs sm:text-sm font-extrabold font-code text-slate-700 min-w-[28px]">30s</span>
-                </div>
-            </div>
+        <!-- Mastered Concepts Card -->
+        <div class="mb-6 p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 leading-relaxed">
+          <h3 class="font-bold text-sm text-indigo-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span>📌</span> Core Topics Evaluated:
+          </h3>
+          <ul class="list-disc list-inside space-y-1.5 text-indigo-900">
+            <li><strong>AI & OpenCV Models:</strong> Haar Cascade face, smile, and license plate classifiers.</li>
+            <li><strong>Vision Workflow:</strong> Image capture ➔ Grayscale conversion ➔ Haar Cascade detection ➔ Rectangle bounding boxes.</li>
+            <li><strong>Machine Learning Fundamentals:</strong> Discovering and applying patterns from datasets.</li>
+            <li><strong>Function Signatures:</strong> Matching function parameter count with passed arguments.</li>
+            <li><strong>Data Structures & Logic:</strong> Valid dictionary-tuple syntax, loop condition structures, and accumulator subtraction.</li>
+          </ul>
+        </div>
 
-            <!-- Question Text -->
-            <div class="mb-5">
-                <h3 id="questionText" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
-                    Loading question...
-                </h3>
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4 border-t border-indigo-200">
+          <button id="toggle-answers-btn" class="w-full sm:w-auto py-3.5 px-7 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2">
+            <span>🔍 Check Your Answers & Focus Points</span>
+          </button>
+          <button id="restart-btn" class="w-full sm:w-auto py-3.5 px-7 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-xl border border-slate-700 shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span>Retake Revision</span>
+          </button>
+        </div>
 
-                <!-- Code Block Container (if question has code) -->
-                <div id="codeContainer" class="hidden mt-3 p-3.5 bg-slate-900 text-emerald-400 rounded-2xl font-code text-xs sm:text-sm overflow-x-auto border border-slate-800 shadow-inner">
-                    <pre><code id="codeBlock"># Code goes here</code></pre>
-                </div>
-            </div>
+      </div>
 
-            <!-- Multi-Select Instructions Indicator -->
-            <div id="multiSelectNotice" class="hidden mb-3 px-3 py-2 bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold rounded-xl flex items-center space-x-2">
-                <i class="fa-solid fa-square-check text-amber-600 text-sm"></i>
-                <span>Multi-Select Question: Click all correct options below, then click "Confirm Selections".</span>
-            </div>
+      <!-- IN-DEPTH CHECK YOUR ANSWERS REVIEW SECTION -->
+      <div id="answers-review-container" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl mb-6">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4 mb-6">
+          <div>
+            <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+              <span>📝</span> <span>Detailed Answer Breakdown & Key Focus Points</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Review what you selected, the correct answer, and Tutor Priyadarshini's focus observation for each question.
+            </p>
+          </div>
 
-            <!-- Answer Options Container (Supports up to 6 Options) -->
-            <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <!-- Buttons injected dynamically -->
-            </div>
+          <!-- Filter Pills -->
+          <div class="flex gap-2">
+            <button onclick="filterReview('all')" id="filter-all-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition">All (10)</button>
+            <button onclick="filterReview('wrong')" id="filter-wrong-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-rose-300 hover:bg-slate-700 transition">Needs Focus</button>
+            <button onclick="filterReview('correct')" id="filter-correct-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-emerald-300 hover:bg-slate-700 transition">Correct</button>
+          </div>
+        </div>
 
-            <!-- Multi-Select Submit Button -->
-            <div id="multiSubmitContainer" class="hidden mb-4 flex justify-end">
-                <button id="confirmMultiBtn" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center space-x-2">
-                    <i class="fa-solid fa-check-double"></i>
-                    <span>Confirm Selections</span>
-                </button>
-            </div>
+        <div id="review-cards-list" class="space-y-5">
+          <!-- Populated dynamically via JS -->
+        </div>
 
-            <!-- Explanation Box (Appears directly under buttons) -->
-            <div id="explanationCard" class="hidden p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300">
-                <div class="flex items-start space-x-3">
-                    <div id="explanationIcon" class="mt-0.5 text-lg"></div>
-                    <div>
-                        <h5 id="explanationTitle" class="font-bold text-sm mb-1">Explanation</h5>
-                        <p id="explanationText" class="text-slate-600 leading-relaxed"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next / Continue Button Footer -->
-            <div class="mt-6 flex justify-end">
-                <button id="nextBtn" class="hidden px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center space-x-2">
-                    <span id="nextBtnText">Next Question</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-        </main>
-
-        <!-- RESULTS & FEEDBACK CARD SCREEN (Hidden by default) -->
-        <section id="resultScreen" class="hidden w-full max-w-2xl space-y-6">
-            
-            <!-- Handwritten Teacher Feedback Card -->
-            <div class="bg-amber-50/90 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-2xl border-2 border-amber-200 relative overflow-hidden">
-                
-                <!-- Title & Total Score -->
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-black text-amber-950 mb-2">Quiz Results</h2>
-                    <div class="inline-block bg-amber-500 text-white px-6 py-2 rounded-2xl font-bold text-lg shadow-md">
-                        Total Score: <span id="finalScoreText">0 / 10</span> (<span id="totalPointsText">0</span> pts)
-                    </div>
-                </div>
-
-                <!-- Section Score Breakdown (First 5 Questions & Next 5 Questions) -->
-                <div class="mb-6 bg-white/80 p-5 rounded-2xl border border-amber-200">
-                    <h3 class="text-xs font-bold text-amber-900 uppercase tracking-wider mb-3 flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>Section Breakdown</span>
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 text-center">
-                            <span class="text-xs text-sky-800 font-bold uppercase block mb-1">First 5 Questions</span>
-                            <span id="firstFiveScore" class="text-2xl font-extrabold text-sky-900">0 / 5</span>
-                            <p class="text-xs text-sky-600 mt-1">Computer Vision & APIs</p>
-                        </div>
-                        <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 text-center">
-                            <span class="text-xs text-indigo-800 font-bold uppercase block mb-1">Next 5 Questions</span>
-                            <span id="nextFiveScore" class="text-2xl font-extrabold text-indigo-900">0 / 5</span>
-                            <p class="text-xs text-indigo-600 mt-1">Loops, Logic & Debugging</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Handwritten Letter Container -->
-                <div class="bg-white/80 p-5 sm:p-8 rounded-2xl border border-amber-200/80 shadow-sm relative mb-6">
-                    <div class="font-handwriting text-2xl sm:text-3xl text-amber-900 leading-relaxed space-y-3">
-                        <p id="studentGreeting">Dear Student,</p>
-                        <p id="teacherNoteContent" class="text-slate-800">
-                            Loading your performance evaluation...
-                        </p>
-                        <p class="text-right font-bold text-amber-700 mt-4 text-3xl">
-                            — Teacher's Note ✍️
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-wrap items-center justify-center gap-4">
-                    <button id="restartBtn" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center space-x-2">
-                        <i class="fa-solid fa-rotate-right"></i>
-                        <span>Retake Quiz</span>
-                    </button>
-                    <button id="reviewBtn" class="px-6 py-3 bg-white hover:bg-amber-100 text-amber-900 font-bold rounded-2xl border border-amber-300 shadow-sm transition-all flex items-center space-x-2">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Review Answers</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- REVIEW MODAL / CONTAINER (Hidden initially) -->
-            <div id="reviewContainer" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-4">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center justify-between border-b pb-3">
-                    <span>Quiz Review (10 Questions)</span>
-                    <button id="closeReviewBtn" class="text-slate-400 hover:text-slate-600 text-sm">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </h3>
-                <div id="reviewList" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-                    <!-- Dynamic review items -->
-                </div>
-            </div>
-        </section>
+      </div>
 
     </div>
 
-    <script>
-        /* ==========================================================================
-           10 COMPLETE QUESTIONS FOR 14-YEAR-OLD PYTHON & AI STUDENT (SCRAMBLED OPTIONS)
-           ========================================================================== */
-        const quizQuestions = [
-            // --- SECTION 1: COMPUTER VISION & GESTURES (Q1 - Q3) ---
-            {
-                id: 1,
-                section: "Computer Vision & Gestures",
-                multiSelect: false,
-                question: "While building real-time gesture recognition applications in Python, which library do we use for tracking hand landmarks and pose estimation?",
-                options: ["TensorFlow Lite Only", "Pygame Zero", "MediaPipe", "Turtle Graphics", "Flask", "Pandas"],
-                answer: 2, // "MediaPipe" (Option C)
-                explanation: "MediaPipe (developed by Google) is the standard cross-platform framework for real-time body, face, and hand landmark tracking in Python!"
-            },
-            {
-                id: 2,
-                section: "Computer Vision & Gestures",
-                multiSelect: false,
-                question: "In MediaPipe's hand tracking model, how many total 3D hand keypoints (landmarks) are tracked per hand?",
-                options: ["10 landmarks", "15 landmarks", "33 landmarks", "21 landmarks", "68 landmarks", "100 landmarks"],
-                answer: 3, // "21 landmarks" (Option D)
-                explanation: "MediaPipe detects exactly 21 hand landmarks (including wrist, knuckles, joints, and finger tips) for precise hand gesture analysis."
-            },
-            {
-                id: 3,
-                section: "Computer Vision & Gestures",
-                multiSelect: true,
-                question: "Which of the following detection models can OpenCV Haar Cascades perform? (Select ALL correct detection models)",
-                options: [
-                    "Voice Emotion Recognition",
-                    "Face Detection",
-                    "Brainwave Thought Scanning",
-                    "Smile Detection",
-                    "Number Plate Detection",
-                    "Quantum Particle Analysis"
-                ],
-                answer: [1, 3, 4], // Face (1), Smile (3), Number Plate (4)
-                explanation: "Haar Cascades are visual feature classifiers trained on pixel contrast patterns for Face, Smile, Eye, and License Plate detection. They cannot analyze audio, brainwaves, or quantum physics!"
-            },
+  </div>
 
-            // --- SECTION 2: API & WEB SERVICES (Q4 - Q5) ---
-            {
-                id: 4,
-                section: "APIs & Web Services",
-                multiSelect: false,
-                question: "What is the fundamental architectural flow of making a REST API call in Python?",
-                options: [
-                    "A Response is received first before any request is created",
-                    "The API downloads the database onto your local keyboard",
-                    "A Request is sent to the server, and a Response is received back",
-                    "The server controls your monitor without network requests",
-                    "Code prints on paper and scans automatically",
-                    "APIs only run inside Turtle graphics window"
-                ],
-                answer: 2, // "A Request is sent to the server..." (Option C)
-                explanation: "An API call follows a Client-Server model: your Python client sends an HTTP Request (GET/POST) to an endpoint, and the server returns an HTTP Response (JSON data)."
-            },
-            {
-                id: 5,
-                section: "APIs & Web Services",
-                multiSelect: true,
-                question: "Which of the following are real AI / LLM APIs that developers can use to build an interactive chatbot in Python? (Select ALL valid AI APIs)",
-                options: [
-                    "Photoshop GPU Driver v2",
-                    "OpenAI API",
-                    "Linux Terminal Cable",
-                    "Gemini API",
-                    "WiFi Antenna Protocol",
-                    "Grok API"
-                ],
-                answer: [1, 3, 5], // OpenAI (1), Gemini (3), Grok (5)
-                explanation: "OpenAI (ChatGPT), Google Gemini, and xAI Grok all offer cloud APIs for text generation and chatbots. Photoshop GPU drivers, Linux cables, and WiFi protocols are hardware/system utilities!"
-            },
+  <!-- Footer -->
+  <footer class="relative z-10 py-3 text-center text-xs text-slate-500 bg-slate-950 border-t border-slate-900">
+    <p>Python 13yo Revision Challenge • Curated with 💙 by Tutor Priyadarshini</p>
+  </footer>
 
-            // --- SECTION 3: LOGIC, LOOPS & DICTIONARIES (Q6, Q7, Q9) ---
-            {
-                id: 6,
-                section: "Logic, Loops & Dictionaries",
-                multiSelect: false,
-                question: "Predict the final number output printed by this loop:",
-                code: "counter = 0\nfor i in range(1, 5):\n    if i % 2 == 0:\n        counter = counter + i\nprint(counter)",
-                options: ["10", "4", "6", "0", "2", "15"],
-                answer: 2, // 6 (Option C)
-                explanation: "`range(1, 5)` loops over numbers 1, 2, 3, 4. The even numbers (`i % 2 == 0`) are 2 and 4. `counter` becomes 2 + 4 = 6!"
-            },
-            {
-                id: 7,
-                section: "Logic, Loops & Dictionaries",
-                multiSelect: false,
-                question: "What will be printed when `check_gesture(0)` is executed?",
-                code: "def check_gesture(fingers_up):\n    if fingers_up == 5:\n        print('Open Palm 👋')\n    elif fingers_up == 0:\n        print('Fist ✊')\n    else:\n        print('Gesture Active')\n\ncheck_gesture(0)",
-                options: ["Open Palm 👋", "Gesture Active", "Fist ✊", "0", "None", "Error: Missing value"],
-                answer: 2, // "Fist ✊" (Option C)
-                explanation: "When `fingers_up` is 0, the condition `elif fingers_up == 0:` evaluates to True, executing `print('Fist ✊')`."
-            },
-            {
-                id: 8,
-                section: "Debugging & Error Hunting",
-                multiSelect: false,
-                question: "Examine this Python function call. What error will Python throw when running line 5?",
-                code: "# Function expects 3 parameters:\ndef process_frame(frame_id, width, height):\n    print('Frame ' + str(frame_id) + ': ' + str(width) + 'x' + str(height))\n\n# Line 5 call:\nprocess_frame(101, 1920)",
-                options: [
-                    "SyntaxError: Missing colon on line 2",
-                    "IndentationError: unexpected indent",
-                    "TypeError: process_frame() missing 1 required positional argument: 'height'",
-                    "NameError: process_frame is not defined",
-                    "ZeroDivisionError: division by zero",
-                    "No error; height defaults to 0"
-                ],
-                answer: 2, // "TypeError: process_frame() missing 1 required..." (Option C)
-                explanation: "The function definition expects 3 positional arguments (`frame_id`, `width`, `height`), but line 5 only passes 2 arguments (`101`, `1920`)!"
-            },
-            {
-                id: 9,
-                section: "Logic, Loops & Dictionaries",
-                multiSelect: false,
-                question: "What will be printed when this dictionary evaluation script runs?",
-                code: 'detection = {"label": "hand", "confidence": 0.85}\n\nif detection["confidence"] > 0.8:\n    print("High Accuracy: " + detection["label"].upper())\nelse:\n    print("Low Accuracy")',
-                options: [
-                    "High Accuracy: hand",
-                    "Low Accuracy",
-                    "High Accuracy: HAND",
-                    "0.85",
-                    "TypeError: Cannot compare string and float",
-                    "KeyError: 'confidence'"
-                ],
-                answer: 2, // "High Accuracy: HAND" (Option C)
-                explanation: "`detection['confidence']` is 0.85, which is > 0.8. `detection['label'].upper()` converts `'hand'` to uppercase `'HAND'`!"
-            },
-            {
-                id: 10,
-                section: "Debugging & Error Hunting",
-                multiSelect: false,
-                question: "Examine the code snippets below. Which snippet is syntactically CORRECT Python code for conditional gesture checking?",
-                code: 'Snippet A:\nif landmark_count == 21\n    print("Hand detected")\n\nSnippet B:\nif landmark_count == 21:\n    print("Hand detected")\n\nSnippet C:\nif (landmark_count = 21):\n    print("Hand detected")\n\nSnippet D:\nif landmark_count == 21:\nprint("Hand detected")',
-                options: ["Snippet A", "Snippet B", "Snippet C", "Snippet D", "All are correct", "None are correct"],
-                answer: 1, // "Snippet B" (Option B)
-                explanation: "Snippet B correctly uses `==` for comparison, ends the `if` header with a colon `:`, and indents the print statement underneath! A lacks a colon, C uses `=`, and D lacks indentation."
-            }
-        ];
+  <script>
+    // -------------------------------------------------------------
+    // 10 QUESTIONS CURATED BY TUTOR PRIYADARSHINI
+    // -------------------------------------------------------------
+    const rawQuestionsDatabase = [
+      
+      // =========================================================
+      // QUESTIONS 1-5: AI & OPENCV VISION CONCEPTS
+      // =========================================================
+      {
+        section: "AI & Computer Vision",
+        question: "1. Which pre-trained model/classifier in OpenCV is used for face detection?",
+        code: null,
+        options: [
+          { text: "Haar Cascade model", isCorrect: true },
+          { text: "Linear Regression model", isCorrect: false },
+          { text: "Decision Tree classifier", isCorrect: false },
+          { text: "K-Means Cluster model", isCorrect: false }
+        ],
+        explanation: "Haar Cascade classifiers (such as haarcascade_frontalface_default.xml) are machine learning models specifically trained on thousands of positive and negative images to detect faces in OpenCV.",
+        focusPoint: "Always remember that OpenCV uses Haar Cascade XML models for classical face, eye, and object detection."
+      },
+      {
+        section: "AI & Computer Vision",
+        question: "2. In AI and Machine Learning, what is a 'pre-trained model'?",
+        code: null,
+        options: [
+          { text: "A model already trained on a large dataset to recognize patterns, ready for immediate use", isCorrect: true },
+          { text: "A blank Python script file with zero lines of code written in it", isCorrect: false },
+          { text: "A webcam that was plugged into the laptop before opening the Python IDE", isCorrect: false },
+          { text: "A program that can only run one single time before deleting itself", isCorrect: false }
+        ],
+        explanation: "A pre-trained model has already spent hours or days analyzing patterns from massive datasets. You can load it directly to detect objects without needing to train it from scratch yourself!",
+        focusPoint: "Observe that 'pre-trained' means the heavy pattern-learning work is already completed and saved for you to reuse immediately."
+      },
+      {
+        section: "AI & Computer Vision",
+        question: "3. To detect faces using a Haar Cascade model in OpenCV, what are the steps involved in the correct order?",
+        code: null,
+        options: [
+          { text: "Read the image ➔ Convert into grayscale ➔ Pass through Haar Cascade model ➔ Draw bounding square/rectangle", isCorrect: true },
+          { text: "Draw bounding square ➔ Delete image ➔ Convert to grayscale ➔ Read the image", isCorrect: false },
+          { text: "Convert image to sound audio ➔ Play sound ➔ Draw circle ➔ Close camera", isCorrect: false },
+          { text: "Read image ➔ Draw bounding square ➔ Invert colors ➔ Save image without detecting", isCorrect: false }
+        ],
+        explanation: "The vision pipeline begins by loading the frame, converting it to single-channel Grayscale (which simplifies edge contrast analysis), passing it to the Haar Cascade detector, and drawing bounding boxes around detected face coordinates!",
+        focusPoint: "Keep the 4-step pipeline in mind: Read image ➔ Grayscale conversion ➔ Haar Cascade detection ➔ Draw bounding rectangle."
+      },
+      {
+        section: "AI & Computer Vision",
+        question: "4. What else can be detected using Haar Cascade models in addition to human faces?",
+        code: null,
+        options: [
+          { text: "Smile detection and vehicle number plate detection", isCorrect: true },
+          { text: "Room temperature and air humidity levels", isCorrect: false },
+          { text: "The battery percentage of your wireless mouse", isCorrect: false },
+          { text: "The upload speed of your home Wi-Fi connection", isCorrect: false }
+        ],
+        explanation: "OpenCV provides pre-trained Haar Cascades for facial expressions like smiles (haarcascade_smile.xml), eyes, and vehicle number plates (haarcascade_russian_plate_number.xml)!",
+        focusPoint: "Notice that Haar Cascades can detect various visual patterns like smiles, eyes, and license plates, not just full faces."
+      },
+      {
+        section: "AI & Computer Vision",
+        question: "5. Which statement best defines what Machine Learning is?",
+        code: null,
+        options: [
+          { text: "Machines learning through patterns in data without hardcoding every single rule", isCorrect: true },
+          { text: "Replacing a computer monitor with a mechanical keyboard", isCorrect: false },
+          { text: "Writing a million manual if-else statements for every possible scenario", isCorrect: false },
+          { text: "Formatting your hard drive and shutting down your laptop", isCorrect: false }
+        ],
+        explanation: "Machine Learning is a branch of Artificial Intelligence where algorithms discover patterns in datasets and learn to make decisions or predictions on their own.",
+        focusPoint: "Machine Learning fundamentally means teaching computers to learn and generalize patterns from data."
+      },
 
-        /* ==========================================================================
-           QUIZ ENGINE STATE & LOGIC
-           ========================================================================== */
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let timerInterval = null;
-        const TIME_LIMIT = 30; // 30 Seconds per question for 14yo student
-        let timeLeft = TIME_LIMIT;
-        let userAnswers = []; // Records user responses for feedback
-        let answerSelected = false;
-        let selectedMultiIndices = []; // For multi-select questions
+      // =========================================================
+      // QUESTIONS 6-8: SNIPPET IDENTIFICATION (FUNCTIONS, DATA STRUCTURES, LOOPS)
+      // =========================================================
+      {
+        section: "Python Syntax & Snippets",
+        question: "6. Function Parameters & Arguments: Which code snippet correctly defines and calls the function without causing a TypeError?",
+        code: null,
+        options: [
+          { 
+            text: "def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10, 5)", 
+            isCorrect: true 
+          },
+          { 
+            text: "def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10, 5, 2)", 
+            isCorrect: false 
+          },
+          { 
+            text: "def calculate_area(length, width, height):\n    return length * width\n\nroom = calculate_area(10, 5)", 
+            isCorrect: false 
+          },
+          { 
+            text: "def calculate_area(length):\n    return length * width\n\nroom = calculate_area(10, 5)", 
+            isCorrect: false 
+          }
+        ],
+        explanation: "`calculate_area(length, width)` defines exactly 2 parameters, and `calculate_area(10, 5)` passes exactly 2 arguments. If the parameter and argument counts don't match, Python raises a TypeError!",
+        focusPoint: "Always keep in mind that the number of function parameters and passed arguments must be equal!"
+      },
+      {
+        section: "Python Syntax & Snippets",
+        question: "7. Data Structures: Which snippet shows valid Python syntax for creating a dictionary containing a tuple value?",
+        code: null,
+        options: [
+          { 
+            text: "robot = {\n    'name': 'Titan',\n    'coordinates': (12, 45)\n}", 
+            isCorrect: true 
+          },
+          { 
+            text: "robot = {\n    'name' = 'Titan',\n    'coordinates' = (12, 45)\n}", 
+            isCorrect: false 
+          },
+          { 
+            text: "robot = [\n    'name': 'Titan',\n    'coordinates': (12, 45)\n]", 
+            isCorrect: false 
+          },
+          { 
+            text: "robot = {\n    'name': 'Titan';\n    'coordinates': (12, 45);\n}", 
+            isCorrect: false 
+          }
+        ],
+        explanation: "Dictionaries use curly braces `{}` with key-value pairs separated by colons `:` (not `=` or `;`). Tuples use parentheses `()`.",
+        focusPoint: "Observe that dictionaries use colons `:` to bind keys to values, separated by commas `,`. Never use `=` inside dictionary curly braces!"
+      },
+      {
+        section: "Python Syntax & Snippets",
+        question: "8. Loop & Condition Syntax: Which snippet correctly checks numbers in a list and prints when a score is 80 or above?",
+        code: null,
+        options: [
+          { 
+            text: "scores = [70, 85, 92]\nfor s in scores:\n    if s >= 80:\n        print('Passed')", 
+            isCorrect: true 
+          },
+          { 
+            text: "scores = [70, 85, 92]\nfor s in scores\n    if s >= 80\n        print('Passed')", 
+            isCorrect: false 
+          },
+          { 
+            text: "scores = [70, 85, 92]\nfor s in scores:\n    if s => 80:\n        print('Passed')", 
+            isCorrect: false 
+          },
+          { 
+            text: "scores = [70, 85, 92]\nwhile s in scores:\n    if s >= 80:\n        print('Passed')", 
+            isCorrect: false 
+          }
+        ],
+        explanation: "Python headers for loops and `if` statements MUST end with a colon `:`. Also, the comparison operator for greater than or equal to is `>=` (not `=>`).",
+        focusPoint: "Always check that headers end with colons `:` and comparison operators are written correctly (`>=`, `<=`, `==`)."
+      },
 
-        // Sound FX synthesizer using Web Audio API
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+      // =========================================================
+      // QUESTIONS 9-10: OUTPUT PREDICTIONS (NO REPETITIVE PATTERNS!)
+      // =========================================================
+      {
+        section: "Python Output Predictions",
+        question: "9. Loop Subtraction Accumulator: Trace the loop below step by step. What final number is printed for `total`?",
+        code: "total = 100\nnumbers = [15, 25, 10]\n\nfor step in numbers:\n    total = total - step\n\nprint(total)",
+        options: [
+          { text: "50", isCorrect: true },
+          { text: "60", isCorrect: false },
+          { text: "40", isCorrect: false },
+          { text: "150", isCorrect: false }
+        ],
+        explanation: "Initial: total = 100. Step 1: 100 - 15 = 85. Step 2: 85 - 25 = 60. Step 3: 60 - 10 = 50. The loop finishes and prints 50!",
+        focusPoint: "When tracing an accumulator loop, follow each subtraction sequentially rather than trying to calculate the final total in your head."
+      },
+      {
+        section: "Python Output Predictions",
+        question: "10. If / Elif First Match: What exact message will be printed when this speed monitor runs?",
+        code: "speed = 75\n\nif speed > 70:\n    print('Alert: High Speed')\nelif speed > 50:\n    print('Normal Speed')\nelif speed > 30:\n    print('Caution: Slow Speed')\nelse:\n    print('Vehicle Stopped')",
+        options: [
+          { text: "Alert: High Speed", isCorrect: true },
+          { text: "Normal Speed", isCorrect: false },
+          { text: "Caution: Slow Speed", isCorrect: false },
+          { text: "Vehicle Stopped", isCorrect: false }
+        ],
+        explanation: "Since `speed = 75` is strictly greater than 70, the very FIRST condition (`if speed > 70:`) is True! Python immediately prints 'Alert: High Speed' and exits the chain without checking any elif conditions.",
+        focusPoint: "Notice that Python stops evaluating an if-elif-else chain the moment it finds the FIRST condition that is True!"
+      }
+    ];
 
-                if (type === 'correct') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-                    osc.frequency.exponentialRampToValueAtTime(130, audioCtx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                } else if (type === 'click') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.05);
-                }
-            } catch (e) {
-                // Audio fallback
-            }
+    let questionsDatabase = [];
+    let currentIndex = 0;
+    let score = 0;
+    let timerId = null;
+    let timeLeft = 30;
+    let isAnswered = false;
+    let studentResponses = []; // Logs user selection, correct/wrong, and timestamps
+
+    // DOM Elements
+    const qNumEl = document.getElementById('q-num');
+    const liveScoreEl = document.getElementById('live-score');
+    const timerTextEl = document.getElementById('timer-text');
+    const timerBarEl = document.getElementById('timer-bar');
+    const sectionBadgeEl = document.getElementById('section-badge');
+    const questionTextEl = document.getElementById('question-text');
+    const codeContainer = document.getElementById('code-container');
+    const codeSnippetEl = document.getElementById('code-snippet');
+    const optionsGrid = document.getElementById('options-grid');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationText = document.getElementById('explanation-text');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const nextBtn = document.getElementById('next-btn');
+
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const finalTotalScore = document.getElementById('final-total-score');
+    const tutorFeedbackText = document.getElementById('tutor-feedback-text');
+    const restartBtn = document.getElementById('restart-btn');
+    const toggleAnswersBtn = document.getElementById('toggle-answers-btn');
+    const answersReviewContainer = document.getElementById('answers-review-container');
+    const reviewCardsList = document.getElementById('review-cards-list');
+
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Shuffle options dynamically for each question
+    function prepareQuestions() {
+      studentResponses = [];
+      questionsDatabase = rawQuestionsDatabase.map((q, qIndex) => {
+        const clonedOpts = [...q.options];
+        for (let i = clonedOpts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
         }
-
-        // DOM Element references
-        const startScreen = document.getElementById('startScreen');
-        const quizScreen = document.getElementById('quizScreen');
-        const resultScreen = document.getElementById('resultScreen');
-        const startBtn = document.getElementById('startBtn');
-        const topStatsPill = document.getElementById('topStatsPill');
-        const questionCounter = document.getElementById('questionCounter');
-        const currentScoreDisplay = document.getElementById('currentScoreDisplay');
-        const sectionBadge = document.getElementById('sectionBadge');
-        const timerProgressBar = document.getElementById('timerProgressBar');
-        const timerText = document.getElementById('timerText');
-        const questionText = document.getElementById('questionText');
-        const codeContainer = document.getElementById('codeContainer');
-        const codeBlock = document.getElementById('codeBlock');
-        const multiSelectNotice = document.getElementById('multiSelectNotice');
-        const optionsGrid = document.getElementById('optionsGrid');
-        const multiSubmitContainer = document.getElementById('multiSubmitContainer');
-        const confirmMultiBtn = document.getElementById('confirmMultiBtn');
-        const explanationCard = document.getElementById('explanationCard');
-        const explanationIcon = document.getElementById('explanationIcon');
-        const explanationTitle = document.getElementById('explanationTitle');
-        const explanationText = document.getElementById('explanationText');
-        const nextBtn = document.getElementById('nextBtn');
-        const nextBtnText = document.getElementById('nextBtnText');
-        const restartBtn = document.getElementById('restartBtn');
-        const reviewBtn = document.getElementById('reviewBtn');
-        const reviewContainer = document.getElementById('reviewContainer');
-        const reviewList = document.getElementById('reviewList');
-        const closeReviewBtn = document.getElementById('closeReviewBtn');
-
-        // Event Listeners
-        startBtn.addEventListener('click', startQuiz);
-        nextBtn.addEventListener('click', handleNextQuestion);
-        restartBtn.addEventListener('click', startQuiz);
-        reviewBtn.addEventListener('click', toggleReviewModal);
-        closeReviewBtn.addEventListener('click', toggleReviewModal);
-        confirmMultiBtn.addEventListener('click', submitMultiAnswer);
-
-        function startQuiz() {
-            playSound('click');
-            currentQuestionIndex = 0;
-            score = 0;
-            userAnswers = [];
-            
-            startScreen.classList.add('hidden');
-            resultScreen.classList.add('hidden');
-            reviewContainer.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            topStatsPill.classList.remove('hidden');
-
-            renderQuestion();
-        }
-
-        function renderQuestion() {
-            answerSelected = false;
-            selectedMultiIndices = [];
-            clearInterval(timerInterval);
-            
-            const q = quizQuestions[currentQuestionIndex];
-
-            // Update stats & section
-            questionCounter.innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
-            currentScoreDisplay.innerText = `${score} pts`;
-            sectionBadge.innerText = q.section;
-            questionText.innerText = q.question;
-
-            // Handle Code block display
-            if (q.code) {
-                codeContainer.classList.remove('hidden');
-                codeBlock.innerText = q.code;
-            } else {
-                codeContainer.classList.add('hidden');
-            }
-
-            // Handle Multi-Select UI state
-            if (q.multiSelect) {
-                multiSelectNotice.classList.remove('hidden');
-                multiSubmitContainer.classList.remove('hidden');
-            } else {
-                multiSelectNotice.classList.add('hidden');
-                multiSubmitContainer.classList.add('hidden');
-            }
-
-            // Reset explanation card & next button
-            explanationCard.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-
-            // Render Options (Up to 6 options grid)
-            optionsGrid.innerHTML = '';
-            
-            if (q.options.length > 4) {
-                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-4';
-            } else {
-                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4';
-            }
-
-            q.options.forEach((optText, index) => {
-                const btn = document.createElement('button');
-                btn.dataset.index = index;
-                btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-slate-50 hover:bg-sky-50 text-slate-700 font-semibold border-2 border-slate-200 hover:border-sky-300 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm group';
-                
-                if (q.multiSelect) {
-                    btn.onclick = () => toggleMultiOption(index, btn);
-                } else {
-                    btn.onclick = () => selectSingleAnswer(index);
-                }
-
-                btn.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center group-hover:bg-sky-500 group-hover:text-white transition-colors">
-                            ${String.fromCharCode(65 + index)}
-                        </span>
-                        <span class="leading-snug">${optText}</span>
-                    </div>
-                    <i class="option-icon fa-regular ${q.multiSelect ? 'fa-square text-slate-300' : 'fa-circle text-slate-300'} text-base"></i>
-                `;
-                optionsGrid.appendChild(btn);
-            });
-
-            // Start 30s Timer
-            startTimer();
-        }
-
-        function startTimer() {
-            timeLeft = TIME_LIMIT;
-            updateTimerUI();
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerUI();
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeout();
-                }
-            }, 1000);
-        }
-
-        function updateTimerUI() {
-            timerText.innerText = `${timeLeft}s`;
-            const percentage = (timeLeft / TIME_LIMIT) * 100;
-            timerProgressBar.style.width = `${percentage}%`;
-
-            if (timeLeft <= 8) {
-                timerProgressBar.className = "bg-gradient-to-r from-amber-500 to-rose-500 h-full w-full transition-all duration-1000 ease-linear";
-            } else {
-                timerProgressBar.className = "bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear";
-            }
-        }
-
-        function toggleMultiOption(index, btn) {
-            if (answerSelected) return;
-            playSound('click');
-
-            const icon = btn.querySelector('.option-icon');
-            const pos = selectedMultiIndices.indexOf(index);
-
-            if (pos > -1) {
-                selectedMultiIndices.splice(pos, 1);
-                btn.classList.remove('bg-sky-100', 'border-sky-500', 'text-sky-900');
-                btn.classList.add('bg-slate-50', 'border-slate-200');
-                icon.className = 'option-icon fa-regular fa-square text-slate-300 text-base';
-            } else {
-                selectedMultiIndices.push(index);
-                btn.classList.remove('bg-slate-50', 'border-slate-200');
-                btn.classList.add('bg-sky-100', 'border-sky-500', 'text-sky-900');
-                icon.className = 'option-icon fa-solid fa-square-check text-sky-600 text-base';
-            }
-        }
-
-        function selectSingleAnswer(selectedIndex) {
-            if (answerSelected) return;
-            answerSelected = true;
-            clearInterval(timerInterval);
-
-            const q = quizQuestions[currentQuestionIndex];
-            const isCorrect = selectedIndex === q.answer;
-
-            evaluateAndShowResult(isCorrect, selectedIndex);
-        }
-
-        function submitMultiAnswer() {
-            if (answerSelected) return;
-            answerSelected = true;
-            clearInterval(timerInterval);
-
-            const q = quizQuestions[currentQuestionIndex];
-            const correctAnswers = q.answer; // Array of correct indices
-
-            // Check arrays match regardless of order
-            const isCorrect = (selectedMultiIndices.length === correctAnswers.length) &&
-                selectedMultiIndices.every(val => correctAnswers.includes(val));
-
-            evaluateAndShowResult(isCorrect, selectedMultiIndices);
-        }
-
-        function evaluateAndShowResult(isCorrect, userSelected) {
-            const q = quizQuestions[currentQuestionIndex];
-
-            if (isCorrect) {
-                score += 10;
-                playSound('correct');
-            } else {
-                playSound('wrong');
-            }
-
-            // Save user answer
-            userAnswers.push({
-                questionId: q.id,
-                selected: userSelected,
-                correct: q.answer,
-                isCorrect: isCorrect,
-                timeSpent: TIME_LIMIT - timeLeft
-            });
-
-            currentScoreDisplay.innerText = `${score} pts`;
-
-            // Highlight Option Buttons
-            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
-            optionBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                btn.classList.remove('hover:bg-sky-50', 'hover:border-sky-300');
-                const icon = btn.querySelector('.option-icon');
-
-                if (q.multiSelect) {
-                    const isTargetCorrect = q.answer.includes(idx);
-                    const isUserPick = selectedMultiIndices.includes(idx);
-
-                    if (isTargetCorrect) {
-                        btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-50 text-emerald-900 font-bold border-2 border-emerald-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                        icon.className = 'option-icon fa-solid fa-square-check text-emerald-600 text-lg';
-                    } else if (isUserPick && !isTargetCorrect) {
-                        btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-rose-50 text-rose-900 font-semibold border-2 border-rose-400 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                        icon.className = 'option-icon fa-solid fa-square-xmark text-rose-500 text-lg';
-                    } else {
-                        btn.classList.add('opacity-50');
-                    }
-                } else {
-                    if (idx === q.answer) {
-                        btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-50 text-emerald-900 font-bold border-2 border-emerald-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                        icon.className = 'option-icon fa-solid fa-circle-check text-emerald-600 text-lg';
-                    } else if (idx === userSelected && !isCorrect) {
-                        btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-rose-50 text-rose-900 font-semibold border-2 border-rose-400 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                        icon.className = 'option-icon fa-solid fa-circle-xmark text-rose-500 text-lg';
-                    } else {
-                        btn.classList.add('opacity-50');
-                    }
-                }
-            });
-
-            // Hide multi submit button
-            multiSubmitContainer.classList.add('hidden');
-
-            // Display Explanation Card Directly Under Buttons
-            showExplanation(isCorrect, q.explanation);
-
-            // Show Next Button
-            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "Finish Mission" : "Next Question";
-            nextBtn.classList.remove('hidden');
-        }
-
-        function handleTimeout() {
-            if (answerSelected) return;
-            answerSelected = true;
-            playSound('wrong');
-
-            const q = quizQuestions[currentQuestionIndex];
-
-            // Record timeout answer (-1)
-            userAnswers.push({
-                questionId: q.id,
-                selected: -1,
-                correct: q.answer,
-                isCorrect: false,
-                timeSpent: TIME_LIMIT
-            });
-
-            // Highlight Correct Answer
-            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
-            optionBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                const icon = btn.querySelector('.option-icon');
-
-                if (q.multiSelect ? q.answer.includes(idx) : idx === q.answer) {
-                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-amber-50 text-amber-900 font-bold border-2 border-amber-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                    icon.className = 'option-icon fa-solid fa-clock text-amber-600 text-lg';
-                } else {
-                    btn.classList.add('opacity-50');
-                }
-            });
-
-            multiSubmitContainer.classList.add('hidden');
-            showExplanation(false, `⏱️ Time's up! ${q.explanation}`);
-            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "Finish Mission" : "Next Question";
-            nextBtn.classList.remove('hidden');
-        }
-
-        function showExplanation(isCorrect, text) {
-            explanationCard.classList.remove('hidden');
-            explanationText.innerText = text;
-
-            if (isCorrect) {
-                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-emerald-50 border-emerald-200 text-emerald-950';
-                explanationIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
-                explanationTitle.innerText = "Awesome job! Correct Answer";
-                explanationTitle.className = "font-bold text-sm mb-1 text-emerald-800";
-            } else {
-                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-amber-50 border-amber-200 text-amber-950';
-                explanationIcon.innerHTML = '<i class="fa-solid fa-lightbulb text-amber-600"></i>';
-                explanationTitle.innerText = "Key Concept Explanation";
-                explanationTitle.className = "font-bold text-sm mb-1 text-amber-800";
-            }
-        }
-
-        function handleNextQuestion() {
-            playSound('click');
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                renderQuestion();
-            } else {
-                finishQuiz();
-            }
-        }
-
-        function finishQuiz() {
-            quizScreen.classList.add('hidden');
-            topStatsPill.classList.add('hidden');
-            resultScreen.classList.remove('hidden');
-
-            const totalQuestions = quizQuestions.length;
-            const correctCount = userAnswers.filter(a => a.isCorrect).length;
-
-            // Calculate score for first 5 questions (Q1 - Q5)
-            const firstFiveCorrect = userAnswers.slice(0, 5).filter(a => a.isCorrect).length;
-            // Calculate score for next 5 questions (Q6 - Q10)
-            const nextFiveCorrect = userAnswers.slice(5, 10).filter(a => a.isCorrect).length;
-
-            // Display Score Summary & Breakdown
-            document.getElementById('finalScoreText').innerText = `${correctCount} / ${totalQuestions}`;
-            document.getElementById('totalPointsText').innerText = `${score}`;
-            document.getElementById('firstFiveScore').innerText = `${firstFiveCorrect} / 5`;
-            document.getElementById('nextFiveScore').innerText = `${nextFiveCorrect} / 5`;
-
-            // Generate Handwritten Teacher Note
-            const noteContent = document.getElementById('teacherNoteContent');
-            let feedback = "";
-
-            if (correctCount >= 9) {
-                feedback = `Outstanding work on your Python revision! You scored ${firstFiveCorrect}/5 in Computer Vision & APIs, and ${nextFiveCorrect}/5 in Loops & Debugging. Excellent logic and syntax mastery!`;
-            } else if (correctCount >= 7) {
-                feedback = `Great job on this revision! You scored ${firstFiveCorrect}/5 on the first section and ${nextFiveCorrect}/5 on the second section. Keep up the great problem solving!`;
-            } else if (correctCount >= 5) {
-                feedback = `Good effort on your Python revision! You got ${firstFiveCorrect}/5 in the first section and ${nextFiveCorrect}/5 in the second section. Review the explanation feedback notes to strengthen your skills.`;
-            } else {
-                feedback = `Nice attempt! You scored ${firstFiveCorrect}/5 in the first section and ${nextFiveCorrect}/5 in the second section. Spend some extra time reviewing loop logic and API concepts!`;
-            }
-
-            noteContent.innerText = feedback;
-        }
-
-        function toggleReviewModal() {
-            playSound('click');
-            reviewContainer.classList.toggle('hidden');
-
-            if (!reviewContainer.classList.contains('hidden')) {
-                renderReviewList();
-            }
-        }
-
-        function renderReviewList() {
-            reviewList.innerHTML = '';
-
-            quizQuestions.forEach((q, idx) => {
-                const userAns = userAnswers[idx] || { selected: -1, isCorrect: false };
-                const item = document.createElement('div');
-                item.className = `p-4 rounded-2xl border text-xs sm:text-sm ${userAns.isCorrect ? 'bg-emerald-50/80 border-emerald-200' : 'bg-rose-50/80 border-rose-200'}`;
-
-                let userOptText = "Timed Out (No Answer)";
-                let correctOptText = "";
-
-                if (q.multiSelect) {
-                    if (Array.isArray(userAns.selected) && userAns.selected.length > 0) {
-                        userOptText = userAns.selected.map(i => q.options[i]).join(", ");
-                    }
-                    correctOptText = q.answer.map(i => q.options[i]).join(", ");
-                } else {
-                    if (userAns.selected >= 0) {
-                        userOptText = q.options[userAns.selected];
-                    }
-                    correctOptText = q.options[q.answer];
-                }
-
-                item.innerHTML = `
-                    <div class="flex items-start justify-between gap-2 mb-2">
-                        <span class="font-bold text-slate-800">Q${idx + 1}: ${q.question}</span>
-                        <span class="px-2 py-0.5 text-xs rounded-lg font-bold ${userAns.isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
-                            ${userAns.isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
-                    </div>
-                    ${q.code ? `<pre class="p-2 bg-slate-900 text-emerald-400 rounded-xl font-code text-xs mb-2 overflow-x-auto">${q.code}</pre>` : ''}
-                    <div class="space-y-1 mb-2 text-slate-700">
-                        <p><strong class="text-slate-900">Your Answer:</strong> ${userOptText}</p>
-                        <p><strong class="text-emerald-700">Correct Answer:</strong> ${correctOptText}</p>
-                    </div>
-                    <p class="text-slate-600 bg-white/70 p-2 rounded-xl text-xs border border-slate-200 leading-relaxed">
-                        <strong class="text-slate-800">Explanation:</strong> ${q.explanation}
-                    </p>
-                `;
-                reviewList.appendChild(item);
-            });
-        }
-
-        /* ==========================================================================
-           ANIMATED AIRPLANE CANVAS BACKGROUND
-           Draws light blue sky backdrop with flying airplanes and soft clouds
-           ========================================================================== */
-        const canvas = document.getElementById('airplaneCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        // Airplanes and Clouds objects
-        const airplanes = [
-            { x: -100, y: height * 0.15, speed: 1.8, scale: 0.8 },
-            { x: -300, y: height * 0.45, speed: 1.2, scale: 0.6 },
-            { x: -200, y: height * 0.75, speed: 2.2, scale: 0.9 }
-        ];
-
-        const clouds = [
-            { x: 100, y: height * 0.1, scale: 1 },
-            { x: 400, y: height * 0.3, scale: 1.4 },
-            { x: 800, y: height * 0.2, scale: 0.8 },
-            { x: 200, y: height * 0.6, scale: 1.2 },
-            { x: 700, y: height * 0.8, scale: 1.1 }
-        ];
-
-        function drawCloud(c) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, 25 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 20 * c.scale, c.y - 10 * c.scale, 20 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 40 * c.scale, c.y, 22 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 20 * c.scale, c.y + 10 * c.scale, 18 * c.scale, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function drawAirplane(plane) {
-            ctx.save();
-            ctx.translate(plane.x, plane.y);
-            ctx.scale(plane.scale, plane.scale);
-
-            // Plane Body
-            ctx.fillStyle = '#0284c7'; // Sky blue
-            ctx.beginPath();
-            ctx.moveTo(30, 0);
-            ctx.quadraticCurveTo(0, -12, -30, -6);
-            ctx.lineTo(-35, 0);
-            ctx.lineTo(-30, 6);
-            ctx.quadraticCurveTo(0, 12, 30, 0);
-            ctx.fill();
-
-            // Wing
-            ctx.fillStyle = '#38bdf8';
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(-10, -22);
-            ctx.lineTo(8, -22);
-            ctx.lineTo(12, 0);
-            ctx.fill();
-
-            // Tail
-            ctx.fillStyle = '#0369a1';
-            ctx.beginPath();
-            ctx.moveTo(-25, -3);
-            ctx.lineTo(-38, -18);
-            ctx.lineTo(-30, -18);
-            ctx.lineTo(-20, -3);
-            ctx.fill();
-
-            // Cockpit Window
-            ctx.fillStyle = '#e0f2fe';
-            ctx.beginPath();
-            ctx.arc(15, -2, 5, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        function animateBackground() {
-            ctx.clearRect(0, 0, width, height);
-
-            // Draw clouds
-            clouds.forEach(cloud => {
-                cloud.x -= 0.3;
-                if (cloud.x < -100) cloud.x = width + 100;
-                drawCloud(cloud);
-            });
-
-            // Move and draw airplanes
-            airplanes.forEach(plane => {
-                plane.x += plane.speed;
-                if (plane.x > width + 150) {
-                    plane.x = -150;
-                    plane.y = Math.random() * (height * 0.7) + 50;
-                }
-                drawAirplane(plane);
-            });
-
-            requestAnimationFrame(animateBackground);
-        }
-
-        // Start flight animation loop on load
-        window.onload = function() {
-            animateBackground();
+        return {
+          id: qIndex,
+          section: q.section,
+          question: q.question,
+          code: q.code || null,
+          options: clonedOpts.map(o => o.text),
+          correctIndex: clonedOpts.findIndex(o => o.isCorrect),
+          explanation: q.explanation,
+          focusPoint: q.focusPoint
         };
-    </script>
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timerId);
+      timeLeft = 30;
+      renderTimer();
+
+      timerId = setInterval(() => {
+        timeLeft--;
+        renderTimer();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          onTimeout();
+        }
+      }, 1000);
+    }
+
+    function renderTimer() {
+      timerTextEl.textContent = timeLeft;
+      const pct = (timeLeft / 30) * 100;
+      timerBarEl.style.width = `${pct}%`;
+
+      if (timeLeft <= 7) {
+        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-indigo-400', 'to-violet-500');
+        timerBarEl.classList.add('from-rose-500', 'to-red-600');
+      } else {
+        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
+        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
+        timerBarEl.classList.add('from-indigo-400', 'to-violet-500');
+      }
+    }
+
+    function displayQuestion() {
+      isAnswered = false;
+      const q = questionsDatabase[currentIndex];
+
+      qNumEl.textContent = currentIndex + 1;
+      liveScoreEl.textContent = `${score} / 10`;
+      sectionBadgeEl.textContent = q.section;
+
+      explanationBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+
+      questionTextEl.textContent = q.question;
+
+      if (q.code) {
+        codeSnippetEl.textContent = q.code;
+        codeContainer.classList.remove('hidden');
+      } else {
+        codeContainer.classList.add('hidden');
+      }
+
+      optionsGrid.innerHTML = '';
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.dataset.idx = idx;
+
+        btn.className = "option-btn p-4 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800/80 hover:border-indigo-500 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-start gap-3 shadow-md";
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 text-indigo-400 font-bold text-sm flex items-center justify-center font-code shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-xs sm:text-sm leading-relaxed font-code whitespace-pre-wrap">${escapeHTML(optText)}</span>
+        `;
+        btn.addEventListener('click', () => handleOptionClick(idx));
+
+        optionsGrid.appendChild(btn);
+      });
+
+      startTimer();
+    }
+
+    function handleOptionClick(selectedIdx) {
+      if (isAnswered) return;
+      isAnswered = true;
+      clearInterval(timerId);
+
+      const q = questionsDatabase[currentIndex];
+      const isCorrect = (selectedIdx === q.correctIndex);
+
+      // Record student response for the review portal
+      studentResponses.push({
+        questionIndex: currentIndex,
+        question: q.question,
+        code: q.code,
+        selectedOption: q.options[selectedIdx],
+        correctOption: q.options[q.correctIndex],
+        isCorrect: isCorrect,
+        explanation: q.explanation,
+        focusPoint: q.focusPoint
+      });
+
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.correctIndex) {
+          btn.classList.remove('border-slate-800', 'bg-slate-950/80');
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.classList.remove('border-slate-800', 'bg-slate-950/80');
+          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
+        }
+      });
+
+      if (isCorrect) {
+        score += 1;
+        liveScoreEl.textContent = `${score} / 10`;
+        showExplanation(true, "Correct! " + q.explanation);
+      } else {
+        showExplanation(false, "Not quite! " + q.explanation);
+      }
+
+      nextBtn.classList.remove('hidden');
+    }
+
+    function onTimeout() {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const q = questionsDatabase[currentIndex];
+      
+      studentResponses.push({
+        questionIndex: currentIndex,
+        question: q.question,
+        code: q.code,
+        selectedOption: "⏳ Time Expired (No answer submitted)",
+        correctOption: q.options[q.correctIndex],
+        isCorrect: false,
+        explanation: q.explanation,
+        focusPoint: q.focusPoint
+      });
+
+      const buttons = optionsGrid.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.correctIndex) {
+          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+        }
+      });
+
+      showExplanation(false, "⏳ Time is up! You had 30 seconds for this question. " + q.explanation);
+      nextBtn.classList.remove('hidden');
+    }
+
+    function showExplanation(isCorrect, message) {
+      explanationBox.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
+
+      if (isCorrect) {
+        explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
+        explanationIcon.textContent = "🌟";
+        explanationTitle.textContent = "Great Spot!";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-emerald-300";
+      } else {
+        explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
+        explanationIcon.textContent = "💡";
+        explanationTitle.textContent = "Key Takeaway";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-rose-300";
+      }
+
+      explanationText.textContent = message;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex++;
+      if (currentIndex < questionsDatabase.length) {
+        displayQuestion();
+      } else {
+        showTeacherReport();
+      }
+    });
+
+    function showTeacherReport() {
+      quizScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
+
+      finalTotalScore.textContent = `${score} / 10`;
+
+      let feedback = "";
+      if (score >= 9) {
+        feedback = `"Outstanding performance! You scored ${score} out of 10! You have demonstrated exceptional mastery over OpenCV Haar Cascade face detection pipelines, machine learning pattern fundamentals, parameter-argument balancing, and loop condition tracing. Your logical thinking and attention to detail are top-notch! Keep exploring AI and building real-world projects!"\n\n— Warmly, Tutor Priyadarshini`;
+      } else if (score >= 7) {
+        feedback = `"Great effort in today's revision! You scored ${score} out of 10! You have a really firm grasp on Haar Cascade models, vision preprocessing, and core Python data structures. Be sure to review the Check Your Answers section below to polish parameter matching and loop accumulator tracing!"\n\n— Warmly, Tutor Priyadarshini`;
+      } else if (score >= 5) {
+        feedback = `"Good work on completing this revision! You scored ${score} out of 10. You answered many AI concepts correctly! Take a close look at the Focus Points below for the questions you missed—especially parameter counts and loop math tracing. With a little more practice, you will get a perfect 10!"\n\n— Warmly, Tutor Priyadarshini`;
+      } else {
+        feedback = `"Nice try on this revision challenge! You scored ${score} out of 10. Computer vision pipelines and Python logic take practice to master. Review the Key Focus Points below to understand what to observe next time, and let's retake the challenge together!"\n\n— Warmly, Tutor Priyadarshini`;
+      }
+
+      tutorFeedbackText.textContent = feedback;
+      renderDetailedReview("all");
+    }
+
+    // Toggle Review Portal
+    toggleAnswersBtn.addEventListener('click', () => {
+      answersReviewContainer.classList.toggle('hidden');
+      if (!answersReviewContainer.classList.contains('hidden')) {
+        answersReviewContainer.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // Render Answer Review Cards with Filter
+    function renderDetailedReview(filter) {
+      reviewCardsList.innerHTML = '';
+
+      // Update Filter Button Styles
+      ['all', 'wrong', 'correct'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}-btn`);
+        if (f === filter) {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+        }
+      });
+
+      const filteredResponses = studentResponses.filter(item => {
+        if (filter === 'wrong') return !item.isCorrect;
+        if (filter === 'correct') return item.isCorrect;
+        return true;
+      });
+
+      if (filteredResponses.length === 0) {
+        reviewCardsList.innerHTML = `
+          <div class="text-center py-8 text-slate-400 text-xs">
+            No questions match this filter category.
+          </div>
+        `;
+        return;
+      }
+
+      filteredResponses.forEach(res => {
+        const card = document.createElement('div');
+        card.className = `p-5 rounded-2xl border transition shadow-sm ${
+          res.isCorrect 
+            ? 'bg-slate-950/80 border-emerald-500/40' 
+            : 'bg-slate-950/90 border-rose-500/40'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <span class="text-xs font-bold font-code text-indigo-400 uppercase tracking-wider">
+              Question ${res.questionIndex + 1}
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+              res.isCorrect 
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+            }">
+              ${res.isCorrect ? 'Correct ✓' : 'Needs Focus ✗'}
+            </span>
+          </div>
+
+          <h4 class="text-sm font-semibold text-slate-100 mb-3 leading-snug">
+            ${escapeHTML(res.question)}
+          </h4>
+
+          ${res.code ? `
+            <pre class="bg-slate-900 text-indigo-200 border border-indigo-500/20 rounded-xl p-3 font-code text-xs mb-3 overflow-x-auto"><code>${escapeHTML(res.code)}</code></pre>
+          ` : ''}
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3 font-code">
+            <div class="p-2.5 rounded-lg border ${
+              res.isCorrect 
+                ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300' 
+                : 'bg-rose-950/40 border-rose-500/30 text-rose-300'
+            }">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Your Selected Answer:</span>
+              <span class="whitespace-pre-wrap">${escapeHTML(res.selectedOption)}</span>
+            </div>
+
+            <div class="p-2.5 rounded-lg border bg-slate-900 border-indigo-500/30 text-indigo-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Correct Answer:</span>
+              <span class="whitespace-pre-wrap">${escapeHTML(res.correctOption)}</span>
+            </div>
+          </div>
+
+          <!-- Tutor Priyadarshini's Focus Observation Point -->
+          <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200/90 leading-relaxed">
+            <div class="font-bold text-amber-300 flex items-center gap-1.5 mb-1">
+              <span>🎯</span> <span>Tutor Priyadarshini's Key Focus Point:</span>
+            </div>
+            <p>${escapeHTML(res.focusPoint)}</p>
+          </div>
+        `;
+
+        reviewCardsList.appendChild(card);
+      });
+    }
+
+    function filterReview(type) {
+      renderDetailedReview(type);
+    }
+
+    restartBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      score = 0;
+      prepareQuestions();
+      answersReviewContainer.classList.add('hidden');
+      resultScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+      displayQuestion();
+    });
+
+    // Initialize
+    prepareQuestions();
+    displayQuestion();
+  </script>
 </body>
 </html>
