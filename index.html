@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python & AI Revision - Tutor Priyadarshini</title>
+  <title>Python & Pygame Revision Quiz</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Outfit for UI, Fira Code for code blocks, Caveat for Tutor feedback -->
+  <!-- Google Fonts: Caveat for handwriting, Outfit for UI, Fira Code for code blocks -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,115 +23,133 @@
       font-family: 'Caveat', cursive;
     }
 
-    /* Ambient cyber grid background */
-    .bg-grid-tech {
-      background-size: 32px 32px;
-      background-image: 
-        linear-gradient(to right, rgba(99, 102, 241, 0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+    /* Floating Clouds Keyframe Animation */
+    @keyframes driftAcross {
+      0% {
+        transform: translateX(-180px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.75;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateX(115vw);
+        opacity: 0;
+      }
     }
 
-    /* Lined Notebook Sheet for Tutor Priyadarshini's Feedback */
-    .tutor-note-paper {
-      background-color: #fefdf9;
-      background-image: linear-gradient(#e0e7ff 1px, transparent 1px);
-      background-size: 100% 2.2rem;
-      border-left: 6px double #6366f1;
+    .drifting-cloud {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      animation: driftAcross linear infinite;
+    }
+
+    /* Lined Notebook Paper for Handwritten Feedback */
+    .notebook-paper {
+      background-color: #fffdf5;
+      background-image: linear-gradient(#d1fae5 1px, transparent 1px);
+      background-size: 100% 2.3rem;
+      border-left: 6px double #0d9488;
     }
 
     pre::-webkit-scrollbar {
       height: 6px;
     }
     pre::-webkit-scrollbar-thumb {
-      background: #6366f1;
+      background: #0d9488;
       border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-slate-950 bg-grid-tech text-slate-100 min-h-screen relative flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="bg-gradient-to-b from-sky-100 via-teal-50 to-emerald-100 text-slate-800 min-h-screen relative flex flex-col justify-between selection:bg-teal-300 selection:text-teal-950">
 
-  <!-- Ambient Glow Blobs -->
-  <div class="fixed top-12 left-10 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none z-0"></div>
-  <div class="fixed bottom-10 right-10 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none z-0"></div>
+  <!-- Ambient Sky Environment Container -->
+  <div id="sky-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
 
-  <!-- Main Application Wrapper -->
+  <!-- Main Container -->
   <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
 
-    <!-- Global Quiz Header -->
-    <header class="text-center mb-6">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold uppercase tracking-widest mb-2">
-        <span>🚀 Python & AI Revision Challenge</span>
+    <!-- Global Header -->
+    <header class="text-center mb-5">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-800/10 border border-teal-700/20 text-teal-900 text-xs font-bold uppercase tracking-widest mb-1.5 shadow-sm">
+        <span>🎮 Python & Pygame Revision</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-indigo-200 to-violet-300 tracking-tight">
-        Python & Computer Vision Quiz
+      <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight drop-shadow-sm">
+        Python & Game Dev Challenge
       </h1>
-      <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
-        10 Questions • 30 Seconds Per Question • Curated by Tutor Priyadarshini
+      <p class="text-xs sm:text-sm font-semibold text-teal-900/80 mt-1">
+        10 Questions • 30 Seconds Per Question • Curated for 12-Year-Old Coders
       </p>
     </header>
 
     <!-- QUIZ SCREEN -->
     <div id="quiz-screen" class="w-full">
       
-      <!-- Top Info Bar: Question Counter, Live Score, Timer -->
-      <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 sm:p-5 mb-5 shadow-2xl">
+      <!-- Top Info Bar -->
+      <div class="bg-white/90 backdrop-blur-md border border-teal-200/80 rounded-2xl p-4 sm:p-5 mb-5 shadow-xl">
         <div class="flex justify-between items-center gap-3">
           
-          <!-- Category Badge & Question Number -->
+          <!-- Category & Question Number -->
           <div>
-            <span id="section-badge" class="text-[11px] uppercase font-bold text-indigo-400 tracking-wider block">Part 1: AI & Vision Concepts</span>
-            <div class="text-xl sm:text-2xl font-black text-slate-100 font-code mt-0.5">
-              Question <span id="q-num" class="text-indigo-400">1</span> <span class="text-slate-500 text-base font-normal">/ 10</span>
+            <span id="section-badge" class="text-[11px] uppercase font-extrabold text-teal-700 tracking-wider block">
+              Part 1: Find the Correct Snippet
+            </span>
+            <div class="text-xl sm:text-2xl font-black text-slate-900 font-code mt-0.5">
+              Question <span id="q-num" class="text-teal-700">1</span> <span class="text-slate-400 text-base font-normal">/ 10</span>
             </div>
           </div>
 
-          <!-- Live Score Badge -->
-          <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 text-right">
-            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Live Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-400 font-code">0 / 10</span>
+          <!-- Live Score -->
+          <div class="bg-teal-50/90 px-4 py-2 rounded-xl border border-teal-200 text-center shadow-inner">
+            <span class="text-[10px] uppercase tracking-wider text-teal-800 font-bold block">Score</span>
+            <span id="live-score" class="text-xl font-extrabold text-amber-600 font-code">0 / 10</span>
           </div>
 
-          <!-- 30s Timer Circle -->
+          <!-- 30s Countdown Timer -->
           <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-slate-950 rounded-full border-2 border-indigo-400 shadow-inner">
-              <span id="timer-text" class="text-xl font-black text-indigo-300 font-code">30</span>
-              <span class="text-[8px] text-slate-400 absolute bottom-1 font-bold">sec</span>
+            <div class="relative w-14 h-14 flex items-center justify-center bg-white rounded-full border-2 border-teal-500 shadow-md">
+              <span id="timer-text" class="text-xl font-black text-teal-700 font-code">30</span>
+              <span class="text-[8px] text-teal-900 absolute bottom-1 font-bold">sec</span>
             </div>
           </div>
 
         </div>
 
         <!-- Timer Progress Bar -->
-        <div class="w-full bg-slate-950 h-2.5 rounded-full mt-3 overflow-hidden border border-slate-800">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-indigo-400 to-violet-500 transition-all duration-1000 ease-linear w-full"></div>
+        <div class="w-full bg-teal-100/70 h-2.5 rounded-full mt-3 overflow-hidden border border-teal-200">
+          <div id="timer-bar" class="h-full bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-500 transition-all duration-1000 ease-linear w-full"></div>
         </div>
       </div>
 
-      <!-- Question Card -->
-      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-2xl relative">
+      <!-- Question Box -->
+      <div class="bg-white/95 backdrop-blur-md border border-teal-200/90 rounded-2xl p-5 sm:p-7 shadow-xl relative">
         
-        <!-- Question Scenario Text -->
-        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-100 leading-relaxed mb-4">
-          Question loading...
+        <!-- Question Prompt -->
+        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed mb-4">
+          Question text loading...
         </h2>
 
-        <!-- Code Snippet Area (Only used when prediction/snippet is needed) -->
+        <!-- Code Snippet Area (Only used for prediction questions) -->
         <div id="code-container" class="mb-5 hidden">
-          <pre class="bg-slate-950 text-indigo-200 border border-indigo-500/30 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
+          <pre class="bg-slate-900 text-teal-300 border border-teal-700/50 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
         </div>
 
-        <!-- 4 Options Grid -->
+        <!-- 4 Options Grid (A & B side-by-side, C & D side-by-side) -->
         <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <!-- Options rendered dynamically -->
+          <!-- Dynamically populated options -->
         </div>
 
-        <!-- Explanation Box (Under Buttons) -->
+        <!-- Explanation Container (Under Buttons) -->
         <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
           <div class="flex items-start gap-3">
             <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
             <div>
               <h4 id="explanation-title" class="font-bold text-sm sm:text-base">Explanation</h4>
-              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-200">
+              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-800">
                 Explanation text appears here.
               </p>
             </div>
@@ -140,7 +158,7 @@
 
         <!-- Next Question Button -->
         <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
+          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
             <span>Next Question</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
           </button>
@@ -152,78 +170,48 @@
     <!-- RESULT SCREEN -->
     <div id="result-screen" class="hidden w-full my-4">
       
-      <!-- Tutor Priyadarshini Feedback Sheet -->
-      <div class="tutor-note-paper rounded-3xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-indigo-600 relative overflow-hidden mb-6">
+      <!-- Lined Notebook Paper Feedback -->
+      <div class="notebook-paper rounded-3xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-teal-700 relative overflow-hidden mb-6">
         
-        <!-- Result Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-indigo-200 pb-4 mb-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-teal-200 pb-4 mb-5">
           <div>
-            <span class="text-xs text-indigo-700 font-bold uppercase tracking-widest block">Official Assessment Review</span>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-indigo-950 mt-0.5">Feedback from Tutor Priyadarshini</h2>
+            <span class="text-xs text-teal-800 font-bold uppercase tracking-widest block">Official Assessment Review</span>
+            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-teal-950 mt-0.5">Tutor Feedback</h2>
           </div>
-          <div class="mt-3 sm:mt-0 bg-indigo-100 border-2 border-indigo-400 rounded-2xl px-5 py-2.5 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-indigo-900 font-bold block">Final Total Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-indigo-950 font-code">0 / 10</span>
+          <div class="mt-3 sm:mt-0 bg-white/90 border-2 border-teal-400 rounded-2xl px-5 py-2.5 text-center shadow-sm">
+            <span class="text-[11px] uppercase tracking-wider text-teal-900 font-bold block">Final Score</span>
+            <span id="final-total-score" class="text-3xl font-black text-teal-950 font-code">0 / 10</span>
           </div>
         </div>
 
-        <!-- Handwritten Feedback Note -->
-        <div class="mb-6 bg-white/95 p-6 rounded-2xl border border-indigo-200 shadow-sm">
-          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed">
-            Generating feedback note from Tutor Priyadarshini...
+        <!-- Handwritten Feedback Body -->
+        <div class="mb-5 bg-white/95 p-6 rounded-2xl border border-teal-200 shadow-sm">
+          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed whitespace-pre-line">
+            Generating feedback note...
           </p>
         </div>
 
-        <!-- Mastered Concepts Card -->
-        <div class="mb-6 p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 leading-relaxed">
-          <h3 class="font-bold text-sm text-indigo-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Core Topics Evaluated:
+        <!-- Key Takeaways & Mastered Concepts -->
+        <div class="p-4 rounded-2xl bg-teal-50/80 border border-teal-200 text-xs sm:text-sm text-teal-950 mb-6">
+          <h3 class="font-bold text-sm text-teal-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span>📌</span> Key Python & Pygame Reminders:
           </h3>
-          <ul class="list-disc list-inside space-y-1.5 text-indigo-900">
-            <li><strong>AI & OpenCV Models:</strong> Haar Cascade face, smile, and license plate classifiers.</li>
-            <li><strong>Vision Workflow:</strong> Image capture ➔ Grayscale conversion ➔ Haar Cascade detection ➔ Rectangle bounding boxes.</li>
-            <li><strong>Machine Learning Fundamentals:</strong> Discovering and applying patterns from datasets.</li>
-            <li><strong>Function Signatures:</strong> Matching function parameter count with passed arguments.</li>
-            <li><strong>Data Structures & Logic:</strong> Valid dictionary-tuple syntax, loop condition structures, and accumulator subtraction.</li>
+          <ul class="list-disc list-inside space-y-1.5 text-slate-700">
+            <li><strong>Variable Rules:</strong> Variable names cannot start with numbers or contain spaces. Always assign with a single <code>=</code>.</li>
+            <li><strong>Inputs & Math:</strong> Remember to wrap <code>input()</code> with <code>int()</code> if you want to perform number addition: <code>num = int(input())</code>.</li>
+            <li><strong>Colons & Comparisons:</strong> Every <code>if</code>, <code>for</code>, and <code>while</code> header must end with a colon (<code>:</code>).</li>
+            <li><strong>Pygame Two Loops:</strong> Pygame uses an outer <code>while</code> loop (the main game loop) and an inner <code>for</code> loop to process events like key presses (<code>for event in pygame.event.get():</code>).</li>
+            <li><strong>Pygame Captions:</strong> Change the window title using <code>pygame.display.set_caption("My Game Title")</code>.</li>
           </ul>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4 border-t border-indigo-200">
-          <button id="toggle-answers-btn" class="w-full sm:w-auto py-3.5 px-7 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2">
-            <span>🔍 Check Your Answers & Focus Points</span>
-          </button>
-          <button id="restart-btn" class="w-full sm:w-auto py-3.5 px-7 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-xl border border-slate-700 shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
+        <!-- Retake Button -->
+        <div class="flex justify-center border-t border-teal-200 pt-4">
+          <button id="restart-btn" class="py-3.5 px-8 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-xl border border-slate-700 shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             <span>Retake Revision</span>
           </button>
-        </div>
-
-      </div>
-
-      <!-- IN-DEPTH CHECK YOUR ANSWERS REVIEW SECTION -->
-      <div id="answers-review-container" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl mb-6">
-        
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-          <div>
-            <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
-              <span>📝</span> <span>Detailed Answer Breakdown & Key Focus Points</span>
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">
-              Review what you selected, the correct answer, and Tutor Priyadarshini's focus observation for each question.
-            </p>
-          </div>
-
-          <!-- Filter Pills -->
-          <div class="flex gap-2">
-            <button onclick="filterReview('all')" id="filter-all-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition">All (10)</button>
-            <button onclick="filterReview('wrong')" id="filter-wrong-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-rose-300 hover:bg-slate-700 transition">Needs Focus</button>
-            <button onclick="filterReview('correct')" id="filter-correct-btn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-emerald-300 hover:bg-slate-700 transition">Correct</button>
-          </div>
-        </div>
-
-        <div id="review-cards-list" class="space-y-5">
-          <!-- Populated dynamically via JS -->
         </div>
 
       </div>
@@ -233,194 +221,218 @@
   </div>
 
   <!-- Footer -->
-  <footer class="relative z-10 py-3 text-center text-xs text-slate-500 bg-slate-950 border-t border-slate-900">
-    <p>Python 13yo Revision Challenge • Curated with 💙 by Tutor Priyadarshini</p>
+  <footer class="relative z-10 py-3 text-center text-xs text-teal-900/70 bg-white/60 backdrop-blur-sm border-t border-teal-200">
+    <p>Python & Pygame Revision • Crafted for 12-Year-Old Young Programmers 🚀</p>
   </footer>
 
   <script>
     // -------------------------------------------------------------
-    // 10 QUESTIONS CURATED BY TUTOR PRIYADARSHINI
+    // 10 ACCESSIBLE QUESTIONS FOR A 12-YEAR-OLD PYTHON LEARNER
+    // 4 Snippet Finding + 3 Output Prediction + 3 Pygame Concepts
     // -------------------------------------------------------------
     const rawQuestionsDatabase = [
       
       // =========================================================
-      // QUESTIONS 1-5: AI & OPENCV VISION CONCEPTS
+      // PART 1 (Q1 - Q4): FIND THE ONLY CORRECT SYNTAX SNIPPET
       // =========================================================
       {
-        section: "AI & Computer Vision",
-        question: "1. Which pre-trained model/classifier in OpenCV is used for face detection?",
+        section: "Part 1: Find the Correct Snippet",
+        question: "1. Variable & Arithmetic: Which snippet shows the ONLY valid way to store numbers and add them together?",
         code: null,
         options: [
-          { text: "Haar Cascade model", isCorrect: true },
-          { text: "Linear Regression model", isCorrect: false },
-          { text: "Decision Tree classifier", isCorrect: false },
-          { text: "K-Means Cluster model", isCorrect: false }
+          { 
+            text: "score = 10\nbonus = 5\ntotal = score + bonus", 
+            isCorrect: true 
+          },
+          { 
+            text: "10 = score\n5 = bonus\ntotal = score + bonus", 
+            isCorrect: false 
+          },
+          { 
+            text: "score = 10\nbonus = 5\nscore + bonus = total", 
+            isCorrect: false 
+          },
+          { 
+            text: "score is 10\nbonus is 5\ntotal = score + bonus", 
+            isCorrect: false 
+          }
         ],
-        explanation: "Haar Cascade classifiers (such as haarcascade_frontalface_default.xml) are machine learning models specifically trained on thousands of positive and negative images to detect faces in OpenCV.",
-        focusPoint: "Always remember that OpenCV uses Haar Cascade XML models for classical face, eye, and object detection."
+        explanation: "Variable names must be on the left side of the equals sign: `variable_name = value`. You cannot put values like `10 = score` on the left!"
       },
       {
-        section: "AI & Computer Vision",
-        question: "2. In AI and Machine Learning, what is a 'pre-trained model'?",
+        section: "Part 1: Find the Correct Snippet",
+        question: "2. User Input: Which snippet shows the ONLY valid syntax to ask the user for a whole number and convert it to an integer?",
         code: null,
         options: [
-          { text: "A model already trained on a large dataset to recognize patterns, ready for immediate use", isCorrect: true },
-          { text: "A blank Python script file with zero lines of code written in it", isCorrect: false },
-          { text: "A webcam that was plugged into the laptop before opening the Python IDE", isCorrect: false },
-          { text: "A program that can only run one single time before deleting itself", isCorrect: false }
+          { 
+            text: "age = int(input(\"Enter your age: \"))", 
+            isCorrect: true 
+          },
+          { 
+            text: "age = int(input(\"Enter your age: \")", 
+            isCorrect: false 
+          },
+          { 
+            text: "age = input(int(\"Enter your age: \"))", 
+            isCorrect: false 
+          },
+          { 
+            text: "age = integer(input(\"Enter your age: \"))", 
+            isCorrect: false 
+          }
         ],
-        explanation: "A pre-trained model has already spent hours or days analyzing patterns from massive datasets. You can load it directly to detect objects without needing to train it from scratch yourself!",
-        focusPoint: "Observe that 'pre-trained' means the heavy pattern-learning work is already completed and saved for you to reuse immediately."
+        explanation: "Python uses `int()` to convert text to a number, and both opening parentheses must be closed: `int(input(\"...\"))`."
       },
       {
-        section: "AI & Computer Vision",
-        question: "3. To detect faces using a Haar Cascade model in OpenCV, what are the steps involved in the correct order?",
+        section: "Part 1: Find the Correct Snippet",
+        question: "3. If-Condition: Which snippet shows the ONLY valid syntax to check if player coins are 50 or more?",
         code: null,
         options: [
-          { text: "Read the image ➔ Convert into grayscale ➔ Pass through Haar Cascade model ➔ Draw bounding square/rectangle", isCorrect: true },
-          { text: "Draw bounding square ➔ Delete image ➔ Convert to grayscale ➔ Read the image", isCorrect: false },
-          { text: "Convert image to sound audio ➔ Play sound ➔ Draw circle ➔ Close camera", isCorrect: false },
-          { text: "Read image ➔ Draw bounding square ➔ Invert colors ➔ Save image without detecting", isCorrect: false }
+          { 
+            text: "if coins >= 50:\n    print(\"Level Up!\")", 
+            isCorrect: true 
+          },
+          { 
+            text: "if coins => 50:\n    print(\"Level Up!\")", 
+            isCorrect: false 
+          },
+          { 
+            text: "if coins >= 50\n    print(\"Level Up!\")", 
+            isCorrect: false 
+          },
+          { 
+            text: "if (coins >= 50) then:\n    print(\"Level Up!\")", 
+            isCorrect: false 
+          }
         ],
-        explanation: "The vision pipeline begins by loading the frame, converting it to single-channel Grayscale (which simplifies edge contrast analysis), passing it to the Haar Cascade detector, and drawing bounding boxes around detected face coordinates!",
-        focusPoint: "Keep the 4-step pipeline in mind: Read image ➔ Grayscale conversion ➔ Haar Cascade detection ➔ Draw bounding rectangle."
+        explanation: "Greater-than-or-equal is written `>=` (not `=>`), and the `if` statement line MUST end with a colon `:`!"
       },
       {
-        section: "AI & Computer Vision",
-        question: "4. What else can be detected using Haar Cascade models in addition to human faces?",
+        section: "Part 1: Find the Correct Snippet",
+        question: "4. For Loop: Which snippet shows the ONLY valid syntax to repeat an action 3 times using a range loop?",
         code: null,
         options: [
-          { text: "Smile detection and vehicle number plate detection", isCorrect: true },
-          { text: "Room temperature and air humidity levels", isCorrect: false },
-          { text: "The battery percentage of your wireless mouse", isCorrect: false },
-          { text: "The upload speed of your home Wi-Fi connection", isCorrect: false }
+          { 
+            text: "for i in range(3):\n    print(\"Hello!\")", 
+            isCorrect: true 
+          },
+          { 
+            text: "for i in range(3)\n    print(\"Hello!\")", 
+            isCorrect: false 
+          },
+          { 
+            text: "repeat 3 times:\n    print(\"Hello!\")", 
+            isCorrect: false 
+          },
+          { 
+            text: "for i to 3:\n    print(\"Hello!\")", 
+            isCorrect: false 
+          }
         ],
-        explanation: "OpenCV provides pre-trained Haar Cascades for facial expressions like smiles (haarcascade_smile.xml), eyes, and vehicle number plates (haarcascade_russian_plate_number.xml)!",
-        focusPoint: "Notice that Haar Cascades can detect various visual patterns like smiles, eyes, and license plates, not just full faces."
-      },
-      {
-        section: "AI & Computer Vision",
-        question: "5. Which statement best defines what Machine Learning is?",
-        code: null,
-        options: [
-          { text: "Machines learning through patterns in data without hardcoding every single rule", isCorrect: true },
-          { text: "Replacing a computer monitor with a mechanical keyboard", isCorrect: false },
-          { text: "Writing a million manual if-else statements for every possible scenario", isCorrect: false },
-          { text: "Formatting your hard drive and shutting down your laptop", isCorrect: false }
-        ],
-        explanation: "Machine Learning is a branch of Artificial Intelligence where algorithms discover patterns in datasets and learn to make decisions or predictions on their own.",
-        focusPoint: "Machine Learning fundamentally means teaching computers to learn and generalize patterns from data."
+        explanation: "Python loops use `for variable in range(number):` with a colon at the end of the line."
       },
 
       // =========================================================
-      // QUESTIONS 6-8: SNIPPET IDENTIFICATION (FUNCTIONS, DATA STRUCTURES, LOOPS)
+      // PART 2 (Q5 - Q7): PREDICT THE OUTPUT
       // =========================================================
       {
-        section: "Python Syntax & Snippets",
-        question: "6. Function Parameters & Arguments: Which code snippet correctly defines and calls the function without causing a TypeError?",
-        code: null,
+        section: "Part 2: Predict the Output",
+        question: "5. Loop Accumulator with Condition: Trace the loop below step-by-step. What value will be printed at the end for total?",
+        code: "total = 10\nfor score in [5, 12, 3, 20]:\n    if score >= 10:\n        total = total + score\n\nprint(total)",
         options: [
-          { 
-            text: "def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10, 5)", 
-            isCorrect: true 
-          },
-          { 
-            text: "def calculate_area(length, width):\n    return length * width\n\nroom = calculate_area(10, 5, 2)", 
-            isCorrect: false 
-          },
-          { 
-            text: "def calculate_area(length, width, height):\n    return length * width\n\nroom = calculate_area(10, 5)", 
-            isCorrect: false 
-          },
-          { 
-            text: "def calculate_area(length):\n    return length * width\n\nroom = calculate_area(10, 5)", 
-            isCorrect: false 
-          }
+          { text: "42", isCorrect: true },
+          { text: "50", isCorrect: false },
+          { text: "32", isCorrect: false },
+          { text: "10", isCorrect: false }
         ],
-        explanation: "`calculate_area(length, width)` defines exactly 2 parameters, and `calculate_area(10, 5)` passes exactly 2 arguments. If the parameter and argument counts don't match, Python raises a TypeError!",
-        focusPoint: "Always keep in mind that the number of function parameters and passed arguments must be equal!"
+        explanation: "total starts at 10. The condition checks if score >= 10: only 12 and 20 are added! So total = 10 + 12 + 20 = 42."
       },
       {
-        section: "Python Syntax & Snippets",
-        question: "7. Data Structures: Which snippet shows valid Python syntax for creating a dictionary containing a tuple value?",
-        code: null,
+        section: "Part 2: Predict the Output",
+        question: "6. Multi-Branch Condition: Trace the logic below. What will be printed when this code runs?",
+        code: "coins = 25\nhas_key = True\n\nif coins >= 30 and has_key:\n    print(\"Open Golden Chest\")\nelif coins >= 20 or not has_key:\n    print(\"Open Silver Chest\")\nelse:\n    print(\"Chest Locked\")",
         options: [
-          { 
-            text: "robot = {\n    'name': 'Titan',\n    'coordinates': (12, 45)\n}", 
-            isCorrect: true 
-          },
-          { 
-            text: "robot = {\n    'name' = 'Titan',\n    'coordinates' = (12, 45)\n}", 
-            isCorrect: false 
-          },
-          { 
-            text: "robot = [\n    'name': 'Titan',\n    'coordinates': (12, 45)\n]", 
-            isCorrect: false 
-          },
-          { 
-            text: "robot = {\n    'name': 'Titan';\n    'coordinates': (12, 45);\n}", 
-            isCorrect: false 
-          }
+          { text: "Open Silver Chest", isCorrect: true },
+          { text: "Open Golden Chest", isCorrect: false },
+          { text: "Chest Locked", isCorrect: false },
+          { text: "Open Golden Chest and Open Silver Chest", isCorrect: false }
         ],
-        explanation: "Dictionaries use curly braces `{}` with key-value pairs separated by colons `:` (not `=` or `;`). Tuples use parentheses `()`.",
-        focusPoint: "Observe that dictionaries use colons `:` to bind keys to values, separated by commas `,`. Never use `=` inside dictionary curly braces!"
+        explanation: "coins >= 30 is False (25 >= 30 is False), so it skips the first if. In the elif: coins >= 20 is True (25 >= 20 is True). Because it uses 'or', it evaluates to True and prints 'Open Silver Chest'!"
       },
       {
-        section: "Python Syntax & Snippets",
-        question: "8. Loop & Condition Syntax: Which snippet correctly checks numbers in a list and prints when a score is 80 or above?",
-        code: null,
+        section: "Part 2: Predict the Output",
+        question: "7. While Loop Countdown: What will be printed for energy after this while loop finishes?",
+        code: "energy = 20\ncount = 0\n\nwhile energy > 5:\n    energy = energy - 4\n    count = count + 1\n\nprint(energy)",
         options: [
-          { 
-            text: "scores = [70, 85, 92]\nfor s in scores:\n    if s >= 80:\n        print('Passed')", 
-            isCorrect: true 
-          },
-          { 
-            text: "scores = [70, 85, 92]\nfor s in scores\n    if s >= 80\n        print('Passed')", 
-            isCorrect: false 
-          },
-          { 
-            text: "scores = [70, 85, 92]\nfor s in scores:\n    if s => 80:\n        print('Passed')", 
-            isCorrect: false 
-          },
-          { 
-            text: "scores = [70, 85, 92]\nwhile s in scores:\n    if s >= 80:\n        print('Passed')", 
-            isCorrect: false 
-          }
+          { text: "4", isCorrect: true },
+          { text: "5", isCorrect: false },
+          { text: "0", isCorrect: false },
+          { text: "8", isCorrect: false }
         ],
-        explanation: "Python headers for loops and `if` statements MUST end with a colon `:`. Also, the comparison operator for greater than or equal to is `>=` (not `=>`).",
-        focusPoint: "Always check that headers end with colons `:` and comparison operators are written correctly (`>=`, `<=`, `==`)."
+        explanation: "Step 1: 20 - 4 = 16. Step 2: 16 - 4 = 12. Step 3: 12 - 4 = 8. Step 4: 8 - 4 = 4. Now 4 > 5 is False, so the loop exits and energy is 4!"
       },
 
       // =========================================================
-      // QUESTIONS 9-10: OUTPUT PREDICTIONS (NO REPETITIVE PATTERNS!)
+      // PART 3 (Q8 - Q10): PYGAME REVISION
       // =========================================================
       {
-        section: "Python Output Predictions",
-        question: "9. Loop Subtraction Accumulator: Trace the loop below step by step. What final number is printed for `total`?",
-        code: "total = 100\nnumbers = [15, 25, 10]\n\nfor step in numbers:\n    total = total - step\n\nprint(total)",
+        section: "Part 3: Pygame Revision",
+        question: "8. What is Pygame? What do game creators primarily use the Pygame library for in Python?",
+        code: null,
         options: [
-          { text: "50", isCorrect: true },
-          { text: "60", isCorrect: false },
-          { text: "40", isCorrect: false },
-          { text: "150", isCorrect: false }
+          { text: "To create 2D video games with sound, graphics, and animations", isCorrect: true },
+          { text: "To design website HTML text pages only", isCorrect: false },
+          { text: "To replace Python with a completely different language", isCorrect: false },
+          { text: "To calculate math homework without any graphics", isCorrect: false }
         ],
-        explanation: "Initial: total = 100. Step 1: 100 - 15 = 85. Step 2: 85 - 25 = 60. Step 3: 60 - 10 = 50. The loop finishes and prints 50!",
-        focusPoint: "When tracing an accumulator loop, follow each subtraction sequentially rather than trying to calculate the final total in your head."
+        explanation: "Pygame is a popular Python library designed specifically to make 2D video games, complete with character movement, graphics, keyboard input, and sound effects!"
       },
       {
-        section: "Python Output Predictions",
-        question: "10. If / Elif First Match: What exact message will be printed when this speed monitor runs?",
-        code: "speed = 75\n\nif speed > 70:\n    print('Alert: High Speed')\nelif speed > 50:\n    print('Normal Speed')\nelif speed > 30:\n    print('Caution: Slow Speed')\nelse:\n    print('Vehicle Stopped')",
+        section: "Part 3: Pygame Revision",
+        question: "9. Loops in Pygame: Which two loops do we typically use together in standard Pygame games?",
+        code: null,
         options: [
-          { text: "Alert: High Speed", isCorrect: true },
-          { text: "Normal Speed", isCorrect: false },
-          { text: "Caution: Slow Speed", isCorrect: false },
-          { text: "Vehicle Stopped", isCorrect: false }
+          { text: "An outer while loop (main game loop) and an inner for loop (for events)", isCorrect: true },
+          { text: "Two while loops running side-by-side at the same time", isCorrect: false },
+          { text: "Pygame never uses while loops, only if statements", isCorrect: false },
+          { text: "Four nested for loops for every single image on screen", isCorrect: false }
         ],
-        explanation: "Since `speed = 75` is strictly greater than 70, the very FIRST condition (`if speed > 70:`) is True! Python immediately prints 'Alert: High Speed' and exits the chain without checking any elif conditions.",
-        focusPoint: "Notice that Python stops evaluating an if-elif-else chain the moment it finds the FIRST condition that is True!"
+        explanation: "Pygame games use two loops: an outer `while` loop (the main loop that keeps the game running frame-by-frame) and an inner `for` loop (`for event in pygame.event.get():`) to capture user events like key presses and mouse clicks!"
+      },
+      {
+        section: "Part 3: Pygame Revision",
+        question: "10. Window Title: How do we set the title or caption shown at the top of a Pygame game window?",
+        code: null,
+        options: [
+          { text: "pygame.display.set_caption(\"My Super Game\")", isCorrect: true },
+          { text: "pygame.window.title_name(\"My Super Game\")", isCorrect: false },
+          { text: "screen.set_text_top(\"My Super Game\")", isCorrect: false },
+          { text: "pygame.caption.create(\"My Super Game\")", isCorrect: false }
+        ],
+        explanation: "In Pygame, `pygame.display.set_caption(\"Title Here\")` is the standard command to change the text displayed in the game window's title bar!"
       }
     ];
+
+    function initSkyBackground() {
+      const container = document.getElementById('sky-container');
+      container.innerHTML = '';
+
+      const cloudSVG = `
+        <svg width="150" height="65" viewBox="0 0 150 65" fill="none" class="opacity-60">
+          <path d="M25 50 C15 50 5 42 5 32 C5 20 16 14 28 16 C34 6 50 3 66 10 C78 3 98 6 104 17 C115 14 130 20 130 32 C138 34 145 40 142 50 C138 60 120 58 25 50 Z" fill="#ffffff"/>
+        </svg>
+      `;
+
+      for (let i = 0; i < 4; i++) {
+        const cloud = document.createElement('div');
+        cloud.className = 'drifting-cloud';
+        cloud.innerHTML = cloudSVG;
+        cloud.style.top = `${8 + (i * 22)}%`;
+        cloud.style.animationDuration = `${35 + (i * 10)}s`;
+        cloud.style.animationDelay = `${i * 8}s`;
+        container.appendChild(cloud);
+      }
+    }
 
     let questionsDatabase = [];
     let currentIndex = 0;
@@ -428,7 +440,6 @@
     let timerId = null;
     let timeLeft = 30;
     let isAnswered = false;
-    let studentResponses = []; // Logs user selection, correct/wrong, and timestamps
 
     // DOM Elements
     const qNumEl = document.getElementById('q-num');
@@ -451,11 +462,9 @@
     const finalTotalScore = document.getElementById('final-total-score');
     const tutorFeedbackText = document.getElementById('tutor-feedback-text');
     const restartBtn = document.getElementById('restart-btn');
-    const toggleAnswersBtn = document.getElementById('toggle-answers-btn');
-    const answersReviewContainer = document.getElementById('answers-review-container');
-    const reviewCardsList = document.getElementById('review-cards-list');
 
     function escapeHTML(str) {
+      if (!str) return '';
       return str
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -464,24 +473,20 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Shuffle options dynamically for each question
     function prepareQuestions() {
-      studentResponses = [];
-      questionsDatabase = rawQuestionsDatabase.map((q, qIndex) => {
+      questionsDatabase = rawQuestionsDatabase.map((q) => {
         const clonedOpts = [...q.options];
         for (let i = clonedOpts.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
         }
         return {
-          id: qIndex,
           section: q.section,
           question: q.question,
           code: q.code || null,
           options: clonedOpts.map(o => o.text),
           correctIndex: clonedOpts.findIndex(o => o.isCorrect),
-          explanation: q.explanation,
-          focusPoint: q.focusPoint
+          explanation: q.explanation
         };
       });
     }
@@ -508,13 +513,13 @@
       timerBarEl.style.width = `${pct}%`;
 
       if (timeLeft <= 7) {
-        timerTextEl.classList.add('text-rose-400', 'animate-pulse');
-        timerBarEl.classList.remove('from-indigo-400', 'to-violet-500');
+        timerTextEl.classList.add('text-rose-600', 'animate-pulse');
+        timerBarEl.classList.remove('from-teal-500', 'via-emerald-400', 'to-cyan-500');
         timerBarEl.classList.add('from-rose-500', 'to-red-600');
       } else {
-        timerTextEl.classList.remove('text-rose-400', 'animate-pulse');
+        timerTextEl.classList.remove('text-rose-600', 'animate-pulse');
         timerBarEl.classList.remove('from-rose-500', 'to-red-600');
-        timerBarEl.classList.add('from-indigo-400', 'to-violet-500');
+        timerBarEl.classList.add('from-teal-500', 'via-emerald-400', 'to-cyan-500');
       }
     }
 
@@ -544,10 +549,10 @@
         const btn = document.createElement('button');
         btn.dataset.idx = idx;
 
-        btn.className = "option-btn p-4 rounded-xl border border-slate-800 bg-slate-950/80 hover:bg-slate-800/80 hover:border-indigo-500 text-left text-slate-100 font-medium transition transform active:scale-98 flex items-start gap-3 shadow-md";
+        btn.className = "option-btn p-3.5 sm:p-4 rounded-xl border border-teal-200/90 bg-white/90 hover:bg-teal-50 hover:border-teal-400 text-left text-slate-800 font-medium transition transform active:scale-98 flex items-start gap-3 shadow-sm";
         btn.innerHTML = `
-          <span class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 text-indigo-400 font-bold text-sm flex items-center justify-center font-code shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-xs sm:text-sm leading-relaxed font-code whitespace-pre-wrap">${escapeHTML(optText)}</span>
+          <span class="w-7 h-7 rounded-lg bg-teal-100 border border-teal-300 text-teal-900 font-bold text-xs sm:text-sm flex items-center justify-center font-code shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-xs sm:text-sm leading-relaxed font-code whitespace-pre-wrap flex-grow">${escapeHTML(optText)}</span>
         `;
         btn.addEventListener('click', () => handleOptionClick(idx));
 
@@ -565,27 +570,15 @@
       const q = questionsDatabase[currentIndex];
       const isCorrect = (selectedIdx === q.correctIndex);
 
-      // Record student response for the review portal
-      studentResponses.push({
-        questionIndex: currentIndex,
-        question: q.question,
-        code: q.code,
-        selectedOption: q.options[selectedIdx],
-        correctOption: q.options[q.correctIndex],
-        isCorrect: isCorrect,
-        explanation: q.explanation,
-        focusPoint: q.focusPoint
-      });
-
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          btn.classList.remove('border-slate-800', 'bg-slate-950/80');
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+          btn.classList.remove('border-teal-200/90', 'bg-white/90');
+          btn.classList.add('border-emerald-500', 'bg-emerald-100/90', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
         } else if (idx === selectedIdx && !isCorrect) {
-          btn.classList.remove('border-slate-800', 'bg-slate-950/80');
-          btn.classList.add('border-rose-500', 'bg-rose-950/90', 'text-rose-200', 'ring-2', 'ring-rose-500');
+          btn.classList.remove('border-teal-200/90', 'bg-white/90');
+          btn.classList.add('border-rose-400', 'bg-rose-100/90', 'text-rose-950', 'ring-2', 'ring-rose-400');
         }
       });
 
@@ -605,23 +598,11 @@
       isAnswered = true;
 
       const q = questionsDatabase[currentIndex];
-      
-      studentResponses.push({
-        questionIndex: currentIndex,
-        question: q.question,
-        code: q.code,
-        selectedOption: "⏳ Time Expired (No answer submitted)",
-        correctOption: q.options[q.correctIndex],
-        isCorrect: false,
-        explanation: q.explanation,
-        focusPoint: q.focusPoint
-      });
-
       const buttons = optionsGrid.querySelectorAll('.option-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
         if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-400', 'bg-emerald-950/90', 'text-emerald-200', 'ring-2', 'ring-emerald-400');
+          btn.classList.add('border-emerald-500', 'bg-emerald-100/90', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
         }
       });
 
@@ -630,18 +611,18 @@
     }
 
     function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-950/80', 'border-emerald-500/50', 'bg-rose-950/80', 'border-rose-500/50');
+      explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
 
       if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50');
+        explanationBox.classList.add('bg-emerald-50', 'border-emerald-300');
         explanationIcon.textContent = "🌟";
         explanationTitle.textContent = "Great Spot!";
-        explanationTitle.className = "font-bold text-sm sm:text-base text-emerald-300";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-emerald-900";
       } else {
-        explanationBox.classList.add('bg-rose-950/80', 'border-rose-500/50');
+        explanationBox.classList.add('bg-rose-50', 'border-rose-300');
         explanationIcon.textContent = "💡";
         explanationTitle.textContent = "Key Takeaway";
-        explanationTitle.className = "font-bold text-sm sm:text-base text-rose-300";
+        explanationTitle.className = "font-bold text-sm sm:text-base text-rose-900";
       }
 
       explanationText.textContent = message;
@@ -662,132 +643,32 @@
 
       finalTotalScore.textContent = `${score} / 10`;
 
+      // Handwritten note for the 12-year-old student
       let feedback = "";
       if (score >= 9) {
-        feedback = `"Outstanding performance! You scored ${score} out of 10! You have demonstrated exceptional mastery over OpenCV Haar Cascade face detection pipelines, machine learning pattern fundamentals, parameter-argument balancing, and loop condition tracing. Your logical thinking and attention to detail are top-notch! Keep exploring AI and building real-world projects!"\n\n— Warmly, Tutor Priyadarshini`;
+        feedback = `“Fantastic job! You scored ${score} out of 10! You did an amazing job spotting the correct syntax for inputs and if-conditions, tracing loops accurately, and answering the Pygame questions. You clearly understand how the main while loop and event for loop work together in Pygame. Keep building cool games and programs!”\n\n— Tutor Priyadarshini`;
       } else if (score >= 7) {
-        feedback = `"Great effort in today's revision! You scored ${score} out of 10! You have a really firm grasp on Haar Cascade models, vision preprocessing, and core Python data structures. Be sure to review the Check Your Answers section below to polish parameter matching and loop accumulator tracing!"\n\n— Warmly, Tutor Priyadarshini`;
+        feedback = `“Great effort! You scored ${score} out of 10! You have a really good grasp on Python variables, range loops, and Pygame game mechanics. Remember the two loops in Pygame: the while loop for running the game and the for loop for events!”\n\n— Tutor Priyadarshini`;
       } else if (score >= 5) {
-        feedback = `"Good work on completing this revision! You scored ${score} out of 10. You answered many AI concepts correctly! Take a close look at the Focus Points below for the questions you missed—especially parameter counts and loop math tracing. With a little more practice, you will get a perfect 10!"\n\n— Warmly, Tutor Priyadarshini`;
+        feedback = `“Good work! You scored ${score} out of 10! You got many questions right, especially on loop tracing and Pygame concepts. Take a look at the key reminders below for variable syntax and the Pygame two-loop pattern, and you will hit 10 out of 10 next time!”\n\n— Tutor Priyadarshini`;
       } else {
-        feedback = `"Nice try on this revision challenge! You scored ${score} out of 10. Computer vision pipelines and Python logic take practice to master. Review the Key Focus Points below to understand what to observe next time, and let's retake the challenge together!"\n\n— Warmly, Tutor Priyadarshini`;
+        feedback = `“Nice try! You scored ${score} out of 10. Python syntax and Pygame take practice to get used to. Read through the reminders below carefully, take another turn, and let's master these 10 questions together!”\n\n— Tutor Priyadarshini`;
       }
 
       tutorFeedbackText.textContent = feedback;
-      renderDetailedReview("all");
-    }
-
-    // Toggle Review Portal
-    toggleAnswersBtn.addEventListener('click', () => {
-      answersReviewContainer.classList.toggle('hidden');
-      if (!answersReviewContainer.classList.contains('hidden')) {
-        answersReviewContainer.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-
-    // Render Answer Review Cards with Filter
-    function renderDetailedReview(filter) {
-      reviewCardsList.innerHTML = '';
-
-      // Update Filter Button Styles
-      ['all', 'wrong', 'correct'].forEach(f => {
-        const btn = document.getElementById(`filter-${f}-btn`);
-        if (f === filter) {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white transition";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
-        }
-      });
-
-      const filteredResponses = studentResponses.filter(item => {
-        if (filter === 'wrong') return !item.isCorrect;
-        if (filter === 'correct') return item.isCorrect;
-        return true;
-      });
-
-      if (filteredResponses.length === 0) {
-        reviewCardsList.innerHTML = `
-          <div class="text-center py-8 text-slate-400 text-xs">
-            No questions match this filter category.
-          </div>
-        `;
-        return;
-      }
-
-      filteredResponses.forEach(res => {
-        const card = document.createElement('div');
-        card.className = `p-5 rounded-2xl border transition shadow-sm ${
-          res.isCorrect 
-            ? 'bg-slate-950/80 border-emerald-500/40' 
-            : 'bg-slate-950/90 border-rose-500/40'
-        }`;
-
-        card.innerHTML = `
-          <div class="flex items-start justify-between gap-3 mb-2">
-            <span class="text-xs font-bold font-code text-indigo-400 uppercase tracking-wider">
-              Question ${res.questionIndex + 1}
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-              res.isCorrect 
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
-                : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-            }">
-              ${res.isCorrect ? 'Correct ✓' : 'Needs Focus ✗'}
-            </span>
-          </div>
-
-          <h4 class="text-sm font-semibold text-slate-100 mb-3 leading-snug">
-            ${escapeHTML(res.question)}
-          </h4>
-
-          ${res.code ? `
-            <pre class="bg-slate-900 text-indigo-200 border border-indigo-500/20 rounded-xl p-3 font-code text-xs mb-3 overflow-x-auto"><code>${escapeHTML(res.code)}</code></pre>
-          ` : ''}
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3 font-code">
-            <div class="p-2.5 rounded-lg border ${
-              res.isCorrect 
-                ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300' 
-                : 'bg-rose-950/40 border-rose-500/30 text-rose-300'
-            }">
-              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Your Selected Answer:</span>
-              <span class="whitespace-pre-wrap">${escapeHTML(res.selectedOption)}</span>
-            </div>
-
-            <div class="p-2.5 rounded-lg border bg-slate-900 border-indigo-500/30 text-indigo-200">
-              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Correct Answer:</span>
-              <span class="whitespace-pre-wrap">${escapeHTML(res.correctOption)}</span>
-            </div>
-          </div>
-
-          <!-- Tutor Priyadarshini's Focus Observation Point -->
-          <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200/90 leading-relaxed">
-            <div class="font-bold text-amber-300 flex items-center gap-1.5 mb-1">
-              <span>🎯</span> <span>Tutor Priyadarshini's Key Focus Point:</span>
-            </div>
-            <p>${escapeHTML(res.focusPoint)}</p>
-          </div>
-        `;
-
-        reviewCardsList.appendChild(card);
-      });
-    }
-
-    function filterReview(type) {
-      renderDetailedReview(type);
     }
 
     restartBtn.addEventListener('click', () => {
       currentIndex = 0;
       score = 0;
       prepareQuestions();
-      answersReviewContainer.classList.add('hidden');
       resultScreen.classList.add('hidden');
       quizScreen.classList.remove('hidden');
       displayQuestion();
     });
 
-    // Initialize
+    // INITIALIZATION
+    initSkyBackground();
     prepareQuestions();
     displayQuestion();
   </script>
