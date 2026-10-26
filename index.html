@@ -1,676 +1,1241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python & Pygame Revision Quiz</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Caveat for handwriting, Outfit for UI, Fira Code for code blocks -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fira+Code:wght@500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Junior Flight Mission ✈️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Caveat (Handwritten) & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      font-family: 'Outfit', sans-serif;
-      overflow-x: hidden;
-    }
-    .font-code {
-      font-family: 'Fira Code', monospace;
-    }
-    .font-handwriting {
-      font-family: 'Caveat', cursive;
-    }
-
-    /* Floating Clouds Keyframe Animation */
-    @keyframes driftAcross {
-      0% {
-        transform: translateX(-180px);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.75;
-      }
-      90% {
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateX(115vw);
-        opacity: 0;
-      }
-    }
-
-    .drifting-cloud {
-      position: fixed;
-      pointer-events: none;
-      z-index: 0;
-      animation: driftAcross linear infinite;
-    }
-
-    /* Lined Notebook Paper for Handwritten Feedback */
-    .notebook-paper {
-      background-color: #fffdf5;
-      background-image: linear-gradient(#d1fae5 1px, transparent 1px);
-      background-size: 100% 2.3rem;
-      border-left: 6px double #0d9488;
-    }
-
-    pre::-webkit-scrollbar {
-      height: 6px;
-    }
-    pre::-webkit-scrollbar-thumb {
-      background: #0d9488;
-      border-radius: 4px;
-    }
-  </style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0f2fe;
+            user-select: none;
+            overflow-x: hidden;
+        }
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
+        }
+        .font-code {
+            font-family: 'Fira Code', monospace;
+        }
+        pre, code {
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { border-color: rgba(59, 130, 246, 0.6); }
+            50% { border-color: rgba(147, 197, 253, 1); }
+        }
+        .pulse-border {
+            animation: pulseGlow 2.5s infinite;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-b from-sky-100 via-teal-50 to-emerald-100 text-slate-800 min-h-screen relative flex flex-col justify-between selection:bg-teal-300 selection:text-teal-950">
+<body class="min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
 
-  <!-- Ambient Sky Environment Container -->
-  <div id="sky-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+    <!-- Background Canvas for Flying Airplanes and Clouds -->
+    <canvas id="airplaneCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-  <!-- Main Container -->
-  <div class="relative z-10 container mx-auto px-4 py-6 max-w-3xl flex-grow flex flex-col justify-center">
-
-    <!-- Global Header -->
-    <header class="text-center mb-5">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-800/10 border border-teal-700/20 text-teal-900 text-xs font-bold uppercase tracking-widest mb-1.5 shadow-sm">
-        <span>🎮 Python & Pygame Revision</span>
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight drop-shadow-sm">
-        Python & Game Dev Challenge
-      </h1>
-      <p class="text-xs sm:text-sm font-semibold text-teal-900/80 mt-1">
-        10 Questions • 30 Seconds Per Question • Curated for 12-Year-Old Coders
-      </p>
-    </header>
-
-    <!-- QUIZ SCREEN -->
-    <div id="quiz-screen" class="w-full">
-      
-      <!-- Top Info Bar -->
-      <div class="bg-white/90 backdrop-blur-md border border-teal-200/80 rounded-2xl p-4 sm:p-5 mb-5 shadow-xl">
-        <div class="flex justify-between items-center gap-3">
-          
-          <!-- Category & Question Number -->
-          <div>
-            <span id="section-badge" class="text-[11px] uppercase font-extrabold text-teal-700 tracking-wider block">
-              Part 1: Find the Correct Snippet
-            </span>
-            <div class="text-xl sm:text-2xl font-black text-slate-900 font-code mt-0.5">
-              Question <span id="q-num" class="text-teal-700">1</span> <span class="text-slate-400 text-base font-normal">/ 10</span>
-            </div>
-          </div>
-
-          <!-- Live Score -->
-          <div class="bg-teal-50/90 px-4 py-2 rounded-xl border border-teal-200 text-center shadow-inner">
-            <span class="text-[10px] uppercase tracking-wider text-teal-800 font-bold block">Score</span>
-            <span id="live-score" class="text-xl font-extrabold text-amber-600 font-code">0 / 10</span>
-          </div>
-
-          <!-- 30s Countdown Timer -->
-          <div class="flex items-center gap-2">
-            <div class="relative w-14 h-14 flex items-center justify-center bg-white rounded-full border-2 border-teal-500 shadow-md">
-              <span id="timer-text" class="text-xl font-black text-teal-700 font-code">30</span>
-              <span class="text-[8px] text-teal-900 absolute bottom-1 font-bold">sec</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Timer Progress Bar -->
-        <div class="w-full bg-teal-100/70 h-2.5 rounded-full mt-3 overflow-hidden border border-teal-200">
-          <div id="timer-bar" class="h-full bg-gradient-to-r from-teal-500 via-emerald-400 to-cyan-500 transition-all duration-1000 ease-linear w-full"></div>
-        </div>
-      </div>
-
-      <!-- Question Box -->
-      <div class="bg-white/95 backdrop-blur-md border border-teal-200/90 rounded-2xl p-5 sm:p-7 shadow-xl relative">
+    <!-- Main Container -->
+    <div class="relative z-10 flex-grow flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-5xl mx-auto">
         
-        <!-- Question Prompt -->
-        <h2 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed mb-4">
-          Question text loading...
-        </h2>
-
-        <!-- Code Snippet Area (Only used for prediction questions) -->
-        <div id="code-container" class="mb-5 hidden">
-          <pre class="bg-slate-900 text-teal-300 border border-teal-700/50 rounded-xl p-4 font-code text-xs sm:text-sm overflow-x-auto shadow-inner"><code id="code-snippet"></code></pre>
-        </div>
-
-        <!-- 4 Options Grid (A & B side-by-side, C & D side-by-side) -->
-        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <!-- Dynamically populated options -->
-        </div>
-
-        <!-- Explanation Container (Under Buttons) -->
-        <div id="explanation-box" class="hidden p-4 rounded-xl border transition-all duration-300 mb-6 shadow-md">
-          <div class="flex items-start gap-3">
-            <span id="explanation-icon" class="text-2xl shrink-0">💡</span>
-            <div>
-              <h4 id="explanation-title" class="font-bold text-sm sm:text-base">Explanation</h4>
-              <p id="explanation-text" class="text-xs sm:text-sm mt-1 leading-relaxed text-slate-800">
-                Explanation text appears here.
-              </p>
+        <!-- Header Bar -->
+        <header class="w-full flex items-center justify-between bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg mb-4 border border-sky-100">
+            <div class="flex items-center space-x-3">
+                <div class="bg-sky-500 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-plane-departure text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-xl font-bold text-sky-900 leading-tight">Python Junior Flight Mission</h1>
+                    <p class="text-xs text-sky-600 font-medium">30 Coding Challenges • 50s Per Question • 4 Options Each</p>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Next Question Button -->
-        <div class="flex justify-end">
-          <button id="next-btn" class="hidden py-3 px-7 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center gap-2">
-            <span>Next Question</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </button>
-        </div>
+            <!-- Quiz Stats Pill -->
+            <div id="topStatsPill" class="hidden flex items-center space-x-3 bg-sky-50 px-3.5 py-1.5 rounded-xl border border-sky-200">
+                <div class="text-center">
+                    <span class="text-[10px] sm:text-xs text-slate-500 block uppercase font-semibold">Question</span>
+                    <span id="questionCounter" class="text-xs sm:text-sm font-bold text-sky-700">1 / 30</span>
+                </div>
+                <div class="h-6 w-px bg-sky-200"></div>
+                <div class="text-center">
+                    <span class="text-[10px] sm:text-xs text-slate-500 block uppercase font-semibold">Score</span>
+                    <span id="currentScoreDisplay" class="text-xs sm:text-sm font-bold text-emerald-600">0 pts</span>
+                </div>
+            </div>
+        </header>
 
-      </div>
+        <!-- START SCREEN -->
+        <section id="startScreen" class="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-xl border border-sky-100 text-center animate-float">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-100 text-sky-600 rounded-full mb-4 shadow-inner">
+                <i class="fa-solid fa-plane-up text-4xl transform -rotate-12"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">Python Revision</h2>
+           
+            <!-- Quiz Rules Box -->
+           
+
+            <!-- Start Button -->
+            <button id="startBtn" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-base sm:text-lg font-bold rounded-2xl shadow-lg hover:shadow-sky-300/50 transition-all transform active:scale-95 flex items-center justify-center space-x-3 mx-auto">
+                <span>Start</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </section>
+
+        <!-- QUIZ CONTAINER -->
+        <main id="quizScreen" class="hidden w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-8 shadow-2xl border border-sky-100 transition-all">
+            
+            <!-- Question Top Bar: Section Badge & Timer -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+                <span id="sectionBadge" class="px-3.5 py-1 bg-sky-100 text-sky-700 text-xs font-bold rounded-full uppercase tracking-wider">
+                    Category
+                </span>
+
+                <!-- Timer Bar & Countdown -->
+                <div class="flex items-center space-x-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                    <i class="fa-solid fa-clock text-amber-500 text-sm"></i>
+                    <div class="w-28 sm:w-36 bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                        <div id="timerProgressBar" class="bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear"></div>
+                    </div>
+                    <span id="timerText" class="text-xs sm:text-sm font-extrabold font-code text-slate-700 min-w-[32px]">50s</span>
+                </div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="mb-5">
+                <h3 id="questionText" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
+                    Loading question...
+                </h3>
+
+                <!-- Code Block Container -->
+                <div id="codeContainer" class="hidden mt-3 p-3.5 bg-slate-900 text-emerald-400 rounded-2xl font-code text-xs sm:text-sm overflow-x-auto border border-slate-800 shadow-inner">
+                    <pre><code id="codeBlock"># Python code snippet</code></pre>
+                </div>
+            </div>
+
+            <!-- Answer Options Container (4 Options Each) -->
+            <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Explanation Box -->
+            <div id="explanationCard" class="hidden p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300">
+                <div class="flex items-start space-x-3">
+                    <div id="explanationIcon" class="mt-0.5 text-lg"></div>
+                    <div>
+                        <h5 id="explanationTitle" class="font-bold text-sm mb-1">Flight Log Explanation</h5>
+                        <p id="explanationText" class="text-slate-600 leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next / Continue Button Footer -->
+            <div class="mt-6 flex justify-end">
+                <button id="nextBtn" class="hidden px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center space-x-2">
+                    <span id="nextBtnText">Next Question</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- RESULTS & FEEDBACK CARD SCREEN -->
+        <section id="resultScreen" class="hidden w-full max-w-4xl space-y-6">
+            
+            <!-- Handwritten Teacher Feedback Card -->
+            <div class="bg-amber-50/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-2xl border-2 border-amber-200 relative overflow-hidden pulse-border">
+                
+                <div class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-amber-400/20 text-amber-800 px-3 py-1.5 rounded-2xl border border-amber-300/50 flex items-center space-x-1.5 text-xs font-bold">
+                    <i class="fa-solid fa-certificate text-amber-500"></i>
+                    <span>MISSION DEBRIEF</span>
+                </div>
+
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-md">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black text-amber-950">Pilot Assessment Card</h2>
+                        <p class="text-xs text-amber-800">Evaluated by your Python Flight Instructor</p>
+                    </div>
+                </div>
+
+                <!-- Handwritten Letter Container -->
+                <div class="bg-white/90 p-5 sm:p-8 rounded-2xl border border-amber-200 shadow-sm relative mb-6">
+                    <div class="font-handwriting text-2xl sm:text-3xl text-amber-900 leading-relaxed space-y-3">
+                        <p id="studentGreeting">Dear Student,</p>
+                        <p id="teacherNoteContent" class="text-slate-800">
+                            Analyzing flight test results...
+                        </p>
+                        <p class="text-right font-bold text-amber-700 mt-4 text-3xl">
+                            — Tutor Priyadarshini
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section Score Breakdown -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-bold text-amber-900 uppercase tracking-wider mb-3 flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Flight Section Breakdown</span>
+                    </h3>
+                    <div id="sectionBreakdownGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        <!-- Dynamic Section Progress Cards -->
+                    </div>
+                </div>
+
+                <!-- Score Summary Pills -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
+                        <span class="text-xs text-amber-700 font-semibold block">Total Score</span>
+                        <span id="finalScoreText" class="text-lg sm:text-xl font-black text-amber-950">0 / 30</span>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
+                        <span class="text-xs text-amber-700 font-semibold block">Accuracy</span>
+                        <span id="accuracyText" class="text-lg sm:text-xl font-black text-emerald-600">0%</span>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
+                        <span class="text-xs text-amber-700 font-semibold block">Rank</span>
+                        <span id="gradeBadgeText" class="text-lg sm:text-xl font-black text-sky-600">Junior Pilot</span>
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
+                        <span class="text-xs text-amber-700 font-semibold block">Stars Earned</span>
+                        <span id="starsEarnedText" class="text-lg sm:text-xl font-black text-amber-500">⭐⭐⭐</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                    <button id="restartBtn" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Retake Mission</span>
+                    </button>
+                    <button id="reviewBtn" class="px-6 py-3 bg-white hover:bg-amber-100 text-amber-900 font-bold rounded-2xl border border-amber-300 shadow-sm transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Review All Answers</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- REVIEW MODAL / CONTAINER -->
+            <div id="reviewContainer" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-4">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center justify-between border-b pb-3">
+                    <span> Answer Review (30 Challenges)</span>
+                    <button id="closeReviewBtn" class="text-slate-400 hover:text-slate-600 text-sm">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </h3>
+                <div id="reviewList" class="space-y-4 max-h-[520px] overflow-y-auto pr-2">
+                    <!-- Dynamic review items -->
+                </div>
+            </div>
+        </section>
+
     </div>
 
-    <!-- RESULT SCREEN -->
-    <div id="result-screen" class="hidden w-full my-4">
-      
-      <!-- Lined Notebook Paper Feedback -->
-      <div class="notebook-paper rounded-3xl p-6 sm:p-9 shadow-2xl text-slate-900 border-t-8 border-teal-700 relative overflow-hidden mb-6">
-        
-        <!-- Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-teal-200 pb-4 mb-5">
-          <div>
-            <span class="text-xs text-teal-800 font-bold uppercase tracking-widest block">Official Assessment Review</span>
-            <h2 class="font-handwriting text-4xl sm:text-5xl font-bold text-teal-950 mt-0.5">Tutor Feedback</h2>
-          </div>
-          <div class="mt-3 sm:mt-0 bg-white/90 border-2 border-teal-400 rounded-2xl px-5 py-2.5 text-center shadow-sm">
-            <span class="text-[11px] uppercase tracking-wider text-teal-900 font-bold block">Final Score</span>
-            <span id="final-total-score" class="text-3xl font-black text-teal-950 font-code">0 / 10</span>
-          </div>
-        </div>
+    <script>
+        /* ==========================================================================
+           30 TAILORED JUNIOR PYTHON QUESTIONS (4 OPTIONS EACH, MULTI-LINE INDENTED CODE)
+           ========================================================================== */
+        const quizQuestions = [
+            // ==========================================
+            // PART 1: SPOT & FIX PYTHON CODE (Q1 - Q10)
+            // ==========================================
+            {
+                id: 1,
+                section: "Spot & Fix Python",
+                question: "Three of these variable names have syntax mistakes! Which is the ONLY valid Python variable?",
+                code: "# Which line will run without syntax errors in Python?",
+                options: [
+                    "2nd_place = 'Silver'",
+                    "student-score = 95",
+                    "player_score = 100",
+                    "class = 'Grade 5'"
+                ],
+                answer: 2,
+                explanation: "In Python, variable names cannot begin with numbers ('2nd_place'), cannot use hyphens ('student-score'), and cannot use reserved words ('class'). 'player_score = 100' is the valid choice!"
+            },
+            {
+                id: 2,
+                section: "Spot & Fix Python",
+                question: "We want to store the text 'Alex'. Which snippet assigns this string correctly without throwing an error?",
+                code: "# Which string declaration is written properly?",
+                options: [
+                    'pilot_name = "Alex"',
+                    'pilot_name = "Alex\'',
+                    'pilot_name = Alex',
+                    'pilot_name = \'Alex"'
+                ],
+                answer: 0,
+                explanation: "Strings require matching opening and closing quotes (\"Alex\" or 'Alex'). Mixed quotes or unquoted names trigger syntax or NameErrors."
+            },
+            {
+                id: 3,
+                section: "Spot & Fix Python",
+                question: "This if-statement is broken. Which option shows the CORRECT multiline syntax with colon and indentation?",
+                code: "# Broken code:\nif score > 50\n    print('Pass')",
+                options: [
+                    "if score > 50:\n    print('Pass')",
+                    "if score > 50 then:\n    print('Pass')",
+                    "if (score > 50)\n    print('Pass')",
+                    "if score > 50 do\n    print('Pass')"
+                ],
+                answer: 0,
+                explanation: "In Python, the condition line must conclude with a colon (`:`), followed by an indented body: `if score > 50:\n    print('Pass')`."
+            },
+            {
+                id: 4,
+                section: "Spot & Fix Python",
+                question: "We want to check if `fuel` is EXACTLY 100. Which condition uses the correct equality operator and syntax?",
+                code: "# Broken check:\nif fuel = 100:\n    print('Full tank')",
+                options: [
+                    "if fuel = 100:\n    print('Full tank')",
+                    "if fuel == 100:\n    print('Full tank')",
+                    "if fuel isequal 100:\n    print('Full tank')",
+                    "if fuel === 100:\n    print('Full tank')"
+                ],
+                answer: 1,
+                explanation: "A single `=` assigns values. Comparison checks require the double equal `==` operator: `if fuel == 100:`."
+            },
+            {
+                id: 5,
+                section: "Spot & Fix Python",
+                question: "Which of these function definitions has the correct Python syntax, parentheses, colon, and indentation?",
+                code: "# We want to define a function named 'fly_plane'",
+                options: [
+                    "function fly_plane():\n    print('Taking off!')",
+                    "def fly_plane()\n    print('Taking off!')",
+                    "def fly_plane():\n    print('Taking off!')",
+                    "define fly_plane():\n    print('Taking off!')"
+                ],
+                answer: 2,
+                explanation: "Python functions must begin with `def`, followed by the name, parentheses `()`, a colon `:`, and an indented block."
+            },
+            {
+                id: 6,
+                section: "Spot & Fix Python",
+                question: "Here is a function that performs an action but returns no value. Which one runs properly without syntax or indentation errors?",
+                code: "# Looking for a valid no-return greeting function:",
+                options: [
+                    "def cheer():\n    print('Let us go!')",
+                    "def cheer[]:\n    print('Let us go!')",
+                    "def cheer:\n    print('Let us go!')",
+                    "def cheer():\nprint('Let us go!')"
+                ],
+                answer: 0,
+                explanation: "Functions require parentheses `()` after the function name, a colon `:`, and proper indentation for all lines inside the function body."
+            },
+            {
+                id: 7,
+                section: "Spot & Fix Python",
+                question: "The function `show_speed` has ONE parameter. Which call correctly passes exactly ONE argument?",
+                code: "def show_speed(speed):\n    print('Current speed is', speed)\n\n# How should we call this function?",
+                options: [
+                    "show_speed()",
+                    "show_speed(120)",
+                    "show_speed(120, 240)",
+                    "show_speed(speed: 120, 240)"
+                ],
+                answer: 1,
+                explanation: "Because `show_speed(speed)` expects 1 positional parameter, calling `show_speed(120)` supplies exactly 1 argument."
+            },
+            {
+                id: 8,
+                section: "Spot & Fix Python",
+                question: "The function `add_coins` expects TWO parameters (`c1, c2`). Which function call provides the correct number of arguments?",
+                code: "def add_coins(c1, c2):\n    print(c1 + c2)\n\n# Choose the correct call:",
+                options: [
+                    "add_coins(5)",
+                    "add_coins(5, 10)",
+                    "add_coins(5, 10, 15)",
+                    "add_coins()"
+                ],
+                answer: 1,
+                explanation: "The function defines 2 parameters (`c1, c2`). Supplying 0, 1, or 3 arguments triggers a `TypeError: missing/extra required positional arguments`."
+            },
+            {
+                id: 9,
+                section: "Spot & Fix Python",
+                question: "Look at the broken indentation below. Which option correctly indents the print statement inside the function block?",
+                code: "# Broken code:\ndef start_engine():\nprint('Engine active!')",
+                options: [
+                    "def start_engine():\n    print('Engine active!')",
+                    "def start_engine():\nprint('Engine active!')",
+                    "def start_engine:\n    print('Engine active!')",
+                    "function start_engine():\n    print('Engine active!')"
+                ],
+                answer: 0,
+                explanation: "In Python, lines inside a function header MUST be indented (4 spaces or 1 tab) directly under the `def` statement."
+            },
+            {
+                id: 10,
+                section: "Spot & Fix Python",
+                question: "We want to check if `altitude > 1000` AND `has_gear == True`. Which condition uses valid Python logical syntax?",
+                code: "# Which conditional header is written with correct Python logic?",
+                options: [
+                    "if altitude > 1000 && has_gear == True:\n    print('Ready')",
+                    "if altitude > 1000 AND has_gear == True:\n    print('Ready')",
+                    "if altitude > 1000 and has_gear == True:\n    print('Ready')",
+                    "if altitude > 1000 &+ has_gear == True:\n    print('Ready')"
+                ],
+                answer: 2,
+                explanation: "Python uses the lowercase keyword `and` (not `&&` or uppercase `AND`) to combine logical conditions."
+            },
 
-        <!-- Handwritten Feedback Body -->
-        <div class="mb-5 bg-white/95 p-6 rounded-2xl border border-teal-200 shadow-sm">
-          <p id="tutor-feedback-text" class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed whitespace-pre-line">
-            Generating feedback note...
-          </p>
-        </div>
+            // ==========================================
+            // PART 2: LOGIC & CONDITIONS (Q11 - Q15)
+            // ==========================================
+            {
+                id: 11,
+                section: "Boolean & Logic",
+                question: "What will be printed when this condition is evaluated?",
+                code: "speed = 50\nis_clear = True\n\nresult = (speed > 40) and is_clear\nprint(result)",
+                options: [
+                    "True",
+                    "False",
+                    "speed > 40",
+                    "None"
+                ],
+                answer: 0,
+                explanation: "`speed > 40` evaluates to True (50 > 40), and `is_clear` is True. Since both sides are True, `True and True` produces `True`."
+            },
+            {
+                id: 12,
+                section: "Boolean & Logic",
+                question: "What will this if-else block print to the screen?",
+                code: "fuel = 15\naltitude = 500\n\nif (fuel > 20) and (altitude > 200):\n    print('Safe to fly')\nelse:\n    print('Low fuel warning')",
+                options: [
+                    "Safe to fly",
+                    "Low fuel warning",
+                    "True",
+                    "SyntaxError: invalid syntax"
+                ],
+                answer: 1,
+                explanation: "`fuel > 20` is False (15 is not greater than 20). Because `and` requires both sides to be True, the `else:` branch executes, printing 'Low fuel warning'."
+            },
+            {
+                id: 13,
+                section: "Boolean & Logic",
+                question: "What is printed when evaluating this `or` logical expression?",
+                code: "score = 30\nhas_golden_key = True\n\nresult = (score >= 50) or has_golden_key\nprint(result)",
+                options: [
+                    "True",
+                    "False",
+                    "30",
+                    "has_golden_key"
+                ],
+                answer: 0,
+                explanation: "`score >= 50` is False (30 >= 50 is False), but `has_golden_key` is True. With `or`, if at least one side is True, the result is `True`!"
+            },
+            {
+                id: 14,
+                section: "Boolean & Logic",
+                question: "What will be printed by this logical `or` condition?",
+                code: "stars = 2\nis_boss_defeated = False\n\nif (stars > 5) or is_boss_defeated:\n    print('Level Passed!')\nelse:\n    print('Keep Trying!')",
+                options: [
+                    "Level Passed!",
+                    "Keep Trying!",
+                    "True",
+                    "False"
+                ],
+                answer: 1,
+                explanation: "`stars > 5` is False (2 > 5 is False), and `is_boss_defeated` is False. Since neither condition is True, the `else:` block prints 'Keep Trying!'."
+            },
+            {
+                id: 15,
+                section: "Boolean & Logic",
+                question: "What will be printed when combining `not` with `and` here?",
+                code: "engine_hot = False\nhas_fuel = True\n\nif (not engine_hot) and has_fuel:\n    print('Engine Ready')\nelse:\n    print('Engine Offline')",
+                options: [
+                    "Engine Ready",
+                    "Engine Offline",
+                    "False",
+                    "TypeError"
+                ],
+                answer: 0,
+                explanation: "`engine_hot` is False, so `not engine_hot` evaluates to True. `has_fuel` is also True. `True and True` equals True, so 'Engine Ready' is printed."
+            },
 
-        <!-- Key Takeaways & Mastered Concepts -->
-        <div class="p-4 rounded-2xl bg-teal-50/80 border border-teal-200 text-xs sm:text-sm text-teal-950 mb-6">
-          <h3 class="font-bold text-sm text-teal-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span>📌</span> Key Python & Pygame Reminders:
-          </h3>
-          <ul class="list-disc list-inside space-y-1.5 text-slate-700">
-            <li><strong>Variable Rules:</strong> Variable names cannot start with numbers or contain spaces. Always assign with a single <code>=</code>.</li>
-            <li><strong>Inputs & Math:</strong> Remember to wrap <code>input()</code> with <code>int()</code> if you want to perform number addition: <code>num = int(input())</code>.</li>
-            <li><strong>Colons & Comparisons:</strong> Every <code>if</code>, <code>for</code>, and <code>while</code> header must end with a colon (<code>:</code>).</li>
-            <li><strong>Pygame Two Loops:</strong> Pygame uses an outer <code>while</code> loop (the main game loop) and an inner <code>for</code> loop to process events like key presses (<code>for event in pygame.event.get():</code>).</li>
-            <li><strong>Pygame Captions:</strong> Change the window title using <code>pygame.display.set_caption("My Game Title")</code>.</li>
-          </ul>
-        </div>
+            // ==========================================
+            // PART 3: LOOP PREDICTION (Q16 - Q20)
+            // ==========================================
+            {
+                id: 16,
+                section: "Loop Predictions",
+                question: "How many times will 'Flying' be printed by this for loop?",
+                code: "for i in range(4):\n    print('Flying')",
+                options: [
+                    "3 times (0, 1, 2)",
+                    "4 times (0, 1, 2, 3)",
+                    "5 times (0, 1, 2, 3, 4)",
+                    "0 times"
+                ],
+                answer: 1,
+                explanation: "`range(4)` generates 0, 1, 2, 3, which is 4 iterations. Therefore, 'Flying' is printed exactly 4 times."
+            },
+            {
+                id: 17,
+                section: "Loop Predictions",
+                question: "Look closely at `range(1, 6)`. How many times does this loop run and update count?",
+                code: "count = 0\nfor x in range(1, 6):\n    count = count + 1\nprint('Final count:', count)",
+                options: [
+                    "Final count: 6",
+                    "Final count: 5",
+                    "Final count: 4",
+                    "Final count: 1"
+                ],
+                answer: 1,
+                explanation: "`range(1, 6)` starts at 1 and stops right BEFORE 6: [1, 2, 3, 4, 5]. That is 5 iterations, making the final count 5."
+            },
+            {
+                id: 18,
+                section: "Loop Predictions",
+                question: "What will be the final value printed by this while loop?",
+                code: "energy = 1\nwhile energy < 4:\n    energy = energy + 1\nprint('Energy level:', energy)",
+                options: [
+                    "Energy level: 1",
+                    "Energy level: 3",
+                    "Energy level: 4",
+                    "Energy level: 5"
+                ],
+                answer: 2,
+                explanation: "Starts at 1 -> increments to 2 (2 < 4) -> increments to 3 (3 < 4) -> increments to 4. Now 4 < 4 is False, so the loop finishes and prints 4."
+            },
+            {
+                id: 19,
+                section: "Loop Predictions",
+                question: "What is printed at the end of this accumulation loop?",
+                code: "total = 0\nfor n in [2, 3, 5]:\n    total = total + n\nprint('Total is:', total)",
+                options: [
+                    "Total is: 10",
+                    "Total is: 5",
+                    "Total is: 0",
+                    "Total is: 235"
+                ],
+                answer: 0,
+                explanation: "The loop sums the elements: 0 + 2 = 2; 2 + 3 = 5; 5 + 5 = 10. The final printed output is 'Total is: 10'."
+            },
+            {
+                id: 20,
+                section: "Loop Predictions",
+                question: "What will be the output of this countdown while loop?",
+                code: "n = 3\nwhile n > 0:\n    n = n - 1\nprint('Blast off at:', n)",
+                options: [
+                    "Blast off at: 3",
+                    "Blast off at: 2",
+                    "Blast off at: 1",
+                    "Blast off at: 0"
+                ],
+                answer: 3,
+                explanation: "n starts at 3, decreases to 2, then 1, then 0. When n reaches 0, the check `0 > 0` is False, exiting the loop to print 'Blast off at: 0'."
+            },
 
-        <!-- Retake Button -->
-        <div class="flex justify-center border-t border-teal-200 pt-4">
-          <button id="restart-btn" class="py-3.5 px-8 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-xl border border-slate-700 shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            <span>Retake Revision</span>
-          </button>
-        </div>
+            // ==========================================
+            // PART 4: TURTLE GRAPHICS & GEOMETRY (Q21 - Q25)
+            // ==========================================
+            {
+                id: 21,
+                section: "Turtle Graphics",
+                question: "Which Turtle command lifts the pen up so the turtle moves WITHOUT drawing any line?",
+                code: "# Move to coordinates without leaving an ink trace:\nimport turtle as t\n\nt.????()\nt.goto(100, 100)",
+                options: [
+                    "t.penup()",
+                    "t.pendown()",
+                    "t.stopdraw()",
+                    "t.noline()"
+                ],
+                answer: 0,
+                explanation: "`t.penup()` (or `t.up()`) lifts the drawing stylus so moving to another point leaves no line on the canvas."
+            },
+            {
+                id: 22,
+                section: "Turtle Graphics",
+                question: "After using `penup()`, which function must we call to place the pen back down on canvas to draw lines again?",
+                code: "# Resume drawing on paper:\nimport turtle as t\n\nt.penup()\nt.goto(50, 50)\nt.????()\nt.forward(100)",
+                options: [
+                    "t.draw()",
+                    "t.start()",
+                    "t.pendown()",
+                    "t.write()"
+                ],
+                answer: 2,
+                explanation: "`t.pendown()` (or `t.down()`) lowers the pen back onto the paper so future movements leave lines."
+            },
+            {
+                id: 23,
+                section: "Turtle Graphics",
+                question: "Which command turns the turtle cursor 90 degrees towards its LEFT?",
+                code: "# Rotate the turtle cursor counter-clockwise by 90 degrees:\nimport turtle as t\n\nt.????(90)",
+                options: [
+                    "t.left(90)",
+                    "t.turn_left()",
+                    "t.heading(90)",
+                    "t.rotate(-90)"
+                ],
+                answer: 0,
+                explanation: "`t.left(angle)` (or `t.lt(angle)`) turns the turtle counter-clockwise (to its left) by the specified degrees."
+            },
+            {
+                id: 24,
+                section: "Turtle Graphics",
+                question: "Which function is used to change the line THICKNESS of the turtle's pen?",
+                code: "# Set pen stroke thickness to 5 pixels:\nimport turtle as t\n\nt.????(5)",
+                options: [
+                    "t.penweight(5)",
+                    "t.pensize(5)",
+                    "t.thick(5)",
+                    "t.set_line_width(5)"
+                ],
+                answer: 1,
+                explanation: "`t.pensize(width)` (or `t.width(width)`) sets the line drawing thickness in pixels."
+            },
+            {
+                id: 25,
+                section: "Turtle Graphics",
+                question: "To draw a regular PENTAGON (5 equal sides), by how many degrees must the turtle turn at each corner?",
+                code: "# Exterior angle formula: 360 / number_of_sides\nfor i in range(5):\n    t.forward(80)\n    t.right( ? )",
+                options: [
+                    "60 degrees  ",
+                    "72 degrees  ",
+                    "90 degrees ",
+                    "108 degrees "
+                ],
+                answer: 1,
+                explanation: "A complete rotation is 360°. For a regular 5-sided pentagon, 360 / 5 = 72°. Turning 72 degrees at each corner draws a pentagon!"
+            },
 
-      </div>
+            // ==========================================
+            // PART 5: PYGAME ZERO FUNDAMENTALS (Q26 - Q30)
+            // ==========================================
+            {
+                id: 26,
+                section: "Turtle & Pygame Zero",
+                question: "To draw a regular HEXAGON (6 equal sides) in Turtle, what angle must the turtle turn at each corner?",
+                code: "# Exterior angle formula: 360 / 6\nfor i in range(6):\n    t.forward(70)\n    t.right( ? )",
+                options: [
+                    "45 degrees  ",
+                    "60 degrees  ",
+                    "90 degrees  ",
+                    "120 degrees "
+                ],
+                answer: 1,
+                explanation: "For a regular 6-sided hexagon, exterior angle = 360 / 6 = 60 degrees!"
+            },
+            {
+                id: 27,
+                section: "Pygame Zero Basics",
+                question: "Before creating any window, which TWO global variables must be defined to set up the game screen size in Pygame Zero?",
+                code: "# Defining window dimensions at the top of your game script:\n???? = 800\n???? = 600",
+                options: [
+                    "WIDTH and HEIGHT",
+                    "SCREEN_X and SCREEN_Y",
+                    "SIZE and SCALE",
+                    "WINDOW_W and WINDOW_H"
+                ],
+                answer: 0,
+                explanation: "Pygame Zero automatically looks for the uppercase variables `WIDTH = 800` and `HEIGHT = 600` to set the window dimensions."
+            },
+            {
+                id: 28,
+                section: "Pygame Zero Basics",
+                question: "Under which special built-in function in Pygame Zero do we place our code to display and render actors and backgrounds?",
+                code: "# Which built-in function renders our sprites on screen?\ndef ????():\n    screen.fill('sky blue')\n    plane.draw()",
+                options: [
+                    "def update():\n    screen.fill('sky blue')",
+                    "def draw():\n    screen.fill('sky blue')",
+                    "def screen():\n    screen.fill('sky blue')",
+                    "def display():\n    screen.fill('sky blue')"
+                ],
+                answer: 1,
+                explanation: "Pygame Zero automatically invokes `def draw():` repeatedly to render the background and sprites onto the game window."
+            },
+            {
+                id: 29,
+                section: "Pygame Zero Basics",
+                question: "How do we initialize and place a character Actor called 'plane' at coordinates x=200, y=150?",
+                code: "# Which line properly positions our actor at startup?",
+                options: [
+                    "plane = Actor('plane', (200, 150))",
+                    "plane = screen.Actor('plane', x=200, y=150)",
+                    "plane = create_actor('plane') + (200, 150)",
+                    "plane = Actor.place('plane', 200, 150)"
+                ],
+                answer: 0,
+                explanation: "In Pygame Zero, `Actor('image_name', (x, y))` or setting `plane.pos = (200, 150)` sets the actor's initial on-screen position."
+            },
+            {
+                id: 30,
+                section: "Pygame Zero Basics",
+                question: "When creating a rectangle shape with `Rect(left, top, width, height)`, what do the 4 parameters represent in order?",
+                code: "# Creating a box shape in Pygame Zero:\nmy_box = Rect(100, 50, 200, 80)",
+                options: [
+                    "Left position, Top position, Width, and Height",
+                    "Width, Height, Color name, and Border size",
+                    "Top, Bottom, Left, and Right coordinates",
+                    "Red, Green, Blue, and Alpha transparency"
+                ],
+                answer: 0,
+                explanation: "A Pygame `Rect(x, y, width, height)` requires: (1) left/x coordinate, (2) top/y coordinate, (3) width, and (4) height!"
+            }
+        ];
 
-    </div>
+        /* ==========================================================================
+           QUIZ ENGINE STATE & LOGIC
+           ========================================================================== */
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval = null;
+        const TIME_LIMIT = 50; // 50 seconds per question
+        let timeLeft = TIME_LIMIT;
+        let userAnswers = [];
+        let answerSelected = false;
 
-  </div>
+        // Sound FX synthesizer using Web Audio API
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
 
-  <!-- Footer -->
-  <footer class="relative z-10 py-3 text-center text-xs text-teal-900/70 bg-white/60 backdrop-blur-sm border-t border-teal-200">
-    <p>Python & Pygame Revision • Crafted for 12-Year-Old Young Programmers 🚀</p>
-  </footer>
-
-  <script>
-    // -------------------------------------------------------------
-    // 10 ACCESSIBLE QUESTIONS FOR A 12-YEAR-OLD PYTHON LEARNER
-    // 4 Snippet Finding + 3 Output Prediction + 3 Pygame Concepts
-    // -------------------------------------------------------------
-    const rawQuestionsDatabase = [
-      
-      // =========================================================
-      // PART 1 (Q1 - Q4): FIND THE ONLY CORRECT SYNTAX SNIPPET
-      // =========================================================
-      {
-        section: "Part 1: Find the Correct Snippet",
-        question: "1. Variable & Arithmetic: Which snippet shows the ONLY valid way to store numbers and add them together?",
-        code: null,
-        options: [
-          { 
-            text: "score = 10\nbonus = 5\ntotal = score + bonus", 
-            isCorrect: true 
-          },
-          { 
-            text: "10 = score\n5 = bonus\ntotal = score + bonus", 
-            isCorrect: false 
-          },
-          { 
-            text: "score = 10\nbonus = 5\nscore + bonus = total", 
-            isCorrect: false 
-          },
-          { 
-            text: "score is 10\nbonus is 5\ntotal = score + bonus", 
-            isCorrect: false 
-          }
-        ],
-        explanation: "Variable names must be on the left side of the equals sign: `variable_name = value`. You cannot put values like `10 = score` on the left!"
-      },
-      {
-        section: "Part 1: Find the Correct Snippet",
-        question: "2. User Input: Which snippet shows the ONLY valid syntax to ask the user for a whole number and convert it to an integer?",
-        code: null,
-        options: [
-          { 
-            text: "age = int(input(\"Enter your age: \"))", 
-            isCorrect: true 
-          },
-          { 
-            text: "age = int(input(\"Enter your age: \")", 
-            isCorrect: false 
-          },
-          { 
-            text: "age = input(int(\"Enter your age: \"))", 
-            isCorrect: false 
-          },
-          { 
-            text: "age = integer(input(\"Enter your age: \"))", 
-            isCorrect: false 
-          }
-        ],
-        explanation: "Python uses `int()` to convert text to a number, and both opening parentheses must be closed: `int(input(\"...\"))`."
-      },
-      {
-        section: "Part 1: Find the Correct Snippet",
-        question: "3. If-Condition: Which snippet shows the ONLY valid syntax to check if player coins are 50 or more?",
-        code: null,
-        options: [
-          { 
-            text: "if coins >= 50:\n    print(\"Level Up!\")", 
-            isCorrect: true 
-          },
-          { 
-            text: "if coins => 50:\n    print(\"Level Up!\")", 
-            isCorrect: false 
-          },
-          { 
-            text: "if coins >= 50\n    print(\"Level Up!\")", 
-            isCorrect: false 
-          },
-          { 
-            text: "if (coins >= 50) then:\n    print(\"Level Up!\")", 
-            isCorrect: false 
-          }
-        ],
-        explanation: "Greater-than-or-equal is written `>=` (not `=>`), and the `if` statement line MUST end with a colon `:`!"
-      },
-      {
-        section: "Part 1: Find the Correct Snippet",
-        question: "4. For Loop: Which snippet shows the ONLY valid syntax to repeat an action 3 times using a range loop?",
-        code: null,
-        options: [
-          { 
-            text: "for i in range(3):\n    print(\"Hello!\")", 
-            isCorrect: true 
-          },
-          { 
-            text: "for i in range(3)\n    print(\"Hello!\")", 
-            isCorrect: false 
-          },
-          { 
-            text: "repeat 3 times:\n    print(\"Hello!\")", 
-            isCorrect: false 
-          },
-          { 
-            text: "for i to 3:\n    print(\"Hello!\")", 
-            isCorrect: false 
-          }
-        ],
-        explanation: "Python loops use `for variable in range(number):` with a colon at the end of the line."
-      },
-
-      // =========================================================
-      // PART 2 (Q5 - Q7): PREDICT THE OUTPUT
-      // =========================================================
-      {
-        section: "Part 2: Predict the Output",
-        question: "5. Loop Accumulator with Condition: Trace the loop below step-by-step. What value will be printed at the end for total?",
-        code: "total = 10\nfor score in [5, 12, 3, 20]:\n    if score >= 10:\n        total = total + score\n\nprint(total)",
-        options: [
-          { text: "42", isCorrect: true },
-          { text: "50", isCorrect: false },
-          { text: "32", isCorrect: false },
-          { text: "10", isCorrect: false }
-        ],
-        explanation: "total starts at 10. The condition checks if score >= 10: only 12 and 20 are added! So total = 10 + 12 + 20 = 42."
-      },
-      {
-        section: "Part 2: Predict the Output",
-        question: "6. Multi-Branch Condition: Trace the logic below. What will be printed when this code runs?",
-        code: "coins = 25\nhas_key = True\n\nif coins >= 30 and has_key:\n    print(\"Open Golden Chest\")\nelif coins >= 20 or not has_key:\n    print(\"Open Silver Chest\")\nelse:\n    print(\"Chest Locked\")",
-        options: [
-          { text: "Open Silver Chest", isCorrect: true },
-          { text: "Open Golden Chest", isCorrect: false },
-          { text: "Chest Locked", isCorrect: false },
-          { text: "Open Golden Chest and Open Silver Chest", isCorrect: false }
-        ],
-        explanation: "coins >= 30 is False (25 >= 30 is False), so it skips the first if. In the elif: coins >= 20 is True (25 >= 20 is True). Because it uses 'or', it evaluates to True and prints 'Open Silver Chest'!"
-      },
-      {
-        section: "Part 2: Predict the Output",
-        question: "7. While Loop Countdown: What will be printed for energy after this while loop finishes?",
-        code: "energy = 20\ncount = 0\n\nwhile energy > 5:\n    energy = energy - 4\n    count = count + 1\n\nprint(energy)",
-        options: [
-          { text: "4", isCorrect: true },
-          { text: "5", isCorrect: false },
-          { text: "0", isCorrect: false },
-          { text: "8", isCorrect: false }
-        ],
-        explanation: "Step 1: 20 - 4 = 16. Step 2: 16 - 4 = 12. Step 3: 12 - 4 = 8. Step 4: 8 - 4 = 4. Now 4 > 5 is False, so the loop exits and energy is 4!"
-      },
-
-      // =========================================================
-      // PART 3 (Q8 - Q10): PYGAME REVISION
-      // =========================================================
-      {
-        section: "Part 3: Pygame Revision",
-        question: "8. What is Pygame? What do game creators primarily use the Pygame library for in Python?",
-        code: null,
-        options: [
-          { text: "To create 2D video games with sound, graphics, and animations", isCorrect: true },
-          { text: "To design website HTML text pages only", isCorrect: false },
-          { text: "To replace Python with a completely different language", isCorrect: false },
-          { text: "To calculate math homework without any graphics", isCorrect: false }
-        ],
-        explanation: "Pygame is a popular Python library designed specifically to make 2D video games, complete with character movement, graphics, keyboard input, and sound effects!"
-      },
-      {
-        section: "Part 3: Pygame Revision",
-        question: "9. Loops in Pygame: Which two loops do we typically use together in standard Pygame games?",
-        code: null,
-        options: [
-          { text: "An outer while loop (main game loop) and an inner for loop (for events)", isCorrect: true },
-          { text: "Two while loops running side-by-side at the same time", isCorrect: false },
-          { text: "Pygame never uses while loops, only if statements", isCorrect: false },
-          { text: "Four nested for loops for every single image on screen", isCorrect: false }
-        ],
-        explanation: "Pygame games use two loops: an outer `while` loop (the main loop that keeps the game running frame-by-frame) and an inner `for` loop (`for event in pygame.event.get():`) to capture user events like key presses and mouse clicks!"
-      },
-      {
-        section: "Part 3: Pygame Revision",
-        question: "10. Window Title: How do we set the title or caption shown at the top of a Pygame game window?",
-        code: null,
-        options: [
-          { text: "pygame.display.set_caption(\"My Super Game\")", isCorrect: true },
-          { text: "pygame.window.title_name(\"My Super Game\")", isCorrect: false },
-          { text: "screen.set_text_top(\"My Super Game\")", isCorrect: false },
-          { text: "pygame.caption.create(\"My Super Game\")", isCorrect: false }
-        ],
-        explanation: "In Pygame, `pygame.display.set_caption(\"Title Here\")` is the standard command to change the text displayed in the game window's title bar!"
-      }
-    ];
-
-    function initSkyBackground() {
-      const container = document.getElementById('sky-container');
-      container.innerHTML = '';
-
-      const cloudSVG = `
-        <svg width="150" height="65" viewBox="0 0 150 65" fill="none" class="opacity-60">
-          <path d="M25 50 C15 50 5 42 5 32 C5 20 16 14 28 16 C34 6 50 3 66 10 C78 3 98 6 104 17 C115 14 130 20 130 32 C138 34 145 40 142 50 C138 60 120 58 25 50 Z" fill="#ffffff"/>
-        </svg>
-      `;
-
-      for (let i = 0; i < 4; i++) {
-        const cloud = document.createElement('div');
-        cloud.className = 'drifting-cloud';
-        cloud.innerHTML = cloudSVG;
-        cloud.style.top = `${8 + (i * 22)}%`;
-        cloud.style.animationDuration = `${35 + (i * 10)}s`;
-        cloud.style.animationDelay = `${i * 8}s`;
-        container.appendChild(cloud);
-      }
-    }
-
-    let questionsDatabase = [];
-    let currentIndex = 0;
-    let score = 0;
-    let timerId = null;
-    let timeLeft = 30;
-    let isAnswered = false;
-
-    // DOM Elements
-    const qNumEl = document.getElementById('q-num');
-    const liveScoreEl = document.getElementById('live-score');
-    const timerTextEl = document.getElementById('timer-text');
-    const timerBarEl = document.getElementById('timer-bar');
-    const sectionBadgeEl = document.getElementById('section-badge');
-    const questionTextEl = document.getElementById('question-text');
-    const codeContainer = document.getElementById('code-container');
-    const codeSnippetEl = document.getElementById('code-snippet');
-    const optionsGrid = document.getElementById('options-grid');
-    const explanationBox = document.getElementById('explanation-box');
-    const explanationTitle = document.getElementById('explanation-title');
-    const explanationText = document.getElementById('explanation-text');
-    const explanationIcon = document.getElementById('explanation-icon');
-    const nextBtn = document.getElementById('next-btn');
-
-    const quizScreen = document.getElementById('quiz-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const finalTotalScore = document.getElementById('final-total-score');
-    const tutorFeedbackText = document.getElementById('tutor-feedback-text');
-    const restartBtn = document.getElementById('restart-btn');
-
-    function escapeHTML(str) {
-      if (!str) return '';
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function prepareQuestions() {
-      questionsDatabase = rawQuestionsDatabase.map((q) => {
-        const clonedOpts = [...q.options];
-        for (let i = clonedOpts.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [clonedOpts[i], clonedOpts[j]] = [clonedOpts[j], clonedOpts[i]];
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.25); // A5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(130, audioCtx.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch (e) {
+                // Audio fallback
+            }
         }
-        return {
-          section: q.section,
-          question: q.question,
-          code: q.code || null,
-          options: clonedOpts.map(o => o.text),
-          correctIndex: clonedOpts.findIndex(o => o.isCorrect),
-          explanation: q.explanation
+
+        // DOM Element references
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const startBtn = document.getElementById('startBtn');
+        const topStatsPill = document.getElementById('topStatsPill');
+        const questionCounter = document.getElementById('questionCounter');
+        const currentScoreDisplay = document.getElementById('currentScoreDisplay');
+        const sectionBadge = document.getElementById('sectionBadge');
+        const timerProgressBar = document.getElementById('timerProgressBar');
+        const timerText = document.getElementById('timerText');
+        const questionText = document.getElementById('questionText');
+        const codeContainer = document.getElementById('codeContainer');
+        const codeBlock = document.getElementById('codeBlock');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const explanationCard = document.getElementById('explanationCard');
+        const explanationIcon = document.getElementById('explanationIcon');
+        const explanationTitle = document.getElementById('explanationTitle');
+        const explanationText = document.getElementById('explanationText');
+        const nextBtn = document.getElementById('nextBtn');
+        const nextBtnText = document.getElementById('nextBtnText');
+        const restartBtn = document.getElementById('restartBtn');
+        const reviewBtn = document.getElementById('reviewBtn');
+        const reviewContainer = document.getElementById('reviewContainer');
+        const reviewList = document.getElementById('reviewList');
+        const closeReviewBtn = document.getElementById('closeReviewBtn');
+
+        // Event Listeners
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', handleNextQuestion);
+        restartBtn.addEventListener('click', startQuiz);
+        reviewBtn.addEventListener('click', toggleReviewModal);
+        closeReviewBtn.addEventListener('click', toggleReviewModal);
+
+        function startQuiz() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            reviewContainer.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            topStatsPill.classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            answerSelected = false;
+            clearInterval(timerInterval);
+            
+            const q = quizQuestions[currentQuestionIndex];
+
+            // Update stats & section
+            questionCounter.innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
+            currentScoreDisplay.innerText = `${score} pts`;
+            sectionBadge.innerText = q.section;
+            questionText.innerText = q.question;
+
+            // Handle Code block display
+            if (q.code) {
+                codeContainer.classList.remove('hidden');
+                codeBlock.innerText = q.code;
+            } else {
+                codeContainer.classList.add('hidden');
+            }
+
+            // Reset explanation card & next button
+            explanationCard.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+
+            // Render Options (Always exactly 4 Options with multiline formatting support)
+            optionsGrid.innerHTML = '';
+            optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4';
+
+            q.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-slate-50 hover:bg-sky-50 text-slate-700 font-medium border-2 border-slate-200 hover:border-sky-300 transition-all text-left flex items-start justify-between text-xs sm:text-sm shadow-sm group';
+                btn.onclick = () => selectAnswer(index);
+
+                // Check if the option is code-like (contains newlines or code syntax)
+                const isCodeLike = optText.includes('\n') || optText.includes('(') || optText.includes('=') || optText.includes(':');
+                const formattedContent = isCodeLike 
+                    ? `<pre class="font-code leading-relaxed text-xs sm:text-sm">${escapeHtml(optText)}</pre>`
+                    : `<span class="leading-snug">${escapeHtml(optText)}</span>`;
+
+                btn.innerHTML = `
+                    <div class="flex items-start space-x-3 w-full pr-2">
+                        <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center group-hover:bg-sky-500 group-hover:text-white transition-colors shrink-0 mt-0.5">
+                            ${String.fromCharCode(65 + index)}
+                        </span>
+                        <div class="overflow-x-auto flex-grow">${formattedContent}</div>
+                    </div>
+                    <i class="option-icon fa-regular fa-circle text-slate-300 text-base shrink-0 mt-1"></i>
+                `;
+                optionsGrid.appendChild(btn);
+            });
+
+            // Start 50s Timer
+            startTimer();
+        }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function startTimer() {
+            timeLeft = TIME_LIMIT;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            timerText.innerText = `${timeLeft}s`;
+            const percentage = (timeLeft / TIME_LIMIT) * 100;
+            timerProgressBar.style.width = `${percentage}%`;
+
+            if (timeLeft <= 10) {
+                timerProgressBar.className = "bg-gradient-to-r from-amber-500 to-rose-500 h-full w-full transition-all duration-1000 ease-linear";
+            } else {
+                timerProgressBar.className = "bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear";
+            }
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (answerSelected) return;
+            answerSelected = true;
+            clearInterval(timerInterval);
+
+            const q = quizQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.answer;
+
+            if (isCorrect) {
+                score += 10;
+                playSound('correct');
+            } else {
+                playSound('wrong');
+            }
+
+            // Save user answer
+            userAnswers.push({
+                questionId: q.id,
+                selected: selectedIndex,
+                correct: q.answer,
+                isCorrect: isCorrect,
+                timeSpent: TIME_LIMIT - timeLeft
+            });
+
+            currentScoreDisplay.innerText = `${score} pts`;
+
+            // Highlight Option Buttons
+            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
+            optionBtns.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-sky-50', 'hover:border-sky-300');
+                const icon = btn.querySelector('.option-icon');
+
+                if (idx === q.answer) {
+                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-50 text-emerald-900 font-bold border-2 border-emerald-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
+                    icon.className = 'option-icon fa-solid fa-circle-check text-emerald-600 text-lg';
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-rose-50 text-rose-900 font-semibold border-2 border-rose-400 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
+                    icon.className = 'option-icon fa-solid fa-circle-xmark text-rose-500 text-lg';
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            showExplanation(isCorrect, q.explanation);
+
+            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "View Report" : "Next ";
+            nextBtn.classList.remove('hidden');
+        }
+
+        function handleTimeout() {
+            if (answerSelected) return;
+            answerSelected = true;
+            playSound('wrong');
+
+            const q = quizQuestions[currentQuestionIndex];
+
+            userAnswers.push({
+                questionId: q.id,
+                selected: -1,
+                correct: q.answer,
+                isCorrect: false,
+                timeSpent: TIME_LIMIT
+            });
+
+            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
+            optionBtns.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.answer) {
+                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-amber-50 text-amber-900 font-bold border-2 border-amber-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
+                    const icon = btn.querySelector('.option-icon');
+                    icon.className = 'option-icon fa-solid fa-clock text-amber-600 text-lg';
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            showExplanation(false, `⏱️ Time reached 50 seconds! ${q.explanation}`);
+            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "View Flight Report" : "Next Flight Challenge";
+            nextBtn.classList.remove('hidden');
+        }
+
+        function showExplanation(isCorrect, text) {
+            explanationCard.classList.remove('hidden');
+            explanationText.innerText = text;
+
+            if (isCorrect) {
+                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-emerald-50 border-emerald-200 text-emerald-950';
+                explanationIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
+                explanationTitle.innerText = "Target Hit! Correct Answer";
+                explanationTitle.className = "font-bold text-sm mb-1 text-emerald-800";
+            } else {
+                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-amber-50 border-amber-200 text-amber-950';
+                explanationIcon.innerHTML = '<i class="fa-solid fa-lightbulb text-amber-600"></i>';
+                explanationTitle.innerText = "Instructor Note";
+                explanationTitle.className = "font-bold text-sm mb-1 text-amber-800";
+            }
+        }
+
+        function handleNextQuestion() {
+            playSound('click');
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            quizScreen.classList.add('hidden');
+            topStatsPill.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            const totalQuestions = quizQuestions.length;
+            const correctCount = userAnswers.filter(a => a.isCorrect).length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+
+            // Display Score Summary
+            document.getElementById('finalScoreText').innerText = `${correctCount} / ${totalQuestions}`;
+            document.getElementById('accuracyText').innerText = `${percentage}%`;
+
+            let stars = "⭐⭐⭐";
+            let grade = "Captain Pilot 🏆";
+            if (percentage < 50) {
+                stars = "⭐";
+                grade = "Cadet Trainee 🛩️";
+            } else if (percentage < 80) {
+                stars = "⭐⭐";
+                grade = "Flight Officer 🎖️";
+            }
+            document.getElementById('gradeBadgeText').innerText = grade;
+            document.getElementById('starsEarnedText').innerText = stars;
+
+            // Generate Section Breakdown
+            const sections = {};
+            quizQuestions.forEach(q => {
+                if (!sections[q.section]) {
+                    sections[q.section] = { total: 0, correct: 0 };
+                }
+                sections[q.section].total++;
+            });
+
+            userAnswers.forEach((ans, idx) => {
+                const sec = quizQuestions[idx].section;
+                if (ans.isCorrect) {
+                    sections[sec].correct++;
+                }
+            });
+
+            const breakdownGrid = document.getElementById('sectionBreakdownGrid');
+            breakdownGrid.innerHTML = '';
+
+            Object.keys(sections).forEach(secName => {
+                const data = sections[secName];
+                const secPercent = Math.round((data.correct / data.total) * 100);
+
+                const card = document.createElement('div');
+                card.className = 'bg-white/80 p-3 rounded-2xl border border-amber-200 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div class="mb-2">
+                        <h5 class="text-xs font-bold text-amber-950">${secName}</h5>
+                        <p class="text-[11px] text-amber-700">${data.correct} of ${data.total} correct</p>
+                    </div>
+                    <span class="text-xs font-extrabold px-2 py-0.5 rounded-lg text-center ${secPercent >= 70 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                        ${secPercent}%
+                    </span>
+                `;
+                breakdownGrid.appendChild(card);
+            });
+
+            // Generate Personalized Handwritten Teacher Note
+            const noteContent = document.getElementById('teacherNoteContent');
+            let feedback = "";
+
+            if (percentage >= 90) {
+                feedback = `Superb skills! You navigated through Python syntax errors with ease, nailed the Boolean logic tables, predicted the loop iterations flawlessly, calculated the 72° pentagon and 60° hexagon angles with precision, and mastered Pygame Zero screen setups like a seasoned pro! You are fully equipped to start animating and adding motion to your characters next. Keep soaring!`;
+            } else if (percentage >= 70) {
+                feedback = `Impressive performance! You demonstrated great command over Turtle drawing commands (penup, pendown, pensize) and spotting function header errors. Take a quick second to review range() stopping conditions and Pygame Zero Rect parameters. You are very close to reaching top Captain rank!`;
+            } else if (percentage >= 50) {
+                feedback = `Good progress on this run! You showed solid understanding of Turtle pen controls and basic conditions. Make sure to review how 'and' versus 'or' works, and how functions match parameters with arguments. Give it another attempt to level up!`;
+            } else {
+                feedback = `Honorable effort! Learning to code takes practice flights. Review the difference between '=' and '==', practice calculating 360 / sides for regular shapes, and check the explanation review below. Take off again—you've got this!`;
+            }
+
+            noteContent.innerText = feedback;
+        }
+
+        function toggleReviewModal() {
+            playSound('click');
+            reviewContainer.classList.toggle('hidden');
+
+            if (!reviewContainer.classList.contains('hidden')) {
+                renderReviewList();
+            }
+        }
+
+        function renderReviewList() {
+            reviewList.innerHTML = '';
+
+            quizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx] || { selected: -1, isCorrect: false };
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-2xl border text-xs sm:text-sm ${userAns.isCorrect ? 'bg-emerald-50/80 border-emerald-200' : 'bg-rose-50/80 border-rose-200'}`;
+
+                const userOptText = userAns.selected >= 0 ? q.options[userAns.selected] : "Timed Out (No Answer Selected)";
+                const correctOptText = q.options[q.answer];
+
+                item.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <span class="font-bold text-slate-800">Q${idx + 1}: ${q.question}</span>
+                        <span class="px-2 py-0.5 text-xs rounded-lg font-bold ${userAns.isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
+                            ${userAns.isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </div>
+                    ${q.code ? `<pre class="p-2.5 bg-slate-900 text-emerald-400 rounded-xl font-code text-xs mb-2 overflow-x-auto">${escapeHtml(q.code)}</pre>` : ''}
+                    <div class="space-y-2 mb-2 text-slate-700">
+                        <div>
+                            <strong class="text-slate-900 block mb-0.5">Your Choice:</strong>
+                            <pre class="p-2 bg-white/80 rounded-lg font-code text-xs border border-slate-200 overflow-x-auto">${escapeHtml(userOptText)}</pre>
+                        </div>
+                        <div>
+                            <strong class="text-emerald-800 block mb-0.5">Correct Option:</strong>
+                            <pre class="p-2 bg-emerald-100/60 text-emerald-950 rounded-lg font-code text-xs border border-emerald-300 overflow-x-auto">${escapeHtml(correctOptText)}</pre>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 bg-white/70 p-2.5 rounded-xl text-xs border border-slate-200 leading-relaxed">
+                        <strong class="text-slate-800">Flight Explanation:</strong> ${q.explanation}
+                    </p>
+                `;
+                reviewList.appendChild(item);
+            });
+        }
+
+        /* ==========================================================================
+           ANIMATED AIRPLANE CANVAS BACKGROUND
+           ========================================================================== */
+        const canvas = document.getElementById('airplaneCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const airplanes = [
+            { x: -100, y: height * 0.15, speed: 1.8, scale: 0.8 },
+            { x: -300, y: height * 0.45, speed: 1.2, scale: 0.6 },
+            { x: -200, y: height * 0.75, speed: 2.2, scale: 0.9 }
+        ];
+
+        const clouds = [
+            { x: 100, y: height * 0.1, scale: 1 },
+            { x: 400, y: height * 0.3, scale: 1.4 },
+            { x: 800, y: height * 0.2, scale: 0.8 },
+            { x: 200, y: height * 0.6, scale: 1.2 },
+            { x: 700, y: height * 0.8, scale: 1.1 }
+        ];
+
+        function drawCloud(c) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, 25 * c.scale, 0, Math.PI * 2);
+            ctx.arc(c.x + 20 * c.scale, c.y - 10 * c.scale, 20 * c.scale, 0, Math.PI * 2);
+            ctx.arc(c.x + 40 * c.scale, c.y, 22 * c.scale, 0, Math.PI * 2);
+            ctx.arc(c.x + 20 * c.scale, c.y + 10 * c.scale, 18 * c.scale, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawAirplane(plane) {
+            ctx.save();
+            ctx.translate(plane.x, plane.y);
+            ctx.scale(plane.scale, plane.scale);
+
+            // Plane Body
+            ctx.fillStyle = '#0284c7';
+            ctx.beginPath();
+            ctx.moveTo(30, 0);
+            ctx.quadraticCurveTo(0, -12, -30, -6);
+            ctx.lineTo(-35, 0);
+            ctx.lineTo(-30, 6);
+            ctx.quadraticCurveTo(0, 12, 30, 0);
+            ctx.fill();
+
+            // Wing
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-10, -22);
+            ctx.lineTo(8, -22);
+            ctx.lineTo(12, 0);
+            ctx.fill();
+
+            // Tail
+            ctx.fillStyle = '#0369a1';
+            ctx.beginPath();
+            ctx.moveTo(-25, -3);
+            ctx.lineTo(-38, -18);
+            ctx.lineTo(-30, -18);
+            ctx.lineTo(-20, -3);
+            ctx.fill();
+
+            // Cockpit Window
+            ctx.fillStyle = '#e0f2fe';
+            ctx.beginPath();
+            ctx.arc(15, -2, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function animateBackground() {
+            ctx.clearRect(0, 0, width, height);
+
+            clouds.forEach(cloud => {
+                cloud.x -= 0.3;
+                if (cloud.x < -100) cloud.x = width + 100;
+                drawCloud(cloud);
+            });
+
+            airplanes.forEach(plane => {
+                plane.x += plane.speed;
+                if (plane.x > width + 150) {
+                    plane.x = -150;
+                    plane.y = Math.random() * (height * 0.7) + 50;
+                }
+                drawAirplane(plane);
+            });
+
+            requestAnimationFrame(animateBackground);
+        }
+
+        window.onload = function() {
+            animateBackground();
         };
-      });
-    }
-
-    function startTimer() {
-      clearInterval(timerId);
-      timeLeft = 30;
-      renderTimer();
-
-      timerId = setInterval(() => {
-        timeLeft--;
-        renderTimer();
-
-        if (timeLeft <= 0) {
-          clearInterval(timerId);
-          onTimeout();
-        }
-      }, 1000);
-    }
-
-    function renderTimer() {
-      timerTextEl.textContent = timeLeft;
-      const pct = (timeLeft / 30) * 100;
-      timerBarEl.style.width = `${pct}%`;
-
-      if (timeLeft <= 7) {
-        timerTextEl.classList.add('text-rose-600', 'animate-pulse');
-        timerBarEl.classList.remove('from-teal-500', 'via-emerald-400', 'to-cyan-500');
-        timerBarEl.classList.add('from-rose-500', 'to-red-600');
-      } else {
-        timerTextEl.classList.remove('text-rose-600', 'animate-pulse');
-        timerBarEl.classList.remove('from-rose-500', 'to-red-600');
-        timerBarEl.classList.add('from-teal-500', 'via-emerald-400', 'to-cyan-500');
-      }
-    }
-
-    function displayQuestion() {
-      isAnswered = false;
-      const q = questionsDatabase[currentIndex];
-
-      qNumEl.textContent = currentIndex + 1;
-      liveScoreEl.textContent = `${score} / 10`;
-      sectionBadgeEl.textContent = q.section;
-
-      explanationBox.classList.add('hidden');
-      nextBtn.classList.add('hidden');
-
-      questionTextEl.textContent = q.question;
-
-      if (q.code) {
-        codeSnippetEl.textContent = q.code;
-        codeContainer.classList.remove('hidden');
-      } else {
-        codeContainer.classList.add('hidden');
-      }
-
-      optionsGrid.innerHTML = '';
-
-      q.options.forEach((optText, idx) => {
-        const btn = document.createElement('button');
-        btn.dataset.idx = idx;
-
-        btn.className = "option-btn p-3.5 sm:p-4 rounded-xl border border-teal-200/90 bg-white/90 hover:bg-teal-50 hover:border-teal-400 text-left text-slate-800 font-medium transition transform active:scale-98 flex items-start gap-3 shadow-sm";
-        btn.innerHTML = `
-          <span class="w-7 h-7 rounded-lg bg-teal-100 border border-teal-300 text-teal-900 font-bold text-xs sm:text-sm flex items-center justify-center font-code shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
-          <span class="text-xs sm:text-sm leading-relaxed font-code whitespace-pre-wrap flex-grow">${escapeHTML(optText)}</span>
-        `;
-        btn.addEventListener('click', () => handleOptionClick(idx));
-
-        optionsGrid.appendChild(btn);
-      });
-
-      startTimer();
-    }
-
-    function handleOptionClick(selectedIdx) {
-      if (isAnswered) return;
-      isAnswered = true;
-      clearInterval(timerId);
-
-      const q = questionsDatabase[currentIndex];
-      const isCorrect = (selectedIdx === q.correctIndex);
-
-      const buttons = optionsGrid.querySelectorAll('.option-btn');
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.remove('border-teal-200/90', 'bg-white/90');
-          btn.classList.add('border-emerald-500', 'bg-emerald-100/90', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
-        } else if (idx === selectedIdx && !isCorrect) {
-          btn.classList.remove('border-teal-200/90', 'bg-white/90');
-          btn.classList.add('border-rose-400', 'bg-rose-100/90', 'text-rose-950', 'ring-2', 'ring-rose-400');
-        }
-      });
-
-      if (isCorrect) {
-        score += 1;
-        liveScoreEl.textContent = `${score} / 10`;
-        showExplanation(true, "Correct! " + q.explanation);
-      } else {
-        showExplanation(false, "Not quite! " + q.explanation);
-      }
-
-      nextBtn.classList.remove('hidden');
-    }
-
-    function onTimeout() {
-      if (isAnswered) return;
-      isAnswered = true;
-
-      const q = questionsDatabase[currentIndex];
-      const buttons = optionsGrid.querySelectorAll('.option-btn');
-      buttons.forEach((btn, idx) => {
-        btn.disabled = true;
-        if (idx === q.correctIndex) {
-          btn.classList.add('border-emerald-500', 'bg-emerald-100/90', 'text-emerald-950', 'ring-2', 'ring-emerald-500');
-        }
-      });
-
-      showExplanation(false, "⏳ Time is up! You had 30 seconds for this question. " + q.explanation);
-      nextBtn.classList.remove('hidden');
-    }
-
-    function showExplanation(isCorrect, message) {
-      explanationBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
-
-      if (isCorrect) {
-        explanationBox.classList.add('bg-emerald-50', 'border-emerald-300');
-        explanationIcon.textContent = "🌟";
-        explanationTitle.textContent = "Great Spot!";
-        explanationTitle.className = "font-bold text-sm sm:text-base text-emerald-900";
-      } else {
-        explanationBox.classList.add('bg-rose-50', 'border-rose-300');
-        explanationIcon.textContent = "💡";
-        explanationTitle.textContent = "Key Takeaway";
-        explanationTitle.className = "font-bold text-sm sm:text-base text-rose-900";
-      }
-
-      explanationText.textContent = message;
-    }
-
-    nextBtn.addEventListener('click', () => {
-      currentIndex++;
-      if (currentIndex < questionsDatabase.length) {
-        displayQuestion();
-      } else {
-        showTeacherReport();
-      }
-    });
-
-    function showTeacherReport() {
-      quizScreen.classList.add('hidden');
-      resultScreen.classList.remove('hidden');
-
-      finalTotalScore.textContent = `${score} / 10`;
-
-      // Handwritten note for the 12-year-old student
-      let feedback = "";
-      if (score >= 9) {
-        feedback = `“Fantastic job! You scored ${score} out of 10! You did an amazing job spotting the correct syntax for inputs and if-conditions, tracing loops accurately, and answering the Pygame questions. You clearly understand how the main while loop and event for loop work together in Pygame. Keep building cool games and programs!”\n\n— Tutor Priyadarshini`;
-      } else if (score >= 7) {
-        feedback = `“Great effort! You scored ${score} out of 10! You have a really good grasp on Python variables, range loops, and Pygame game mechanics. Remember the two loops in Pygame: the while loop for running the game and the for loop for events!”\n\n— Tutor Priyadarshini`;
-      } else if (score >= 5) {
-        feedback = `“Good work! You scored ${score} out of 10! You got many questions right, especially on loop tracing and Pygame concepts. Take a look at the key reminders below for variable syntax and the Pygame two-loop pattern, and you will hit 10 out of 10 next time!”\n\n— Tutor Priyadarshini`;
-      } else {
-        feedback = `“Nice try! You scored ${score} out of 10. Python syntax and Pygame take practice to get used to. Read through the reminders below carefully, take another turn, and let's master these 10 questions together!”\n\n— Tutor Priyadarshini`;
-      }
-
-      tutorFeedbackText.textContent = feedback;
-    }
-
-    restartBtn.addEventListener('click', () => {
-      currentIndex = 0;
-      score = 0;
-      prepareQuestions();
-      resultScreen.classList.add('hidden');
-      quizScreen.classList.remove('hidden');
-      displayQuestion();
-    });
-
-    // INITIALIZATION
-    initSkyBackground();
-    prepareQuestions();
-    displayQuestion();
-  </script>
+    </script>
 </body>
 </html>
