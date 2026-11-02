@@ -3,866 +3,1160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Junior Flight Mission ✈️</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Caveat (Handwritten) & Fira Code -->
+    <title>Python revision</title>
+    <!-- Fonts: Clean Inter, Arcade Heading, and Handwritten Font for Teacher's Note -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e0f2fe;
+        :root {
+            --bg-light-yellow: #FEF08A;
+            --yellow-card-bg: #FFFFFF;
+            --yellow-accent: #FDE047;
+            --yellow-accent-hover: #EAB308;
+            --border-dark: #1C1917;
+            --color-correct: #4ADE80;
+            --color-wrong: #F87171;
+            --text-dark: #1C1917;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-light-yellow);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
             overflow-x: hidden;
+            position: relative;
         }
-        .font-handwriting {
-            font-family: 'Caveat', cursive;
+
+        /* --- BACKGROUND CANVAS: FALLING TETRIS BLOCKS --- */
+        #tetrisCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
-        .font-code {
-            font-family: 'Fira Code', monospace;
+
+        /* --- MAIN CARD --- */
+        .quiz-card {
+            width: 100%;
+            max-width: 880px;
+            background: var(--yellow-card-bg);
+            border: 4px solid var(--border-dark);
+            border-radius: 24px;
+            box-shadow: 8px 8px 0px var(--border-dark);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
         }
-        pre, code {
-            font-family: 'Fira Code', monospace;
+
+        /* --- HUD / TOP BAR --- */
+        .hud-topbar {
+            background: #FDE047;
+            border-bottom: 4px solid var(--border-dark);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hud-badge {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        .game-view {
+            display: none;
+            padding: 28px;
+        }
+
+        .game-view.active {
+            display: block;
+        }
+
+        /* --- COVER SCREEN --- */
+        .home-layout {
+            text-align: center;
+            padding: 60px 16px;
+        }
+
+        .home-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 32px;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+            line-height: 1.5;
+            text-shadow: 3px 3px 0px #EAB308;
+        }
+
+        .btn-start, .btn-restart {
+            background: var(--yellow-accent);
+            color: var(--text-dark);
+            border: 3px solid var(--border-dark);
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--border-dark);
+            transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+        }
+
+        .btn-start:hover, .btn-restart:hover {
+            background: var(--yellow-accent-hover);
+        }
+
+        .btn-start:active, .btn-restart:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        /* --- QUESTION ARENA SUBBAR & TIMER --- */
+        .arena-subbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .level-headline {
+            font-weight: 700;
+            font-size: 14px;
+            color: #854D0E;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-timer-bar {
+            width: 200px;
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            height: 24px;
+            overflow: hidden;
+            box-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .timer-progress-fill {
+            width: 100%;
+            height: 100%;
+            background: #EAB308;
+            transition: width 0.1s linear;
+        }
+
+        /* --- QUESTION PROMPT CARD --- */
+        .problem-description-card {
+            background-color: #FEFCE8;
+            border: 3px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 4px 4px 0px var(--border-dark);
+        }
+
+        .problem-prompt-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .python-syntax-box {
+            background: #1C1917;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            color: #FEF08A;
             white-space: pre-wrap;
-            word-break: break-word;
+            margin-top: 14px;
+            line-height: 1.5;
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        /* --- CHOICE OPTIONS (CODE BOXES / MCQS 2x2) --- */
+        .choices-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 22px;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
+
+        .choice-item-btn {
+            background: #FFFFFF;
+            border: 3px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            box-shadow: 4px 4px 0px var(--border-dark);
+            transition: transform 0.05s, box-shadow 0.05s, background-color 0.1s;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.45;
+            display: flex;
+            align-items: center;
+            min-height: 58px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 4px;
+
+        .choice-item-btn:hover {
+            background: #FEFCE8;
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px var(--border-dark);
         }
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+
+        .choice-item-btn.flash-green {
+            background-color: var(--color-correct) !important;
+            font-weight: 700;
+            color: #064E3B;
         }
-        .animate-float {
-            animation: floatSlow 4s ease-in-out infinite;
+
+        .choice-item-btn.flash-red {
+            background-color: var(--color-wrong) !important;
+            font-weight: 700;
+            color: #7F1D1D;
         }
-        @keyframes pulseGlow {
-            0%, 100% { border-color: rgba(59, 130, 246, 0.6); }
-            50% { border-color: rgba(147, 197, 253, 1); }
+
+        /* --- EXPLANATION SYSTEM --- */
+        .explanation-review-box {
+            display: none;
+            background: #F0FDF4;
+            border: 3px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
+            box-shadow: 3px 3px 0px var(--border-dark);
         }
-        .pulse-border {
-            animation: pulseGlow 2.5s infinite;
+
+        .explanation-label-tag {
+            font-weight: 700;
+            color: #166534;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .explanation-body-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #1F2937;
+        }
+
+        /* --- REPORT SCREEN & HANDWRITTEN NOTE --- */
+        .report-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 22px;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .report-score-board {
+            background: #FEFCE8;
+            border: 3px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 22px;
+            max-width: 580px;
+            margin: 0 auto 28px auto;
+            box-shadow: 4px 4px 0px var(--border-dark);
+        }
+
+        .report-score-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 2px dashed #FDE047;
+            padding-bottom: 6px;
+        }
+
+        .note-card {
+            background: #FFFBEB;
+            border: 3px solid #78350F;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 640px;
+            margin: 0 auto 28px auto;
+            box-shadow: 5px 5px 0px #78350F;
+            position: relative;
+        }
+
+        .note-signature {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: #92400E;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .review-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border-dark);
+        }
+
+        .tab-btn.active {
+            background: var(--yellow-accent);
+        }
+
+        .tab-content {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 16px;
+            background: #F8FAFC;
+            margin-bottom: 24px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .review-item {
+            background: #FFFFFF;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .review-item.is-correct {
+            border-left: 8px solid var(--color-correct);
+        }
+
+        .review-item.is-wrong {
+            border-left: 8px solid var(--color-wrong);
+        }
+
+        @media (max-width: 640px) {
+            .choices-stack-grid {
+                grid-template-columns: 1fr;
+            }
+            .home-title {
+                font-size: 22px;
+            }
+            .hud-topbar {
+                padding: 12px 16px;
+            }
+            .hud-badge {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .progress-timer-bar {
+                width: 140px;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
+<body>
 
-    <!-- Background Canvas for Flying Airplanes and Clouds -->
-    <canvas id="airplaneCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+    <!-- ANIMATED TETRIS BLOCKS BACKGROUND CANVAS -->
+    <canvas id="tetrisCanvas"></canvas>
 
-    <!-- Main Container -->
-    <div class="relative z-10 flex-grow flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-5xl mx-auto">
-        
-        <!-- Header Bar -->
-        <header class="w-full flex items-center justify-between bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg mb-4 border border-sky-100">
-            <div class="flex items-center space-x-3">
-                <div class="bg-sky-500 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
-                    <i class="fa-solid fa-plane-departure text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-base sm:text-xl font-bold text-sky-900 leading-tight">Python Junior Flight Mission</h1>
-                    <p class="text-xs text-sky-600 font-medium">30 Coding Challenges • 50s Per Question • 4 Options Each</p>
-                </div>
-            </div>
+    <div class="quiz-card">
+        <!-- TOP HUD -->
+        <div class="hud-topbar">
+            <div id="hud-index-tracker" class="hud-badge">Question 1/30</div>
+            <div id="hud-score-tracker" class="hud-badge">⭐ Score: 0</div>
+        </div>
 
-            <!-- Quiz Stats Pill -->
-            <div id="topStatsPill" class="hidden flex items-center space-x-3 bg-sky-50 px-3.5 py-1.5 rounded-xl border border-sky-200">
-                <div class="text-center">
-                    <span class="text-[10px] sm:text-xs text-slate-500 block uppercase font-semibold">Question</span>
-                    <span id="questionCounter" class="text-xs sm:text-sm font-bold text-sky-700">1 / 30</span>
-                </div>
-                <div class="h-6 w-px bg-sky-200"></div>
-                <div class="text-center">
-                    <span class="text-[10px] sm:text-xs text-slate-500 block uppercase font-semibold">Score</span>
-                    <span id="currentScoreDisplay" class="text-xs sm:text-sm font-bold text-emerald-600">0 pts</span>
+        <!-- SCREEN 1: HOME COVER -->
+        <div id="view-home" class="game-view active">
+            <div class="home-layout">
+                <h1 class="home-title">Python revision</h1>
+                <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                    <button id="btn-start-quiz" class="btn-start">Start with the revision 🚀</button>
+                    <button id="btn-download-html" class="btn-start" style="background: #FFFFFF; font-size: 16px; padding: 14px 28px;">💾 Download Quiz File</button>
                 </div>
             </div>
-        </header>
+        </div>
 
-        <!-- START SCREEN -->
-        <section id="startScreen" class="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-xl border border-sky-100 text-center animate-float">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-100 text-sky-600 rounded-full mb-4 shadow-inner">
-                <i class="fa-solid fa-plane-up text-4xl transform -rotate-12"></i>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">Python Revision</h2>
-           
-            <!-- Quiz Rules Box -->
-           
-
-            <!-- Start Button -->
-            <button id="startBtn" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white text-base sm:text-lg font-bold rounded-2xl shadow-lg hover:shadow-sky-300/50 transition-all transform active:scale-95 flex items-center justify-center space-x-3 mx-auto">
-                <span>Start</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </section>
-
-        <!-- QUIZ CONTAINER -->
-        <main id="quizScreen" class="hidden w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-8 shadow-2xl border border-sky-100 transition-all">
-            
-            <!-- Question Top Bar: Section Badge & Timer -->
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
-                <span id="sectionBadge" class="px-3.5 py-1 bg-sky-100 text-sky-700 text-xs font-bold rounded-full uppercase tracking-wider">
-                    Category
-                </span>
-
-                <!-- Timer Bar & Countdown -->
-                <div class="flex items-center space-x-3 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-                    <i class="fa-solid fa-clock text-amber-500 text-sm"></i>
-                    <div class="w-28 sm:w-36 bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                        <div id="timerProgressBar" class="bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear"></div>
-                    </div>
-                    <span id="timerText" class="text-xs sm:text-sm font-extrabold font-code text-slate-700 min-w-[32px]">50s</span>
+        <!-- SCREEN 2: ACTIVE QUESTION ARENA -->
+        <div id="view-arena" class="game-view">
+            <div class="arena-subbar">
+                <div id="arena-level-header" class="level-headline">Level 1: Choose the Correct Syntax</div>
+                <div class="progress-timer-bar">
+                    <div id="arena-timer-fill" class="timer-progress-fill"></div>
                 </div>
             </div>
 
-            <!-- Question Text -->
-            <div class="mb-5">
-                <h3 id="questionText" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
-                    Loading question...
-                </h3>
-
-                <!-- Code Block Container -->
-                <div id="codeContainer" class="hidden mt-3 p-3.5 bg-slate-900 text-emerald-400 rounded-2xl font-code text-xs sm:text-sm overflow-x-auto border border-slate-800 shadow-inner">
-                    <pre><code id="codeBlock"># Python code snippet</code></pre>
-                </div>
+            <div id="arena-prompt-frame" class="problem-description-card">
+                <p id="arena-question-text" class="problem-prompt-text">Loading question...</p>
+                <div id="arena-syntax-terminal" class="python-syntax-box" style="display: none;"></div>
             </div>
 
-            <!-- Answer Options Container (4 Options Each) -->
-            <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <!-- Injected via JavaScript -->
-            </div>
+            <!-- Four Syntax/Option Box Stack (2x2 Grid) -->
+            <div id="arena-choices-stack" class="choices-stack-grid"></div>
 
             <!-- Explanation Box -->
-            <div id="explanationCard" class="hidden p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300">
-                <div class="flex items-start space-x-3">
-                    <div id="explanationIcon" class="mt-0.5 text-lg"></div>
-                    <div>
-                        <h5 id="explanationTitle" class="font-bold text-sm mb-1">Flight Log Explanation</h5>
-                        <p id="explanationText" class="text-slate-600 leading-relaxed"></p>
-                    </div>
+            <div id="arena-explanation-drawer" class="explanation-review-box">
+                <div class="explanation-label-tag">Explanation 💡</div>
+                <p id="explanation-body-text" class="explanation-body-text">Explanation text...</p>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button id="btn-next-step" class="btn-start" style="display: none; font-size: 15px; padding: 12px 26px;">Next Question ➡️</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: REPORT CARD & PRIYADARSHINI NOTE -->
+        <div id="view-report" class="game-view">
+            <h2 class="report-header">Revision Complete! 🌟</h2>
+
+            <div class="report-score-board">
+                <div class="report-score-row">
+                    <span>Part 1: Syntax Identification (Q1-10)</span>
+                    <span id="rep-p1-score" style="color: #854D0E;">0 / 10</span>
+                </div>
+                <div class="report-score-row">
+                    <span>Part 2: Predict the Output (Q11-20)</span>
+                    <span id="rep-p2-score" style="color: #854D0E;">0 / 10</span>
+                </div>
+                <div class="report-score-row">
+                    <span>Part 3: Turtle &amp; Pygame Zero Movement (Q21-30)</span>
+                    <span id="rep-p3-score" style="color: #854D0E;">0 / 10</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; padding-top: 10px; color: #16A34A;">
+                    <span>FINAL TOTAL SCORE</span>
+                    <span id="rep-grand-total">0 / 30</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; padding-top: 6px; color: #854D0E;">
+                    <span>ACCURACY</span>
+                    <span id="rep-percentage">0%</span>
                 </div>
             </div>
 
-            <!-- Next / Continue Button Footer -->
-            <div class="mt-6 flex justify-end">
-                <button id="nextBtn" class="hidden px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center space-x-2">
-                    <span id="nextBtnText">Next Question</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-        </main>
-
-        <!-- RESULTS & FEEDBACK CARD SCREEN -->
-        <section id="resultScreen" class="hidden w-full max-w-4xl space-y-6">
-            
-            <!-- Handwritten Teacher Feedback Card -->
-            <div class="bg-amber-50/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-2xl border-2 border-amber-200 relative overflow-hidden pulse-border">
-                
-                <div class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-amber-400/20 text-amber-800 px-3 py-1.5 rounded-2xl border border-amber-300/50 flex items-center space-x-1.5 text-xs font-bold">
-                    <i class="fa-solid fa-certificate text-amber-500"></i>
-                    <span>MISSION DEBRIEF</span>
+            <!-- HANDWRITTEN NOTE FROM TUTOR PRIYADARSHINI -->
+            <div class="note-card">
+                <div style="font-weight: 700; margin-bottom: 8px; color: #78350F; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+                    📝 A Note from Tutor Priyadarshini:
                 </div>
-
-                <div class="flex items-center space-x-3 mb-6">
-                    <div class="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-md">
-                        <i class="fa-solid fa-file-signature"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-black text-amber-950">Pilot Assessment Card</h2>
-                        <p class="text-xs text-amber-800">Evaluated by your Python Flight Instructor</p>
-                    </div>
-                </div>
-
-                <!-- Handwritten Letter Container -->
-                <div class="bg-white/90 p-5 sm:p-8 rounded-2xl border border-amber-200 shadow-sm relative mb-6">
-                    <div class="font-handwriting text-2xl sm:text-3xl text-amber-900 leading-relaxed space-y-3">
-                        <p id="studentGreeting">Dear Student,</p>
-                        <p id="teacherNoteContent" class="text-slate-800">
-                            Analyzing flight test results...
-                        </p>
-                        <p class="text-right font-bold text-amber-700 mt-4 text-3xl">
-                            — Tutor Priyadarshini
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Section Score Breakdown -->
-                <div class="mb-6">
-                    <h3 class="text-sm font-bold text-amber-900 uppercase tracking-wider mb-3 flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>Flight Section Breakdown</span>
-                    </h3>
-                    <div id="sectionBreakdownGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                        <!-- Dynamic Section Progress Cards -->
-                    </div>
-                </div>
-
-                <!-- Score Summary Pills -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
-                        <span class="text-xs text-amber-700 font-semibold block">Total Score</span>
-                        <span id="finalScoreText" class="text-lg sm:text-xl font-black text-amber-950">0 / 30</span>
-                    </div>
-                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
-                        <span class="text-xs text-amber-700 font-semibold block">Accuracy</span>
-                        <span id="accuracyText" class="text-lg sm:text-xl font-black text-emerald-600">0%</span>
-                    </div>
-                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
-                        <span class="text-xs text-amber-700 font-semibold block">Rank</span>
-                        <span id="gradeBadgeText" class="text-lg sm:text-xl font-black text-sky-600">Junior Pilot</span>
-                    </div>
-                    <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 text-center">
-                        <span class="text-xs text-amber-700 font-semibold block">Stars Earned</span>
-                        <span id="starsEarnedText" class="text-lg sm:text-xl font-black text-amber-500">⭐⭐⭐</span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-                    <button id="restartBtn" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center space-x-2">
-                        <i class="fa-solid fa-rotate-right"></i>
-                        <span>Retake Mission</span>
-                    </button>
-                    <button id="reviewBtn" class="px-6 py-3 bg-white hover:bg-amber-100 text-amber-900 font-bold rounded-2xl border border-amber-300 shadow-sm transition-all flex items-center space-x-2">
-                        <i class="fa-solid fa-list-check"></i>
-                        <span>Review All Answers</span>
-                    </button>
+                <div id="tutor-note-content" class="note-signature">
+                    "Dear student, you tackled every loop condition, syntax rule, turtle angle, and Pygame Zero character movement with sharp thinking! Keep coding and experimenting with joy!"
+                    <br><br>
+                    Warmly,<br>
+                    Tutor Priyadarshini ✨
                 </div>
             </div>
 
-            <!-- REVIEW MODAL / CONTAINER -->
-            <div id="reviewContainer" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-4">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center justify-between border-b pb-3">
-                    <span> Answer Review (30 Challenges)</span>
-                    <button id="closeReviewBtn" class="text-slate-400 hover:text-slate-600 text-sm">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </h3>
-                <div id="reviewList" class="space-y-4 max-h-[520px] overflow-y-auto pr-2">
-                    <!-- Dynamic review items -->
+            <!-- DETAILED QUESTION-BY-QUESTION REVIEW TABS -->
+            <div style="margin-top: 24px;">
+                <h3 style="text-align: center; margin-bottom: 12px; font-size: 16px; font-weight: 700;">Check Your Answers:</h3>
+                <div class="review-tabs">
+                    <button class="tab-btn active" onclick="showReviewTab('all')">All (30)</button>
+                    <button class="tab-btn" onclick="showReviewTab('correct')">Correct (✔️)</button>
+                    <button class="tab-btn" onclick="showReviewTab('wrong')">Review Needed (❌)</button>
                 </div>
-            </div>
-        </section>
 
+                <div id="tab-all" class="tab-content active"></div>
+                <div id="tab-correct" class="tab-content"></div>
+                <div id="tab-wrong" class="tab-content"></div>
+            </div>
+
+            <div style="text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                <button id="btn-restart-quiz" class="btn-restart">Try Again 🔄</button>
+                <button id="btn-download-report" class="btn-restart" style="background: #FFFFFF;">💾 Download HTML</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        /* ==========================================================================
-           30 TAILORED JUNIOR PYTHON QUESTIONS (4 OPTIONS EACH, MULTI-LINE INDENTED CODE)
-           ========================================================================== */
+        // MASTER 30 REVISION QUESTIONS (NEW VARIETY)
         const quizQuestions = [
-            // ==========================================
-            // PART 1: SPOT & FIX PYTHON CODE (Q1 - Q10)
-            // ==========================================
+            // --- Q1 to Q10: SYNTAX IDENTIFICATION IN 4 BOXES ---
             {
-                id: 1,
-                section: "Spot & Fix Python",
-                question: "Three of these variable names have syntax mistakes! Which is the ONLY valid Python variable?",
-                code: "# Which line will run without syntax errors in Python?",
-                options: [
-                    "2nd_place = 'Silver'",
-                    "student-score = 95",
-                    "player_score = 100",
-                    "class = 'Grade 5'"
+                part: 1,
+                prompt: "Question 1: Mia wants to print even numbers from 2 up to 8 using a for loop. Which box has the correct range syntax?",
+                choices: [
+                    "for i in range(2, 9, 2):\n    print(i)",
+                    "for i in range(2, 8):\n    print(i)",
+                    "for i in range(2, 9, 1):\n    print(i)",
+                    "for i from 2 to 8 step 2:\n    print(i)"
                 ],
-                answer: 2,
-                explanation: "In Python, variable names cannot begin with numbers ('2nd_place'), cannot use hyphens ('student-score'), and cannot use reserved words ('class'). 'player_score = 100' is the valid choice!"
+                correctIdx: 0,
+                explanation: "range(2, 9, 2) starts at 2, stops before 9, and steps up by 2 each turn (producing 2, 4, 6, 8)."
             },
             {
-                id: 2,
-                section: "Spot & Fix Python",
-                question: "We want to store the text 'Alex'. Which snippet assigns this string correctly without throwing an error?",
-                code: "# Which string declaration is written properly?",
-                options: [
-                    'pilot_name = "Alex"',
-                    'pilot_name = "Alex\'',
-                    'pilot_name = Alex',
-                    'pilot_name = \'Alex"'
+                part: 1,
+                prompt: "Question 2: Alex wants a while loop that counts down from 5 to 1 and decreases by 1 each time. Which syntax is written properly?",
+                choices: [
+                    "count = 5\nwhile count > 0:\n    print(count)\n    count -= 1",
+                    "count = 5\nwhile count > 0:\n    print(count)\n    count + 1",
+                    "count = 5\nwhile count < 0:\n    print(count)\n    count -= 1",
+                    "count = 5\nwhile count > 0\n    print(count)\n    count -= 1"
                 ],
-                answer: 0,
-                explanation: "Strings require matching opening and closing quotes (\"Alex\" or 'Alex'). Mixed quotes or unquoted names trigger syntax or NameErrors."
+                correctIdx: 0,
+                explanation: "The while condition must check 'count > 0' and subtract 1 with 'count -= 1' inside the loop."
             },
             {
-                id: 3,
-                section: "Spot & Fix Python",
-                question: "This if-statement is broken. Which option shows the CORRECT multiline syntax with colon and indentation?",
-                code: "# Broken code:\nif score > 50\n    print('Pass')",
-                options: [
-                    "if score > 50:\n    print('Pass')",
-                    "if score > 50 then:\n    print('Pass')",
-                    "if (score > 50)\n    print('Pass')",
-                    "if score > 50 do\n    print('Pass')"
+                part: 1,
+                prompt: "Question 3: Sophia wants to check three score categories: >= 90 for 'Gold', >= 60 for 'Silver', and anything else for 'Bronze'. Which elif structure is correct?",
+                choices: [
+                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60:\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
+                    "if score >= 90:\n    print(\"Gold\")\nelse if score >= 60:\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
+                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
+                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60:\n    print(\"Silver\")"
                 ],
-                answer: 0,
-                explanation: "In Python, the condition line must conclude with a colon (`:`), followed by an indented body: `if score > 50:\n    print('Pass')`."
+                correctIdx: 0,
+                explanation: "Python uses 'if', 'elif', and 'else' with colons ':' at the end of each condition line."
             },
             {
-                id: 4,
-                section: "Spot & Fix Python",
-                question: "We want to check if `fuel` is EXACTLY 100. Which condition uses the correct equality operator and syntax?",
-                code: "# Broken check:\nif fuel = 100:\n    print('Full tank')",
-                options: [
-                    "if fuel = 100:\n    print('Full tank')",
-                    "if fuel == 100:\n    print('Full tank')",
-                    "if fuel isequal 100:\n    print('Full tank')",
-                    "if fuel === 100:\n    print('Full tank')"
+                part: 1,
+                prompt: "Question 4: Noah wants to remove the item 'banana' from his list. Which code snippet does this properly?",
+                choices: [
+                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.remove(\"banana\")",
+                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.delete(\"banana\")",
+                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.pop_item(\"banana\")",
+                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.discard(\"banana\")"
                 ],
-                answer: 1,
-                explanation: "A single `=` assigns values. Comparison checks require the double equal `==` operator: `if fuel == 100:`."
+                correctIdx: 0,
+                explanation: "The .remove() method finds and deletes the specified item value from a Python list."
             },
             {
-                id: 5,
-                section: "Spot & Fix Python",
-                question: "Which of these function definitions has the correct Python syntax, parentheses, colon, and indentation?",
-                code: "# We want to define a function named 'fly_plane'",
-                options: [
-                    "function fly_plane():\n    print('Taking off!')",
-                    "def fly_plane()\n    print('Taking off!')",
-                    "def fly_plane():\n    print('Taking off!')",
-                    "define fly_plane():\n    print('Taking off!')"
+                part: 1,
+                prompt: "Question 5: Chloe wants to check if the key 'health' exists inside a game dictionary. Which syntax checks for the key?",
+                choices: [
+                    "if \"health\" in player:\n    print(\"Found!\")",
+                    "if player.has_key(\"health\"):\n    print(\"Found!\")",
+                    "if \"health\" == player:\n    print(\"Found!\")",
+                    "if player.contains(\"health\"):\n    print(\"Found!\")"
                 ],
-                answer: 2,
-                explanation: "Python functions must begin with `def`, followed by the name, parentheses `()`, a colon `:`, and an indented block."
+                correctIdx: 0,
+                explanation: "In modern Python, you check if a key is in a dictionary using the 'in' keyword."
             },
             {
-                id: 6,
-                section: "Spot & Fix Python",
-                question: "Here is a function that performs an action but returns no value. Which one runs properly without syntax or indentation errors?",
-                code: "# Looking for a valid no-return greeting function:",
-                options: [
-                    "def cheer():\n    print('Let us go!')",
-                    "def cheer[]:\n    print('Let us go!')",
-                    "def cheer:\n    print('Let us go!')",
-                    "def cheer():\nprint('Let us go!')"
+                part: 1,
+                prompt: "Question 6: Ethan wants to write a function that shows game instructions on screen without returning anything. Which is valid syntax?",
+                choices: [
+                    "def show_rules():\n    print(\"Rule 1: Collect gems\")",
+                    "function show_rules():\n    print(\"Rule 1: Collect gems\")",
+                    "def show_rules[]:\n    print(\"Rule 1: Collect gems\")",
+                    "define show_rules():\n    print(\"Rule 1: Collect gems\")"
                 ],
-                answer: 0,
-                explanation: "Functions require parentheses `()` after the function name, a colon `:`, and proper indentation for all lines inside the function body."
+                correctIdx: 0,
+                explanation: "Functions start with 'def', followed by the function name, parentheses '()', a colon ':', and indented code."
             },
             {
-                id: 7,
-                section: "Spot & Fix Python",
-                question: "The function `show_speed` has ONE parameter. Which call correctly passes exactly ONE argument?",
-                code: "def show_speed(speed):\n    print('Current speed is', speed)\n\n# How should we call this function?",
-                options: [
-                    "show_speed()",
-                    "show_speed(120)",
-                    "show_speed(120, 240)",
-                    "show_speed(speed: 120, 240)"
+                part: 1,
+                prompt: "Question 7: Ava needs to check if the temperature is between 20 and 30 degrees (inclusive). Which condition has valid syntax?",
+                choices: [
+                    "if temp >= 20 and temp <= 30:\n    print(\"Pleasant\")",
+                    "if temp >= 20 && temp <= 30:\n    print(\"Pleasant\")",
+                    "if 20 <= temp & temp <= 30:\n    print(\"Pleasant\")",
+                    "if temp >= 20 or temp <= 30:\n    print(\"Pleasant\")"
                 ],
-                answer: 1,
-                explanation: "Because `show_speed(speed)` expects 1 positional parameter, calling `show_speed(120)` supplies exactly 1 argument."
+                correctIdx: 0,
+                explanation: "Use 'and' to ensure both boundary conditions (>= 20 and <= 30) are True simultaneously."
             },
             {
-                id: 8,
-                section: "Spot & Fix Python",
-                question: "The function `add_coins` expects TWO parameters (`c1, c2`). Which function call provides the correct number of arguments?",
-                code: "def add_coins(c1, c2):\n    print(c1 + c2)\n\n# Choose the correct call:",
-                options: [
-                    "add_coins(5)",
-                    "add_coins(5, 10)",
-                    "add_coins(5, 10, 15)",
-                    "add_coins()"
+                part: 1,
+                prompt: "Question 8: Lucas wants to access the very last item of a list using negative indexing. Which box shows the correct syntax?",
+                choices: [
+                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[-1]",
+                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[-0]",
+                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[last]",
+                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors.end()"
                 ],
-                answer: 1,
-                explanation: "The function defines 2 parameters (`c1, c2`). Supplying 0, 1, or 3 arguments triggers a `TypeError: missing/extra required positional arguments`."
+                correctIdx: 0,
+                explanation: "In Python, index [-1] retrieves the last item in any sequence or list."
             },
             {
-                id: 9,
-                section: "Spot & Fix Python",
-                question: "Look at the broken indentation below. Which option correctly indents the print statement inside the function block?",
-                code: "# Broken code:\ndef start_engine():\nprint('Engine active!')",
-                options: [
-                    "def start_engine():\n    print('Engine active!')",
-                    "def start_engine():\nprint('Engine active!')",
-                    "def start_engine:\n    print('Engine active!')",
-                    "function start_engine():\n    print('Engine active!')"
+                part: 1,
+                prompt: "Question 9: Zoe wants to change the value of 'coins' inside her dictionary to 50. Which syntax updates the dictionary entry?",
+                choices: [
+                    "player[\"coins\"] = 50",
+                    "player(\"coins\") = 50",
+                    "player.set(\"coins\", 50)",
+                    "player[\"coins\"] == 50"
                 ],
-                answer: 0,
-                explanation: "In Python, lines inside a function header MUST be indented (4 spaces or 1 tab) directly under the `def` statement."
+                correctIdx: 0,
+                explanation: "Dictionary values are updated by assigning to the key using square brackets: dictionary[key] = value."
             },
             {
-                id: 10,
-                section: "Spot & Fix Python",
-                question: "We want to check if `altitude > 1000` AND `has_gear == True`. Which condition uses valid Python logical syntax?",
-                code: "# Which conditional header is written with correct Python logic?",
-                options: [
-                    "if altitude > 1000 && has_gear == True:\n    print('Ready')",
-                    "if altitude > 1000 AND has_gear == True:\n    print('Ready')",
-                    "if altitude > 1000 and has_gear == True:\n    print('Ready')",
-                    "if altitude > 1000 &+ has_gear == True:\n    print('Ready')"
+                part: 1,
+                prompt: "Question 10: Oliver wants to define a function with two parameters that prints their sum directly without return. Which is correct?",
+                choices: [
+                    "def add_and_show(a, b):\n    print(a + b)",
+                    "def add_and_show(a; b):\n    print(a + b)",
+                    "def add_and_show[a, b]:\n    print(a + b)",
+                    "function add_and_show(a, b):\n    print(a + b)"
                 ],
-                answer: 2,
-                explanation: "Python uses the lowercase keyword `and` (not `&&` or uppercase `AND`) to combine logical conditions."
+                correctIdx: 0,
+                explanation: "Parameters inside the parentheses must be separated by commas: def add_and_show(a, b):"
             },
 
-            // ==========================================
-            // PART 2: LOGIC & CONDITIONS (Q11 - Q15)
-            // ==========================================
+            // --- Q11 to Q20: PREDICT THE OUTPUT ---
             {
-                id: 11,
-                section: "Boolean & Logic",
-                question: "What will be printed when this condition is evaluated?",
-                code: "speed = 50\nis_clear = True\n\nresult = (speed > 40) and is_clear\nprint(result)",
-                options: [
-                    "True",
-                    "False",
-                    "speed > 40",
-                    "None"
-                ],
-                answer: 0,
-                explanation: "`speed > 40` evaluates to True (50 > 40), and `is_clear` is True. Since both sides are True, `True and True` produces `True`."
+                part: 2,
+                prompt: "Question 11: Predict what is printed after .pop() removes an item from this stack:",
+                code: "toys = [\"car\", \"ball\", \"robot\"]\nremoved = toys.pop()\nprint(removed)",
+                choices: ["robot", "car", "ball", "3"],
+                correctIdx: 0,
+                explanation: "toys.pop() removes and returns the last element from the list, which is 'robot'."
             },
             {
-                id: 12,
-                section: "Boolean & Logic",
-                question: "What will this if-else block print to the screen?",
-                code: "fuel = 15\naltitude = 500\n\nif (fuel > 20) and (altitude > 200):\n    print('Safe to fly')\nelse:\n    print('Low fuel warning')",
-                options: [
-                    "Safe to fly",
-                    "Low fuel warning",
-                    "True",
-                    "SyntaxError: invalid syntax"
-                ],
-                answer: 1,
-                explanation: "`fuel > 20` is False (15 is not greater than 20). Because `and` requires both sides to be True, the `else:` branch executes, printing 'Low fuel warning'."
+                part: 2,
+                prompt: "Question 12: Predict the output of this floor division (//) operation:",
+                code: "cookies = 19\nkids = 4\nshare = cookies // kids\nprint(share)",
+                choices: ["4", "4.75", "5", "3"],
+                correctIdx: 0,
+                explanation: "Floor division // divides and rounds down to the nearest integer. 19 // 4 = 4."
             },
             {
-                id: 13,
-                section: "Boolean & Logic",
-                question: "What is printed when evaluating this `or` logical expression?",
-                code: "score = 30\nhas_golden_key = True\n\nresult = (score >= 50) or has_golden_key\nprint(result)",
-                options: [
-                    "True",
-                    "False",
-                    "30",
-                    "has_golden_key"
-                ],
-                answer: 0,
-                explanation: "`score >= 50` is False (30 >= 50 is False), but `has_golden_key` is True. With `or`, if at least one side is True, the result is `True`!"
+                part: 2,
+                prompt: "Question 13: What is the output when multiplying a text string with an integer?",
+                code: "badge = \"Go! \" * 3\nprint(badge)",
+                choices: ["Go! Go! Go! ", "Go! * 3", "Go! 3", "Error"],
+                correctIdx: 0,
+                explanation: "Multiplying a string by a number repeats that string. 'Go! ' repeated 3 times is 'Go! Go! Go! '."
             },
             {
-                id: 14,
-                section: "Boolean & Logic",
-                question: "What will be printed by this logical `or` condition?",
-                code: "stars = 2\nis_boss_defeated = False\n\nif (stars > 5) or is_boss_defeated:\n    print('Level Passed!')\nelse:\n    print('Keep Trying!')",
-                options: [
-                    "Level Passed!",
-                    "Keep Trying!",
-                    "True",
-                    "False"
-                ],
-                answer: 1,
-                explanation: "`stars > 5` is False (2 > 5 is False), and `is_boss_defeated` is False. Since neither condition is True, the `else:` block prints 'Keep Trying!'."
+                part: 2,
+                prompt: "Question 14: Predict what prints when checking if a number is odd using modulo (%):",
+                code: "num = 9\nif num % 2 != 0:\n    print(\"Odd\")\nelse:\n    print(\"Even\")",
+                choices: ["Odd", "Even", "9", "1"],
+                correctIdx: 0,
+                explanation: "9 % 2 is 1. Since 1 != 0 is True, it prints 'Odd'."
             },
             {
-                id: 15,
-                section: "Boolean & Logic",
-                question: "What will be printed when combining `not` with `and` here?",
-                code: "engine_hot = False\nhas_fuel = True\n\nif (not engine_hot) and has_fuel:\n    print('Engine Ready')\nelse:\n    print('Engine Offline')",
-                options: [
-                    "Engine Ready",
-                    "Engine Offline",
-                    "False",
-                    "TypeError"
-                ],
-                answer: 0,
-                explanation: "`engine_hot` is False, so `not engine_hot` evaluates to True. `has_fuel` is also True. `True and True` equals True, so 'Engine Ready' is printed."
-            },
-
-            // ==========================================
-            // PART 3: LOOP PREDICTION (Q16 - Q20)
-            // ==========================================
-            {
-                id: 16,
-                section: "Loop Predictions",
-                question: "How many times will 'Flying' be printed by this for loop?",
-                code: "for i in range(4):\n    print('Flying')",
-                options: [
-                    "3 times (0, 1, 2)",
-                    "4 times (0, 1, 2, 3)",
-                    "5 times (0, 1, 2, 3, 4)",
-                    "0 times"
-                ],
-                answer: 1,
-                explanation: "`range(4)` generates 0, 1, 2, 3, which is 4 iterations. Therefore, 'Flying' is printed exactly 4 times."
+                part: 2,
+                prompt: "Question 15: Notice there is no return statement in this helper function. What will print?",
+                code: "def boost_speed(val):\n    fast = val + 10\n\nresult = boost_speed(5)\nprint(result)",
+                choices: ["None", "15", "5", "Error"],
+                correctIdx: 0,
+                explanation: "Because boost_speed has no return statement, the function returns None by default."
             },
             {
-                id: 17,
-                section: "Loop Predictions",
-                question: "Look closely at `range(1, 6)`. How many times does this loop run and update count?",
-                code: "count = 0\nfor x in range(1, 6):\n    count = count + 1\nprint('Final count:', count)",
-                options: [
-                    "Final count: 6",
-                    "Final count: 5",
-                    "Final count: 4",
-                    "Final count: 1"
-                ],
-                answer: 1,
-                explanation: "`range(1, 6)` starts at 1 and stops right BEFORE 6: [1, 2, 3, 4, 5]. That is 5 iterations, making the final count 5."
+                part: 2,
+                prompt: "Question 16: Predict what prints when the while loop finishes its countdown:",
+                code: "m = 6\nwhile m > 2:\n    m -= 2\nprint(m)",
+                choices: ["2", "4", "0", "6"],
+                correctIdx: 0,
+                explanation: "m starts at 6 -> 4 -> 2. When m reaches 2, 2 > 2 is False, so the loop terminates and prints 2."
             },
             {
-                id: 18,
-                section: "Loop Predictions",
-                question: "What will be the final value printed by this while loop?",
-                code: "energy = 1\nwhile energy < 4:\n    energy = energy + 1\nprint('Energy level:', energy)",
-                options: [
-                    "Energy level: 1",
-                    "Energy level: 3",
-                    "Energy level: 4",
-                    "Energy level: 5"
-                ],
-                answer: 2,
-                explanation: "Starts at 1 -> increments to 2 (2 < 4) -> increments to 3 (3 < 4) -> increments to 4. Now 4 < 4 is False, so the loop finishes and prints 4."
+                part: 2,
+                prompt: "Question 17: Predict the output when looking up and adding dictionary values:",
+                code: "points = {\"star\": 10, \"coin\": 5}\ntotal = points[\"star\"] + points[\"coin\"]\nprint(total)",
+                choices: ["15", "105", "star coin", "2"],
+                correctIdx: 0,
+                explanation: "points['star'] is 10 and points['coin'] is 5. 10 + 5 = 15."
             },
             {
-                id: 19,
-                section: "Loop Predictions",
-                question: "What is printed at the end of this accumulation loop?",
-                code: "total = 0\nfor n in [2, 3, 5]:\n    total = total + n\nprint('Total is:', total)",
-                options: [
-                    "Total is: 10",
-                    "Total is: 5",
-                    "Total is: 0",
-                    "Total is: 235"
-                ],
-                answer: 0,
-                explanation: "The loop sums the elements: 0 + 2 = 2; 2 + 3 = 5; 5 + 5 = 10. The final printed output is 'Total is: 10'."
+                part: 2,
+                prompt: "Question 18: What value of count will print after this for loop finishes?",
+                code: "count = 0\nfor x in [1, 2, 3, 4]:\n    if x > 2:\n        count += 1\nprint(count)",
+                choices: ["2", "4", "3", "1"],
+                correctIdx: 0,
+                explanation: "Only numbers 3 and 4 are strictly greater than 2, so count increases twice to 2."
             },
             {
-                id: 20,
-                section: "Loop Predictions",
-                question: "What will be the output of this countdown while loop?",
-                code: "n = 3\nwhile n > 0:\n    n = n - 1\nprint('Blast off at:', n)",
-                options: [
-                    "Blast off at: 3",
-                    "Blast off at: 2",
-                    "Blast off at: 1",
-                    "Blast off at: 0"
-                ],
-                answer: 3,
-                explanation: "n starts at 3, decreases to 2, then 1, then 0. When n reaches 0, the check `0 > 0` is False, exiting the loop to print 'Blast off at: 0'."
+                part: 2,
+                prompt: "Question 19: Predict the output of this power (**) and addition expression:",
+                code: "score = 3 ** 2 + 1\nprint(score)",
+                choices: ["10", "7", "8", "9"],
+                correctIdx: 0,
+                explanation: "3 ** 2 is 3 squared (3 × 3 = 9). Then 9 + 1 = 10."
+            },
+            {
+                part: 2,
+                prompt: "Question 20: Predict what prints when this custom function is called:",
+                code: "def make_tag(label, id_num):\n    print(label + \"-\" + str(id_num))\n\nmake_tag(\"Item\", 7)",
+                choices: ["Item-7", "Item-id_num", "Item 7", "Error"],
+                correctIdx: 0,
+                explanation: "The function concatenates 'Item', '-', and '7' to print 'Item-7'."
             },
 
-            // ==========================================
-            // PART 4: TURTLE GRAPHICS & GEOMETRY (Q21 - Q25)
-            // ==========================================
+            // --- Q21 to Q25: TURTLE GRAPHICS ---
             {
-                id: 21,
-                section: "Turtle Graphics",
-                question: "Which Turtle command lifts the pen up so the turtle moves WITHOUT drawing any line?",
-                code: "# Move to coordinates without leaving an ink trace:\nimport turtle as t\n\nt.????()\nt.goto(100, 100)",
-                options: [
-                    "t.penup()",
-                    "t.pendown()",
-                    "t.stopdraw()",
-                    "t.noline()"
-                ],
-                answer: 0,
-                explanation: "`t.penup()` (or `t.up()`) lifts the drawing stylus so moving to another point leaves no line on the canvas."
+                part: 3,
+                prompt: "Question 21: You want turtle to draw a regular octagon (8 equal sides). How many times must your drawing loop repeat?",
+                choices: ["8 times", "6 times", "10 times", "4 times"],
+                correctIdx: 0,
+                explanation: "An octagon has 8 equal sides and corners, so the loop must repeat exactly 8 times."
             },
             {
-                id: 22,
-                section: "Turtle Graphics",
-                question: "After using `penup()`, which function must we call to place the pen back down on canvas to draw lines again?",
-                code: "# Resume drawing on paper:\nimport turtle as t\n\nt.penup()\nt.goto(50, 50)\nt.????()\nt.forward(100)",
-                options: [
-                    "t.draw()",
-                    "t.start()",
-                    "t.pendown()",
-                    "t.write()"
-                ],
-                answer: 2,
-                explanation: "`t.pendown()` (or `t.down()`) lowers the pen back onto the paper so future movements leave lines."
+                part: 3,
+                prompt: "Question 22: You want to draw an equilateral triangle using turtle. How many degrees must the turtle turn at each corner?",
+                choices: ["120 degrees", "60 degrees", "90 degrees", "180 degrees"],
+                correctIdx: 0,
+                explanation: "Total exterior turns in any closed shape equal 360°. For a 3-sided triangle, 360° ÷ 3 = 120°."
             },
             {
-                id: 23,
-                section: "Turtle Graphics",
-                question: "Which command turns the turtle cursor 90 degrees towards its LEFT?",
-                code: "# Rotate the turtle cursor counter-clockwise by 90 degrees:\nimport turtle as t\n\nt.????(90)",
-                options: [
-                    "t.left(90)",
-                    "t.turn_left()",
-                    "t.heading(90)",
-                    "t.rotate(-90)"
-                ],
-                answer: 0,
-                explanation: "`t.left(angle)` (or `t.lt(angle)`) turns the turtle counter-clockwise (to its left) by the specified degrees."
+                part: 3,
+                prompt: "Question 23: Which command makes the lines drawn by the turtle thicker?",
+                choices: ["pen.pensize(5)", "pen.thick(5)", "pen.width_set(5)", "pen.bold(5)"],
+                correctIdx: 0,
+                explanation: "pen.pensize(pixels) sets the stroke thickness of the turtle pen."
             },
             {
-                id: 24,
-                section: "Turtle Graphics",
-                question: "Which function is used to change the line THICKNESS of the turtle's pen?",
-                code: "# Set pen stroke thickness to 5 pixels:\nimport turtle as t\n\nt.????(5)",
-                options: [
-                    "t.penweight(5)",
-                    "t.pensize(5)",
-                    "t.thick(5)",
-                    "t.set_line_width(5)"
-                ],
-                answer: 1,
-                explanation: "`t.pensize(width)` (or `t.width(width)`) sets the line drawing thickness in pixels."
+                part: 3,
+                prompt: "Question 24: Which command changes the color of the line drawn by the turtle to green?",
+                choices: ["pen.pencolor(\"green\")", "pen.paint(\"green\")", "pen.set_line(\"green\")", "pen.brush(\"green\")"],
+                correctIdx: 0,
+                explanation: "pen.pencolor('green') changes the ink color used when drawing lines."
             },
             {
-                id: 25,
-                section: "Turtle Graphics",
-                question: "To draw a regular PENTAGON (5 equal sides), by how many degrees must the turtle turn at each corner?",
-                code: "# Exterior angle formula: 360 / number_of_sides\nfor i in range(5):\n    t.forward(80)\n    t.right( ? )",
-                options: [
-                    "60 degrees  ",
-                    "72 degrees  ",
-                    "90 degrees ",
-                    "108 degrees "
-                ],
-                answer: 1,
-                explanation: "A complete rotation is 360°. For a regular 5-sided pentagon, 360 / 5 = 72°. Turning 72 degrees at each corner draws a pentagon!"
+                part: 3,
+                prompt: "Question 25: Turtle is at the center (0, 0). Which command teleports it straight to x = -100 and y = 50?",
+                choices: ["pen.goto(-100, 50)", "pen.move_to(-100, 50)", "pen.teleport(-100, 50)", "pen.place(-100, 50)"],
+                correctIdx: 0,
+                explanation: "pen.goto(x, y) instructs the turtle to move directly to that coordinate."
             },
 
-            // ==========================================
-            // PART 5: PYGAME ZERO FUNDAMENTALS (Q26 - Q30)
-            // ==========================================
+            // --- Q26 to Q30: PYGAME ZERO CHARACTER MOVEMENT & CONTROLS ---
             {
-                id: 26,
-                section: "Turtle & Pygame Zero",
-                question: "To draw a regular HEXAGON (6 equal sides) in Turtle, what angle must the turtle turn at each corner?",
-                code: "# Exterior angle formula: 360 / 6\nfor i in range(6):\n    t.forward(70)\n    t.right( ? )",
-                options: [
-                    "45 degrees  ",
-                    "60 degrees  ",
-                    "90 degrees  ",
-                    "120 degrees "
+                part: 3,
+                prompt: "Question 26: In Pygame Zero, if you want to move your actor UPWARDS towards the top of the screen, which coordinate value must decrease?",
+                choices: [
+                    "actor.y -= 5",
+                    "actor.x += 5",
+                    "actor.y += 5",
+                    "actor.x -= 5"
                 ],
-                answer: 1,
-                explanation: "For a regular 6-sided hexagon, exterior angle = 360 / 6 = 60 degrees!"
+                correctIdx: 0,
+                explanation: "In computer graphics, y = 0 is at the top of the window. Decreasing actor.y moves the sprite UP."
             },
             {
-                id: 27,
-                section: "Pygame Zero Basics",
-                question: "Before creating any window, which TWO global variables must be defined to set up the game screen size in Pygame Zero?",
-                code: "# Defining window dimensions at the top of your game script:\n???? = 800\n???? = 600",
-                options: [
-                    "WIDTH and HEIGHT",
-                    "SCREEN_X and SCREEN_Y",
-                    "SIZE and SCALE",
-                    "WINDOW_W and WINDOW_H"
+                part: 3,
+                prompt: "Question 27: In Pygame Zero, how do you move your character to the RIGHT when the player presses the right arrow key?",
+                choices: [
+                    "actor.x += 5",
+                    "actor.y += 5",
+                    "actor.x -= 5",
+                    "actor.y -= 5"
                 ],
-                answer: 0,
-                explanation: "Pygame Zero automatically looks for the uppercase variables `WIDTH = 800` and `HEIGHT = 600` to set the window dimensions."
+                correctIdx: 0,
+                explanation: "Increasing actor.x moves the sprite horizontally to the RIGHT."
             },
             {
-                id: 28,
-                section: "Pygame Zero Basics",
-                question: "Under which special built-in function in Pygame Zero do we place our code to display and render actors and backgrounds?",
-                code: "# Which built-in function renders our sprites on screen?\ndef ????():\n    screen.fill('sky blue')\n    plane.draw()",
-                options: [
-                    "def update():\n    screen.fill('sky blue')",
-                    "def draw():\n    screen.fill('sky blue')",
-                    "def screen():\n    screen.fill('sky blue')",
-                    "def display():\n    screen.fill('sky blue')"
+                part: 3,
+                prompt: "Question 28: Which condition checks if the player is currently pressing the 'W' key on the keyboard in Pygame Zero?",
+                choices: [
+                    "if keyboard.w:",
+                    "if keyboard.pressed(\"w\"):",
+                    "if key.W == True:",
+                    "if keyboard.is_down(\"W\"):"
                 ],
-                answer: 1,
-                explanation: "Pygame Zero automatically invokes `def draw():` repeatedly to render the background and sprites onto the game window."
+                correctIdx: 0,
+                explanation: "Pygame Zero provides a built-in 'keyboard' object where keys are accessed directly, like 'if keyboard.w:'."
             },
             {
-                id: 29,
-                section: "Pygame Zero Basics",
-                question: "How do we initialize and place a character Actor called 'plane' at coordinates x=200, y=150?",
-                code: "# Which line properly positions our actor at startup?",
-                options: [
-                    "plane = Actor('plane', (200, 150))",
-                    "plane = screen.Actor('plane', x=200, y=150)",
-                    "plane = create_actor('plane') + (200, 150)",
-                    "plane = Actor.place('plane', 200, 150)"
+                part: 3,
+                prompt: "Question 29: In which built-in Pygame Zero function should you write your character movement code so it checks controls 60 times a second?",
+                choices: [
+                    "def update():",
+                    "def draw():",
+                    "def start():",
+                    "def move():"
                 ],
-                answer: 0,
-                explanation: "In Pygame Zero, `Actor('image_name', (x, y))` or setting `plane.pos = (200, 150)` sets the actor's initial on-screen position."
+                correctIdx: 0,
+                explanation: "def update(): runs automatically every frame to handle game logic, timers, and sprite movements."
             },
             {
-                id: 30,
-                section: "Pygame Zero Basics",
-                question: "When creating a rectangle shape with `Rect(left, top, width, height)`, what do the 4 parameters represent in order?",
-                code: "# Creating a box shape in Pygame Zero:\nmy_box = Rect(100, 50, 200, 80)",
-                options: [
-                    "Left position, Top position, Width, and Height",
-                    "Width, Height, Color name, and Border size",
-                    "Top, Bottom, Left, and Right coordinates",
-                    "Red, Green, Blue, and Alpha transparency"
+                part: 3,
+                prompt: "Question 30: Which code snippet moves the alien character to the left ONLY when the LEFT arrow key is pressed?",
+                choices: [
+                    "if keyboard.left:\n    alien.x -= 4",
+                    "if keyboard.left:\n    alien.y -= 4",
+                    "if keyboard.left:\n    alien.x += 4",
+                    "if keyboard.down:\n    alien.x -= 4"
                 ],
-                answer: 0,
-                explanation: "A Pygame `Rect(x, y, width, height)` requires: (1) left/x coordinate, (2) top/y coordinate, (3) width, and (4) height!"
+                correctIdx: 0,
+                explanation: "To move left, check 'keyboard.left' and decrease 'alien.x' with '-='."
             }
         ];
 
-        /* ==========================================================================
-           QUIZ ENGINE STATE & LOGIC
-           ========================================================================== */
-        let currentQuestionIndex = 0;
+        let activeQuestionIndex = 0;
         let score = 0;
-        let timerInterval = null;
-        const TIME_LIMIT = 50; // 50 seconds per question
-        let timeLeft = TIME_LIMIT;
-        let userAnswers = [];
-        let answerSelected = false;
+        let p1Score = 0;
+        let p2Score = 0;
+        let p3Score = 0;
 
-        // Sound FX synthesizer using Web Audio API
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+        let clockInterval = null;
+        let timeLeft = 50;
+        let questionLocked = false;
+        let userAnswersLog = [];
 
-                if (type === 'correct') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.25); // A5
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.25);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-                    osc.frequency.exponentialRampToValueAtTime(130, audioCtx.currentTime + 0.25);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.25);
-                } else if (type === 'click') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.05);
-                }
-            } catch (e) {
-                // Audio fallback
-            }
+        // DOM REFERENCES
+        const viewHome = document.getElementById("view-home");
+        const viewArena = document.getElementById("view-arena");
+        const viewReport = document.getElementById("view-report");
+
+        const hudIndexTracker = document.getElementById("hud-index-tracker");
+        const hudScoreTracker = document.getElementById("hud-score-tracker");
+        const arenaTimerFill = document.getElementById("arena-timer-fill");
+        
+        const arenaLevelHeader = document.getElementById("arena-level-header");
+        const arenaQuestionText = document.getElementById("arena-question-text");
+        const arenaSyntaxTerminal = document.getElementById("arena-syntax-terminal");
+        const arenaChoicesStack = document.getElementById("arena-choices-stack");
+        
+        const arenaExplanationDrawer = document.getElementById("arena-explanation-drawer");
+        const explanationBodyText = document.getElementById("explanation-body-text");
+        const btnNextStep = document.getElementById("btn-next-step");
+
+        // --- BACKGROUND CANVAS: ANIMATED FALLING TETRIS BLOCKS ---
+        const canvas = document.getElementById("tetrisCanvas");
+        const ctx = canvas.getContext("2d");
+        let tetrisPieces = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        // Tetris shapes defined as 4-block relative grids
+        const tetrominoShapes = [
+            // I-Piece (Cyan)
+            { color: "#06B6D4", blocks: [[0, 0], [0, 1], [0, 2], [0, 3]] },
+            // O-Square (Yellow)
+            { color: "#EAB308", blocks: [[0, 0], [1, 0], [0, 1], [1, 1]] },
+            // T-Piece (Purple)
+            { color: "#A855F7", blocks: [[0, 0], [-1, 0], [1, 0], [0, 1]] },
+            // L-Piece (Orange)
+            { color: "#F97316", blocks: [[0, 0], [0, 1], [0, 2], [1, 2]] },
+            // Z-Piece (Red)
+            { color: "#EF4444", blocks: [[0, 0], [-1, 0], [0, 1], [1, 1]] },
+            // S-Piece (Green)
+            { color: "#10B981", blocks: [[0, 0], [1, 0], [0, 1], [-1, 1]] }
+        ];
+
+        for (let i = 0; i < 18; i++) {
+            const template = tetrominoShapes[Math.floor(Math.random() * tetrominoShapes.length)];
+            tetrisPieces.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                blockSize: Math.random() * 6 + 12,
+                speedY: Math.random() * 0.7 + 0.3,
+                angle: Math.random() * Math.PI * 2,
+                spinSpeed: (Math.random() * 0.015 + 0.005) * (Math.random() > 0.5 ? 1 : -1),
+                color: template.color,
+                blocks: template.blocks
+            });
         }
 
-        // DOM Element references
-        const startScreen = document.getElementById('startScreen');
-        const quizScreen = document.getElementById('quizScreen');
-        const resultScreen = document.getElementById('resultScreen');
-        const startBtn = document.getElementById('startBtn');
-        const topStatsPill = document.getElementById('topStatsPill');
-        const questionCounter = document.getElementById('questionCounter');
-        const currentScoreDisplay = document.getElementById('currentScoreDisplay');
-        const sectionBadge = document.getElementById('sectionBadge');
-        const timerProgressBar = document.getElementById('timerProgressBar');
-        const timerText = document.getElementById('timerText');
-        const questionText = document.getElementById('questionText');
-        const codeContainer = document.getElementById('codeContainer');
-        const codeBlock = document.getElementById('codeBlock');
-        const optionsGrid = document.getElementById('optionsGrid');
-        const explanationCard = document.getElementById('explanationCard');
-        const explanationIcon = document.getElementById('explanationIcon');
-        const explanationTitle = document.getElementById('explanationTitle');
-        const explanationText = document.getElementById('explanationText');
-        const nextBtn = document.getElementById('nextBtn');
-        const nextBtnText = document.getElementById('nextBtnText');
-        const restartBtn = document.getElementById('restartBtn');
-        const reviewBtn = document.getElementById('reviewBtn');
-        const reviewContainer = document.getElementById('reviewContainer');
-        const reviewList = document.getElementById('reviewList');
-        const closeReviewBtn = document.getElementById('closeReviewBtn');
+        function drawTetrisPiece(c, piece) {
+            c.save();
+            c.translate(piece.x, piece.y);
+            c.rotate(piece.angle);
+            c.fillStyle = piece.color;
+            c.strokeStyle = "#1C1917";
+            c.lineWidth = 2;
 
-        // Event Listeners
-        startBtn.addEventListener('click', startQuiz);
-        nextBtn.addEventListener('click', handleNextQuestion);
-        restartBtn.addEventListener('click', startQuiz);
-        reviewBtn.addEventListener('click', toggleReviewModal);
-        closeReviewBtn.addEventListener('click', toggleReviewModal);
+            piece.blocks.forEach(([bx, by]) => {
+                const px = bx * piece.blockSize;
+                const py = by * piece.blockSize;
+                c.fillRect(px, py, piece.blockSize, piece.blockSize);
+                c.strokeRect(px, py, piece.blockSize, piece.blockSize);
 
-        function startQuiz() {
-            playSound('click');
-            currentQuestionIndex = 0;
-            score = 0;
-            userAnswers = [];
-            
-            startScreen.classList.add('hidden');
-            resultScreen.classList.add('hidden');
-            reviewContainer.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            topStatsPill.classList.remove('hidden');
-
-            renderQuestion();
-        }
-
-        function renderQuestion() {
-            answerSelected = false;
-            clearInterval(timerInterval);
-            
-            const q = quizQuestions[currentQuestionIndex];
-
-            // Update stats & section
-            questionCounter.innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
-            currentScoreDisplay.innerText = `${score} pts`;
-            sectionBadge.innerText = q.section;
-            questionText.innerText = q.question;
-
-            // Handle Code block display
-            if (q.code) {
-                codeContainer.classList.remove('hidden');
-                codeBlock.innerText = q.code;
-            } else {
-                codeContainer.classList.add('hidden');
-            }
-
-            // Reset explanation card & next button
-            explanationCard.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-
-            // Render Options (Always exactly 4 Options with multiline formatting support)
-            optionsGrid.innerHTML = '';
-            optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4';
-
-            q.options.forEach((optText, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-slate-50 hover:bg-sky-50 text-slate-700 font-medium border-2 border-slate-200 hover:border-sky-300 transition-all text-left flex items-start justify-between text-xs sm:text-sm shadow-sm group';
-                btn.onclick = () => selectAnswer(index);
-
-                // Check if the option is code-like (contains newlines or code syntax)
-                const isCodeLike = optText.includes('\n') || optText.includes('(') || optText.includes('=') || optText.includes(':');
-                const formattedContent = isCodeLike 
-                    ? `<pre class="font-code leading-relaxed text-xs sm:text-sm">${escapeHtml(optText)}</pre>`
-                    : `<span class="leading-snug">${escapeHtml(optText)}</span>`;
-
-                btn.innerHTML = `
-                    <div class="flex items-start space-x-3 w-full pr-2">
-                        <span class="w-6 h-6 rounded-lg bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center group-hover:bg-sky-500 group-hover:text-white transition-colors shrink-0 mt-0.5">
-                            ${String.fromCharCode(65 + index)}
-                        </span>
-                        <div class="overflow-x-auto flex-grow">${formattedContent}</div>
-                    </div>
-                    <i class="option-icon fa-regular fa-circle text-slate-300 text-base shrink-0 mt-1"></i>
-                `;
-                optionsGrid.appendChild(btn);
+                // Highlight inner square for authentic Tetris look
+                c.fillStyle = "rgba(255, 255, 255, 0.35)";
+                c.fillRect(px + 2, py + 2, piece.blockSize - 4, 3);
+                c.fillStyle = piece.color;
             });
 
-            // Start 50s Timer
+            c.restore();
+        }
+
+        function animateTetris() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            tetrisPieces.forEach(p => {
+                p.y += p.speedY;
+                p.angle += p.spinSpeed;
+
+                if (p.y > canvas.height + 60) {
+                    p.y = -60;
+                    p.x = Math.random() * canvas.width;
+                }
+                drawTetrisPiece(ctx, p);
+            });
+            requestAnimationFrame(animateTetris);
+        }
+        animateTetris();
+
+        // --- QUIZ NAVIGATION & LOGIC ---
+        function switchView(target) {
+            viewHome.classList.remove("active");
+            viewArena.classList.remove("active");
+            viewReport.classList.remove("active");
+            target.classList.add("active");
+        }
+
+        // --- SHUFFLE FUNCTION FOR CHOICES ---
+        function shuffleQuestionChoices(question) {
+            const correctAnswerText = question.choices[question.correctIdx];
+            for (let i = question.choices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [question.choices[i], question.choices[j]] = [question.choices[j], question.choices[i]];
+            }
+            question.correctIdx = question.choices.indexOf(correctAnswerText);
+        }
+
+        function startQuiz() {
+            activeQuestionIndex = 0;
+            score = 0;
+            p1Score = 0;
+            p2Score = 0;
+            p3Score = 0;
+            userAnswersLog = [];
+            hudScoreTracker.innerText = "⭐ Score: 0";
+
+            // Randomize choices for all questions each time the quiz starts
+            quizQuestions.forEach(q => shuffleQuestionChoices(q));
+
+            switchView(viewArena);
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            questionLocked = false;
+            arenaExplanationDrawer.style.display = "none";
+            btnNextStep.style.display = "none";
+            arenaChoicesStack.innerHTML = "";
+            arenaSyntaxTerminal.style.display = "none";
+
+            const current = quizQuestions[activeQuestionIndex];
+            hudIndexTracker.innerText = `Question ${activeQuestionIndex + 1}/30`;
+
+            if (current.part === 1) {
+                arenaLevelHeader.innerText = "Level 1: Choose the Correct Syntax 🧩";
+            } else if (current.part === 2) {
+                arenaLevelHeader.innerText = "Level 2: Predict the Output 🔍";
+            } else {
+                arenaLevelHeader.innerText = "Level 3: Turtle & Pygame Zero Controls 🐢🎮";
+            }
+
+            arenaQuestionText.innerText = current.prompt;
+
+            if (current.code) {
+                arenaSyntaxTerminal.innerText = current.code;
+                arenaSyntaxTerminal.style.display = "block";
+            }
+
+            current.choices.forEach((choiceText, index) => {
+                const btn = document.createElement("button");
+                btn.className = "choice-item-btn";
+                btn.innerText = choiceText;
+                btn.onclick = () => selectChoice(index, btn);
+                arenaChoicesStack.appendChild(btn);
+            });
+
             startTimer();
         }
 
+        function startTimer() {
+            clearInterval(clockInterval);
+            timeLeft = 50;
+            arenaTimerFill.style.width = "100%";
+
+            clockInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                let pct = (timeLeft / 50) * 100;
+                arenaTimerFill.style.width = `${pct}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(clockInterval);
+                    handleTimeOut();
+                }
+            }, 100);
+        }
+
+        function selectChoice(chosenIdx, btnElement) {
+            if (questionLocked) return;
+            questionLocked = true;
+            clearInterval(clockInterval);
+
+            const current = quizQuestions[activeQuestionIndex];
+            const buttons = arenaChoicesStack.children;
+            const isCorrect = (chosenIdx === current.correctIdx);
+
+            if (isCorrect) {
+                btnElement.classList.add("flash-green");
+                score++;
+                if (current.part === 1) p1Score++;
+                else if (current.part === 2) p2Score++;
+                else p3Score++;
+
+                hudScoreTracker.innerText = `⭐ Score: ${score}`;
+            } else {
+                btnElement.classList.add("flash-red");
+                if (buttons[current.correctIdx]) {
+                    buttons[current.correctIdx].classList.add("flash-green");
+                }
+            }
+
+            userAnswersLog.push({
+                index: activeQuestionIndex + 1,
+                prompt: current.prompt,
+                code: current.code || null,
+                userChoiceText: current.choices[chosenIdx],
+                correctChoiceText: current.choices[current.correctIdx],
+                explanation: current.explanation,
+                isCorrect: isCorrect
+            });
+
+            showExplanation(current.explanation);
+        }
+
+        function handleTimeOut() {
+            questionLocked = true;
+            const current = quizQuestions[activeQuestionIndex];
+            const buttons = arenaChoicesStack.children;
+
+            if (buttons[current.correctIdx]) {
+                buttons[current.correctIdx].classList.add("flash-green");
+            }
+
+            userAnswersLog.push({
+                index: activeQuestionIndex + 1,
+                prompt: current.prompt,
+                code: current.code || null,
+                userChoiceText: "Timed Out ⏳",
+                correctChoiceText: current.choices[current.correctIdx],
+                explanation: current.explanation,
+                isCorrect: false
+            });
+
+            showExplanation("Time is up! " + current.explanation);
+        }
+
+        function showExplanation(text) {
+            explanationBodyText.innerText = text;
+            arenaExplanationDrawer.style.display = "block";
+            btnNextStep.style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            activeQuestionIndex++;
+            if (activeQuestionIndex < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                showReportCard();
+            }
+        }
+
+        function showReportCard() {
+            switchView(viewReport);
+            document.getElementById("rep-p1-score").innerText = `${p1Score} / 10`;
+            document.getElementById("rep-p2-score").innerText = `${p2Score} / 10`;
+            document.getElementById("rep-p3-score").innerText = `${p3Score} / 10`;
+            document.getElementById("rep-grand-total").innerText = `${score} / 30`;
+
+            const percentage = Math.round((score / 30) * 100);
+            document.getElementById("rep-percentage").innerText = `${percentage}%`;
+
+            const noteContent = document.getElementById("tutor-note-content");
+            if (score >= 26) {
+                noteContent.innerHTML = `"Dear student, what an incredible revision session! You mastered loops, functions, turtle turns, and character controls in Pygame Zero like a real developer!"<br><br>With proud smiles,<br>Tutor Priyadarshini 🌟`;
+            } else if (score >= 18) {
+                noteContent.innerHTML = `"Dear student, fantastic effort! You have a really solid grip on loops, coordinate movements, and Python syntax. Keep up this amazing momentum!"<br><br>Keep shining,<br>Tutor Priyadarshini 🚀`;
+            } else {
+                noteContent.innerHTML = `"Dear student, great effort completing all 30 questions today! Remember that character x controls left/right and y controls up/down. Let's practice together and try again!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
+            }
+
+            renderReviewTabs();
+        }
+
+        function renderReviewTabs() {
+            const tabAll = document.getElementById("tab-all");
+            const tabCorrect = document.getElementById("tab-correct");
+            const tabWrong = document.getElementById("tab-wrong");
+
+            tabAll.innerHTML = "";
+            tabCorrect.innerHTML = "";
+            tabWrong.innerHTML = "";
+
+            userAnswersLog.forEach(item => {
+                const itemDiv = document.createElement("div");
+                itemDiv.className = `review-item ${item.isCorrect ? 'is-correct' : 'is-wrong'}`;
+
+                itemDiv.innerHTML = `
+                    <div style="font-weight: 700; margin-bottom: 4px;">
+                        ${item.isCorrect ? '✅' : '❌'} Q${item.index}: ${item.prompt}
+                    </div>
+                    ${item.code ? `<div style="background:#F1F5F9; padding:6px 10px; border-radius:6px; font-family:monospace; font-size:12px; margin:6px 0; white-space:pre-wrap;">${escapeHtml(item.code)}</div>` : ''}
+                    <div style="font-size: 13px; margin-top: 4px;">
+                        <strong>Your Answer:</strong> <span style="color: ${item.isCorrect ? '#16A34A' : '#DC2626'};">${escapeHtml(item.userChoiceText)}</span>
+                    </div>
+                    ${!item.isCorrect ? `<div style="font-size: 13px; color: #16A34A;"><strong>Correct Answer:</strong> ${escapeHtml(item.correctChoiceText)}</div>` : ''}
+                    <div style="font-size: 12px; color: #475569; margin-top: 4px;">
+                        <em>💡 ${escapeHtml(item.explanation)}</em>
+                    </div>
+                `;
+
+                tabAll.appendChild(itemDiv.cloneNode(true));
+                if (item.isCorrect) tabCorrect.appendChild(itemDiv.cloneNode(true));
+                else tabWrong.appendChild(itemDiv.cloneNode(true));
+            });
+
+            if (tabCorrect.children.length === 0) {
+                tabCorrect.innerHTML = "<p style='text-align:center; color:#64748B; font-size:14px; padding:12px;'>No correct answers yet. Give it another try!</p>";
+            }
+            if (tabWrong.children.length === 0) {
+                tabWrong.innerHTML = "<p style='text-align:center; color:#16A34A; font-size:14px; font-weight:700; padding:12px;'>🎉 Perfect! No wrong answers to review!</p>";
+            }
+        }
+
+        function showReviewTab(tabName) {
+            document.querySelectorAll(".review-tabs .tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+            if (tabName === 'all') {
+                document.querySelector(".review-tabs .tab-btn:nth-child(1)").classList.add("active");
+                document.getElementById("tab-all").classList.add("active");
+            } else if (tabName === 'correct') {
+                document.querySelector(".review-tabs .tab-btn:nth-child(2)").classList.add("active");
+                document.getElementById("tab-correct").classList.add("active");
+            } else {
+                document.querySelector(".review-tabs .tab-btn:nth-child(3)").classList.add("active");
+                document.getElementById("tab-wrong").classList.add("active");
+            }
+        }
+
         function escapeHtml(str) {
+            if (!str) return '';
             return str
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -871,371 +1165,26 @@
                 .replace(/'/g, "&#039;");
         }
 
-        function startTimer() {
-            timeLeft = TIME_LIMIT;
-            updateTimerUI();
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerUI();
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeout();
-                }
-            }, 1000);
+        // DOWNLOAD HANDLER (Allows saving the complete standalone file)
+        function downloadCurrentHTML() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const downloadUrl = URL.createObjectURL(blob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = downloadUrl;
+            downloadLink.download = "python_revision_quiz.html";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadUrl);
         }
 
-        function updateTimerUI() {
-            timerText.innerText = `${timeLeft}s`;
-            const percentage = (timeLeft / TIME_LIMIT) * 100;
-            timerProgressBar.style.width = `${percentage}%`;
-
-            if (timeLeft <= 10) {
-                timerProgressBar.className = "bg-gradient-to-r from-amber-500 to-rose-500 h-full w-full transition-all duration-1000 ease-linear";
-            } else {
-                timerProgressBar.className = "bg-gradient-to-r from-emerald-500 to-amber-500 h-full w-full transition-all duration-1000 ease-linear";
-            }
-        }
-
-        function selectAnswer(selectedIndex) {
-            if (answerSelected) return;
-            answerSelected = true;
-            clearInterval(timerInterval);
-
-            const q = quizQuestions[currentQuestionIndex];
-            const isCorrect = selectedIndex === q.answer;
-
-            if (isCorrect) {
-                score += 10;
-                playSound('correct');
-            } else {
-                playSound('wrong');
-            }
-
-            // Save user answer
-            userAnswers.push({
-                questionId: q.id,
-                selected: selectedIndex,
-                correct: q.answer,
-                isCorrect: isCorrect,
-                timeSpent: TIME_LIMIT - timeLeft
-            });
-
-            currentScoreDisplay.innerText = `${score} pts`;
-
-            // Highlight Option Buttons
-            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
-            optionBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                btn.classList.remove('hover:bg-sky-50', 'hover:border-sky-300');
-                const icon = btn.querySelector('.option-icon');
-
-                if (idx === q.answer) {
-                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-50 text-emerald-900 font-bold border-2 border-emerald-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                    icon.className = 'option-icon fa-solid fa-circle-check text-emerald-600 text-lg';
-                } else if (idx === selectedIndex && !isCorrect) {
-                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-rose-50 text-rose-900 font-semibold border-2 border-rose-400 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                    icon.className = 'option-icon fa-solid fa-circle-xmark text-rose-500 text-lg';
-                } else {
-                    btn.classList.add('opacity-50');
-                }
-            });
-
-            showExplanation(isCorrect, q.explanation);
-
-            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "View Report" : "Next ";
-            nextBtn.classList.remove('hidden');
-        }
-
-        function handleTimeout() {
-            if (answerSelected) return;
-            answerSelected = true;
-            playSound('wrong');
-
-            const q = quizQuestions[currentQuestionIndex];
-
-            userAnswers.push({
-                questionId: q.id,
-                selected: -1,
-                correct: q.answer,
-                isCorrect: false,
-                timeSpent: TIME_LIMIT
-            });
-
-            const optionBtns = optionsGrid.querySelectorAll('.option-btn');
-            optionBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                if (idx === q.answer) {
-                    btn.className = 'option-btn w-full p-3.5 sm:p-4 rounded-2xl bg-amber-50 text-amber-900 font-bold border-2 border-amber-500 transition-all text-left flex items-center justify-between text-xs sm:text-sm shadow-sm';
-                    const icon = btn.querySelector('.option-icon');
-                    icon.className = 'option-icon fa-solid fa-clock text-amber-600 text-lg';
-                } else {
-                    btn.classList.add('opacity-50');
-                }
-            });
-
-            showExplanation(false, `⏱️ Time reached 50 seconds! ${q.explanation}`);
-            nextBtnText.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "View Flight Report" : "Next Flight Challenge";
-            nextBtn.classList.remove('hidden');
-        }
-
-        function showExplanation(isCorrect, text) {
-            explanationCard.classList.remove('hidden');
-            explanationText.innerText = text;
-
-            if (isCorrect) {
-                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-emerald-50 border-emerald-200 text-emerald-950';
-                explanationIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
-                explanationTitle.innerText = "Target Hit! Correct Answer";
-                explanationTitle.className = "font-bold text-sm mb-1 text-emerald-800";
-            } else {
-                explanationCard.className = 'p-4 rounded-2xl border text-xs sm:text-sm transition-all duration-300 bg-amber-50 border-amber-200 text-amber-950';
-                explanationIcon.innerHTML = '<i class="fa-solid fa-lightbulb text-amber-600"></i>';
-                explanationTitle.innerText = "Instructor Note";
-                explanationTitle.className = "font-bold text-sm mb-1 text-amber-800";
-            }
-        }
-
-        function handleNextQuestion() {
-            playSound('click');
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                renderQuestion();
-            } else {
-                finishQuiz();
-            }
-        }
-
-        function finishQuiz() {
-            quizScreen.classList.add('hidden');
-            topStatsPill.classList.add('hidden');
-            resultScreen.classList.remove('hidden');
-
-            const totalQuestions = quizQuestions.length;
-            const correctCount = userAnswers.filter(a => a.isCorrect).length;
-            const percentage = Math.round((correctCount / totalQuestions) * 100);
-
-            // Display Score Summary
-            document.getElementById('finalScoreText').innerText = `${correctCount} / ${totalQuestions}`;
-            document.getElementById('accuracyText').innerText = `${percentage}%`;
-
-            let stars = "⭐⭐⭐";
-            let grade = "Captain Pilot 🏆";
-            if (percentage < 50) {
-                stars = "⭐";
-                grade = "Cadet Trainee 🛩️";
-            } else if (percentage < 80) {
-                stars = "⭐⭐";
-                grade = "Flight Officer 🎖️";
-            }
-            document.getElementById('gradeBadgeText').innerText = grade;
-            document.getElementById('starsEarnedText').innerText = stars;
-
-            // Generate Section Breakdown
-            const sections = {};
-            quizQuestions.forEach(q => {
-                if (!sections[q.section]) {
-                    sections[q.section] = { total: 0, correct: 0 };
-                }
-                sections[q.section].total++;
-            });
-
-            userAnswers.forEach((ans, idx) => {
-                const sec = quizQuestions[idx].section;
-                if (ans.isCorrect) {
-                    sections[sec].correct++;
-                }
-            });
-
-            const breakdownGrid = document.getElementById('sectionBreakdownGrid');
-            breakdownGrid.innerHTML = '';
-
-            Object.keys(sections).forEach(secName => {
-                const data = sections[secName];
-                const secPercent = Math.round((data.correct / data.total) * 100);
-
-                const card = document.createElement('div');
-                card.className = 'bg-white/80 p-3 rounded-2xl border border-amber-200 flex flex-col justify-between';
-                card.innerHTML = `
-                    <div class="mb-2">
-                        <h5 class="text-xs font-bold text-amber-950">${secName}</h5>
-                        <p class="text-[11px] text-amber-700">${data.correct} of ${data.total} correct</p>
-                    </div>
-                    <span class="text-xs font-extrabold px-2 py-0.5 rounded-lg text-center ${secPercent >= 70 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                        ${secPercent}%
-                    </span>
-                `;
-                breakdownGrid.appendChild(card);
-            });
-
-            // Generate Personalized Handwritten Teacher Note
-            const noteContent = document.getElementById('teacherNoteContent');
-            let feedback = "";
-
-            if (percentage >= 90) {
-                feedback = `Superb skills! You navigated through Python syntax errors with ease, nailed the Boolean logic tables, predicted the loop iterations flawlessly, calculated the 72° pentagon and 60° hexagon angles with precision, and mastered Pygame Zero screen setups like a seasoned pro! You are fully equipped to start animating and adding motion to your characters next. Keep soaring!`;
-            } else if (percentage >= 70) {
-                feedback = `Impressive performance! You demonstrated great command over Turtle drawing commands (penup, pendown, pensize) and spotting function header errors. Take a quick second to review range() stopping conditions and Pygame Zero Rect parameters. You are very close to reaching top Captain rank!`;
-            } else if (percentage >= 50) {
-                feedback = `Good progress on this run! You showed solid understanding of Turtle pen controls and basic conditions. Make sure to review how 'and' versus 'or' works, and how functions match parameters with arguments. Give it another attempt to level up!`;
-            } else {
-                feedback = `Honorable effort! Learning to code takes practice flights. Review the difference between '=' and '==', practice calculating 360 / sides for regular shapes, and check the explanation review below. Take off again—you've got this!`;
-            }
-
-            noteContent.innerText = feedback;
-        }
-
-        function toggleReviewModal() {
-            playSound('click');
-            reviewContainer.classList.toggle('hidden');
-
-            if (!reviewContainer.classList.contains('hidden')) {
-                renderReviewList();
-            }
-        }
-
-        function renderReviewList() {
-            reviewList.innerHTML = '';
-
-            quizQuestions.forEach((q, idx) => {
-                const userAns = userAnswers[idx] || { selected: -1, isCorrect: false };
-                const item = document.createElement('div');
-                item.className = `p-4 rounded-2xl border text-xs sm:text-sm ${userAns.isCorrect ? 'bg-emerald-50/80 border-emerald-200' : 'bg-rose-50/80 border-rose-200'}`;
-
-                const userOptText = userAns.selected >= 0 ? q.options[userAns.selected] : "Timed Out (No Answer Selected)";
-                const correctOptText = q.options[q.answer];
-
-                item.innerHTML = `
-                    <div class="flex items-start justify-between gap-2 mb-2">
-                        <span class="font-bold text-slate-800">Q${idx + 1}: ${q.question}</span>
-                        <span class="px-2 py-0.5 text-xs rounded-lg font-bold ${userAns.isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
-                            ${userAns.isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
-                    </div>
-                    ${q.code ? `<pre class="p-2.5 bg-slate-900 text-emerald-400 rounded-xl font-code text-xs mb-2 overflow-x-auto">${escapeHtml(q.code)}</pre>` : ''}
-                    <div class="space-y-2 mb-2 text-slate-700">
-                        <div>
-                            <strong class="text-slate-900 block mb-0.5">Your Choice:</strong>
-                            <pre class="p-2 bg-white/80 rounded-lg font-code text-xs border border-slate-200 overflow-x-auto">${escapeHtml(userOptText)}</pre>
-                        </div>
-                        <div>
-                            <strong class="text-emerald-800 block mb-0.5">Correct Option:</strong>
-                            <pre class="p-2 bg-emerald-100/60 text-emerald-950 rounded-lg font-code text-xs border border-emerald-300 overflow-x-auto">${escapeHtml(correctOptText)}</pre>
-                        </div>
-                    </div>
-                    <p class="text-slate-600 bg-white/70 p-2.5 rounded-xl text-xs border border-slate-200 leading-relaxed">
-                        <strong class="text-slate-800">Flight Explanation:</strong> ${q.explanation}
-                    </p>
-                `;
-                reviewList.appendChild(item);
-            });
-        }
-
-        /* ==========================================================================
-           ANIMATED AIRPLANE CANVAS BACKGROUND
-           ========================================================================== */
-        const canvas = document.getElementById('airplaneCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        const airplanes = [
-            { x: -100, y: height * 0.15, speed: 1.8, scale: 0.8 },
-            { x: -300, y: height * 0.45, speed: 1.2, scale: 0.6 },
-            { x: -200, y: height * 0.75, speed: 2.2, scale: 0.9 }
-        ];
-
-        const clouds = [
-            { x: 100, y: height * 0.1, scale: 1 },
-            { x: 400, y: height * 0.3, scale: 1.4 },
-            { x: 800, y: height * 0.2, scale: 0.8 },
-            { x: 200, y: height * 0.6, scale: 1.2 },
-            { x: 700, y: height * 0.8, scale: 1.1 }
-        ];
-
-        function drawCloud(c) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, 25 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 20 * c.scale, c.y - 10 * c.scale, 20 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 40 * c.scale, c.y, 22 * c.scale, 0, Math.PI * 2);
-            ctx.arc(c.x + 20 * c.scale, c.y + 10 * c.scale, 18 * c.scale, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function drawAirplane(plane) {
-            ctx.save();
-            ctx.translate(plane.x, plane.y);
-            ctx.scale(plane.scale, plane.scale);
-
-            // Plane Body
-            ctx.fillStyle = '#0284c7';
-            ctx.beginPath();
-            ctx.moveTo(30, 0);
-            ctx.quadraticCurveTo(0, -12, -30, -6);
-            ctx.lineTo(-35, 0);
-            ctx.lineTo(-30, 6);
-            ctx.quadraticCurveTo(0, 12, 30, 0);
-            ctx.fill();
-
-            // Wing
-            ctx.fillStyle = '#38bdf8';
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(-10, -22);
-            ctx.lineTo(8, -22);
-            ctx.lineTo(12, 0);
-            ctx.fill();
-
-            // Tail
-            ctx.fillStyle = '#0369a1';
-            ctx.beginPath();
-            ctx.moveTo(-25, -3);
-            ctx.lineTo(-38, -18);
-            ctx.lineTo(-30, -18);
-            ctx.lineTo(-20, -3);
-            ctx.fill();
-
-            // Cockpit Window
-            ctx.fillStyle = '#e0f2fe';
-            ctx.beginPath();
-            ctx.arc(15, -2, 5, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        function animateBackground() {
-            ctx.clearRect(0, 0, width, height);
-
-            clouds.forEach(cloud => {
-                cloud.x -= 0.3;
-                if (cloud.x < -100) cloud.x = width + 100;
-                drawCloud(cloud);
-            });
-
-            airplanes.forEach(plane => {
-                plane.x += plane.speed;
-                if (plane.x > width + 150) {
-                    plane.x = -150;
-                    plane.y = Math.random() * (height * 0.7) + 50;
-                }
-                drawAirplane(plane);
-            });
-
-            requestAnimationFrame(animateBackground);
-        }
-
-        window.onload = function() {
-            animateBackground();
-        };
+        // EVENT ATTACHMENTS
+        document.getElementById("btn-start-quiz").addEventListener("click", startQuiz);
+        document.getElementById("btn-next-step").addEventListener("click", nextQuestion);
+        document.getElementById("btn-restart-quiz").addEventListener("click", () => switchView(viewHome));
+        document.getElementById("btn-download-html").addEventListener("click", downloadCurrentHTML);
+        document.getElementById("btn-download-report").addEventListener("click", downloadCurrentHTML);
     </script>
 </body>
 </html>
