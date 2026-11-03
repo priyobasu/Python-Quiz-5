@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python revision</title>
+    <title>Python AI revision</title>
     <!-- Fonts: Clean Inter, Arcade Heading, and Handwritten Font for Teacher's Note -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -395,17 +395,16 @@
     <div class="quiz-card">
         <!-- TOP HUD -->
         <div class="hud-topbar">
-            <div id="hud-index-tracker" class="hud-badge">Question 1/30</div>
+            <div id="hud-index-tracker" class="hud-badge">Question 1/10</div>
             <div id="hud-score-tracker" class="hud-badge">⭐ Score: 0</div>
         </div>
 
         <!-- SCREEN 1: HOME COVER -->
         <div id="view-home" class="game-view active">
             <div class="home-layout">
-                <h1 class="home-title">Python revision</h1>
+                <h1 class="home-title">Python AI revision</h1>
                 <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                     <button id="btn-start-quiz" class="btn-start">Start with the revision 🚀</button>
-                
                 </div>
             </div>
         </div>
@@ -413,7 +412,7 @@
         <!-- SCREEN 2: ACTIVE QUESTION ARENA -->
         <div id="view-arena" class="game-view">
             <div class="arena-subbar">
-                <div id="arena-level-header" class="level-headline">Level 1: Choose the Correct Syntax</div>
+                <div id="arena-level-header" class="level-headline">AI &amp; Vision Revision</div>
                 <div class="progress-timer-bar">
                     <div id="arena-timer-fill" class="timer-progress-fill"></div>
                 </div>
@@ -444,20 +443,8 @@
 
             <div class="report-score-board">
                 <div class="report-score-row">
-                    <span>Part 1: Syntax Identification (Q1-10)</span>
-                    <span id="rep-p1-score" style="color: #854D0E;">0 / 10</span>
-                </div>
-                <div class="report-score-row">
-                    <span>Part 2: Predict the Output (Q11-20)</span>
-                    <span id="rep-p2-score" style="color: #854D0E;">0 / 10</span>
-                </div>
-                <div class="report-score-row">
-                    <span>Part 3: Turtle &amp; Pygame Zero Movement (Q21-30)</span>
-                    <span id="rep-p3-score" style="color: #854D0E;">0 / 10</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; padding-top: 10px; color: #16A34A;">
-                    <span>FINAL TOTAL SCORE</span>
-                    <span id="rep-grand-total">0 / 30</span>
+                    <span>Python AI &amp; Smart Systems</span>
+                    <span id="rep-grand-total" style="color: #16A34A; font-weight: 700;">0 / 10</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; padding-top: 6px; color: #854D0E;">
                     <span>ACCURACY</span>
@@ -471,7 +458,7 @@
                     📝 A Note from Tutor Priyadarshini:
                 </div>
                 <div id="tutor-note-content" class="note-signature">
-                    "Dear student, you tackled every loop condition, syntax rule, turtle angle, and Pygame Zero character movement with sharp thinking! Keep coding and experimenting with joy!"
+                    "Dear student, let's see how much of Python AI you remembered today!"
                     <br><br>
                     Warmly,<br>
                     Tutor Priyadarshini ✨
@@ -482,7 +469,7 @@
             <div style="margin-top: 24px;">
                 <h3 style="text-align: center; margin-bottom: 12px; font-size: 16px; font-weight: 700;">Check Your Answers:</h3>
                 <div class="review-tabs">
-                    <button class="tab-btn active" onclick="showReviewTab('all')">All (30)</button>
+                    <button class="tab-btn active" onclick="showReviewTab('all')">All (10)</button>
                     <button class="tab-btn" onclick="showReviewTab('correct')">Correct (✔️)</button>
                     <button class="tab-btn" onclick="showReviewTab('wrong')">Review Needed (❌)</button>
                 </div>
@@ -494,326 +481,130 @@
 
             <div style="text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
                 <button id="btn-restart-quiz" class="btn-restart">Try Again 🔄</button>
-            
             </div>
         </div>
     </div>
 
     <script>
-        // MASTER 30 REVISION QUESTIONS (NEW VARIETY)
+        // MASTER 10 PYTHON AI REVISION QUESTIONS
         const quizQuestions = [
-            // --- Q1 to Q10: SYNTAX IDENTIFICATION IN 4 BOXES ---
             {
-                part: 1,
-                prompt: "Question 1: Mia wants to print even numbers from 2 up to 8 using a for loop. Which box has the correct range syntax?",
+                prompt: "Question 1: In our Smart Attendance System, which Python command do we use to automatically create a folder with the student's name to save their captured faces?",
                 choices: [
-                    "for i in range(2, 9, 2):\n    print(i)",
-                    "for i in range(2, 8):\n    print(i)",
-                    "for i in range(2, 9, 1):\n    print(i)",
-                    "for i from 2 to 8 step 2:\n    print(i)"
+                    "os.makedirs()",
+                    "os.create_folder()",
+                    "file.make()",
+                    "sys.new_directory()"
                 ],
                 correctIdx: 0,
-                explanation: "range(2, 9, 2) starts at 2, stops before 9, and steps up by 2 each turn (producing 2, 4, 6, 8)."
+                explanation: "We use os.makedirs() because it automatically creates new folders and paths to store each student's captured face images."
             },
             {
-                part: 1,
-                prompt: "Question 2: Alex wants a while loop that counts down from 5 to 1 and decreases by 1 each time. Which syntax is written properly?",
+                prompt: "Question 2: Why do we convert captured face images into grayscale before saving them?",
                 choices: [
-                    "count = 5\nwhile count > 0:\n    print(count)\n    count -= 1",
-                    "count = 5\nwhile count > 0:\n    print(count)\n    count + 1",
-                    "count = 5\nwhile count < 0:\n    print(count)\n    count -= 1",
-                    "count = 5\nwhile count > 0\n    print(count)\n    count -= 1"
+                    "It reduces file size and standardizes the dataset for training",
+                    "It makes the image colorful and bright",
+                    "The camera can only save pictures in black and white",
+                    "It deletes all pixels except the eyes and nose"
                 ],
                 correctIdx: 0,
-                explanation: "The while condition must check 'count > 0' and subtract 1 with 'count -= 1' inside the loop."
+                explanation: "Converting to grayscale strips away unnecessary color data, making image files smaller and standardizing them so the model trains faster and more accurately."
             },
             {
-                part: 1,
-                prompt: "Question 3: Sophia wants to check three score categories: >= 90 for 'Gold', >= 60 for 'Silver', and anything else for 'Bronze'. Which elif structure is correct?",
+                prompt: "Question 3: What are the three main steps involved in building our Smart Attendance System?",
                 choices: [
-                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60:\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
-                    "if score >= 90:\n    print(\"Gold\")\nelse if score >= 60:\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
-                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60\n    print(\"Silver\")\nelse:\n    print(\"Bronze\")",
-                    "if score >= 90:\n    print(\"Gold\")\nelif score >= 60:\n    print(\"Silver\")"
+                    "Capturing the face, creating the training dataset, and recognizing faces to log attendance",
+                    "Connecting to internet, deleting old folders, and turning off the webcam",
+                    "Writing a text file, recording microphone audio, and restarting the PC",
+                    "Drawing shapes, scaling window resolution, and closing Python"
                 ],
                 correctIdx: 0,
-                explanation: "Python uses 'if', 'elif', and 'else' with colons ':' at the end of each condition line."
+                explanation: "First we capture faces with a webcam, second we train the model dataset with those images, and third we recognize students in real-time to log their attendance."
             },
             {
-                part: 1,
-                prompt: "Question 4: Noah wants to remove the item 'banana' from his list. Which code snippet does this properly?",
+                prompt: "Question 4: Which ultra-fast AI inference platform API did we connect to for generating smart, instant chatbot responses?",
                 choices: [
-                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.remove(\"banana\")",
-                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.delete(\"banana\")",
-                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.pop_item(\"banana\")",
-                    "fruits = [\"apple\", \"banana\", \"pear\"]\nfruits.discard(\"banana\")"
+                    "Groq API",
+                    "Pygame API",
+                    "Turtle API",
+                    "Excel API"
                 ],
                 correctIdx: 0,
-                explanation: "The .remove() method finds and deletes the specified item value from a Python list."
+                explanation: "We used Groq's API because its LPU hardware runs large language models super fast to give instant chatbot replies."
             },
             {
-                part: 1,
-                prompt: "Question 5: Chloe wants to check if the key 'health' exists inside a game dictionary. Which syntax checks for the key?",
+                prompt: "Question 5: In simple words, what does an API actually do in our programs?",
                 choices: [
-                    "if \"health\" in player:\n    print(\"Found!\")",
-                    "if player.has_key(\"health\"):\n    print(\"Found!\")",
-                    "if \"health\" == player:\n    print(\"Found!\")",
-                    "if player.contains(\"health\"):\n    print(\"Found!\")"
+                    "It receives a request from our app and sends back a response",
+                    "It turns off the computer when an error occurs",
+                    "It cleans your screen pixels and removes viruses",
+                    "It saves your code into a Word document"
                 ],
                 correctIdx: 0,
-                explanation: "In modern Python, you check if a key is in a dictionary using the 'in' keyword."
+                explanation: "An API acts like a smart messenger: your program sends a request (your question), and the API brings back a response (the AI answer)."
             },
             {
-                part: 1,
-                prompt: "Question 6: Ethan wants to write a function that shows game instructions on screen without returning anything. Which is valid syntax?",
+                prompt: "Question 6: Which client library did we import to connect our code seamlessly with the language model API?",
                 choices: [
-                    "def show_rules():\n    print(\"Rule 1: Collect gems\")",
-                    "function show_rules():\n    print(\"Rule 1: Collect gems\")",
-                    "def show_rules[]:\n    print(\"Rule 1: Collect gems\")",
-                    "define show_rules():\n    print(\"Rule 1: Collect gems\")"
+                    "from openai import OpenAI",
+                    "import turtle_ai",
+                    "import camera_screen",
+                    "import website_maker"
                 ],
                 correctIdx: 0,
-                explanation: "Functions start with 'def', followed by the function name, parentheses '()', a colon ':', and indented code."
+                explanation: "We use the OpenAI Python client library (from openai import OpenAI) because platforms like Groq use the compatible OpenAI API format."
             },
             {
-                part: 1,
-                prompt: "Question 7: Ava needs to check if the temperature is between 20 and 30 degrees (inclusive). Which condition has valid syntax?",
+                prompt: "Question 7: How did we keep track of the entire ongoing chat history so the AI remembers past messages?",
                 choices: [
-                    "if temp >= 20 and temp <= 30:\n    print(\"Pleasant\")",
-                    "if temp >= 20 && temp <= 30:\n    print(\"Pleasant\")",
-                    "if 20 <= temp & temp <= 30:\n    print(\"Pleasant\")",
-                    "if temp >= 20 or temp <= 30:\n    print(\"Pleasant\")"
+                    "By appending each user and assistant message into a conversation list/dictionary",
+                    "By restarting the chatbot after every question",
+                    "By saving each word in a variable named temp_word",
+                    "By deleting older answers to keep only the latest word"
                 ],
                 correctIdx: 0,
-                explanation: "Use 'and' to ensure both boundary conditions (>= 20 and <= 30) are True simultaneously."
+                explanation: "We keep appending each message as a dictionary ({'role': ..., 'content': ...}) into our messages list so the AI has full conversational context."
             },
             {
-                part: 1,
-                prompt: "Question 8: Lucas wants to access the very last item of a list using negative indexing. Which box shows the correct syntax?",
+                prompt: "Question 8: What role does a Haar Cascade classifier file (XML) play in our camera vision system?",
                 choices: [
-                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[-1]",
-                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[-0]",
-                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors[last]",
-                    "colors = [\"red\", \"blue\", \"green\"]\nlast = colors.end()"
+                    "It quickly detects and finds the bounding box coordinates of faces in the video frame",
+                    "It converts speech voice notes into text files",
+                    "It downloads games from the internet",
+                    "It controls the speed of the computer's cooling fan"
                 ],
                 correctIdx: 0,
-                explanation: "In Python, index [-1] retrieves the last item in any sequence or list."
+                explanation: "A Haar Cascade is a pre-trained feature detection model in OpenCV that spots where faces appear in each video frame."
             },
             {
-                part: 1,
-                prompt: "Question 9: Zoe wants to change the value of 'coins' inside her dictionary to 50. Which syntax updates the dictionary entry?",
+                prompt: "Question 9: Which Python library do we use for audio recording and capturing voice signals from the microphone for voice automation?",
                 choices: [
-                    "player[\"coins\"] = 50",
-                    "player(\"coins\") = 50",
-                    "player.set(\"coins\", 50)",
-                    "player[\"coins\"] == 50"
+                    "sounddevice",
+                    "pygame.music",
+                    "os.audio",
+                    "math.sound"
                 ],
                 correctIdx: 0,
-                explanation: "Dictionary values are updated by assigning to the key using square brackets: dictionary[key] = value."
+                explanation: "The sounddevice library lets Python capture real-time audio from your microphone as well as play sound arrays back through speakers."
             },
             {
-                part: 1,
-                prompt: "Question 10: Oliver wants to define a function with two parameters that prints their sum directly without return. Which is correct?",
+                prompt: "Question 10: In voice automation, what is the two-step cycle for converting user voice into an AI reply?",
                 choices: [
-                    "def add_and_show(a, b):\n    print(a + b)",
-                    "def add_and_show(a; b):\n    print(a + b)",
-                    "def add_and_show[a, b]:\n    print(a + b)",
-                    "function add_and_show(a, b):\n    print(a + b)"
+                    "Speech-to-Text (STT) to understand audio, then Text-to-Speech (TTS) to speak back",
+                    "Taking a screenshot, then saving it as an MP3 song",
+                    "Creating a folder, then deleting the microphone driver",
+                    "Converting video to black and white, then closing the browser"
                 ],
                 correctIdx: 0,
-                explanation: "Parameters inside the parentheses must be separated by commas: def add_and_show(a, b):"
-            },
-
-            // --- Q11 to Q20: PREDICT THE OUTPUT ---
-            {
-                part: 2,
-                prompt: "Question 11: Predict what is printed after .pop() removes an item from this stack:",
-                code: "toys = [\"car\", \"ball\", \"robot\"]\nremoved = toys.pop()\nprint(removed)",
-                choices: ["robot", "car", "ball", "3"],
-                correctIdx: 0,
-                explanation: "toys.pop() removes and returns the last element from the list, which is 'robot'."
-            },
-            {
-                part: 2,
-                prompt: "Question 12: Predict the output of this floor division (//) operation:",
-                code: "cookies = 19\nkids = 4\nshare = cookies // kids\nprint(share)",
-                choices: ["4", "4.75", "5", "3"],
-                correctIdx: 0,
-                explanation: "Floor division // divides and rounds down to the nearest integer. 19 // 4 = 4."
-            },
-            {
-                part: 2,
-                prompt: "Question 13: What is the output when multiplying a text string with an integer?",
-                code: "badge = \"Go! \" * 3\nprint(badge)",
-                choices: ["Go! Go! Go! ", "Go! * 3", "Go! 3", "Error"],
-                correctIdx: 0,
-                explanation: "Multiplying a string by a number repeats that string. 'Go! ' repeated 3 times is 'Go! Go! Go! '."
-            },
-            {
-                part: 2,
-                prompt: "Question 14: Predict what prints when checking if a number is odd using modulo (%):",
-                code: "num = 9\nif num % 2 != 0:\n    print(\"Odd\")\nelse:\n    print(\"Even\")",
-                choices: ["Odd", "Even", "9", "1"],
-                correctIdx: 0,
-                explanation: "9 % 2 is 1. Since 1 != 0 is True, it prints 'Odd'."
-            },
-            {
-                part: 2,
-                prompt: "Question 15: Notice there is no return statement in this helper function. What will print?",
-                code: "def boost_speed(val):\n    fast = val + 10\n\nresult = boost_speed(5)\nprint(result)",
-                choices: ["None", "15", "5", "Error"],
-                correctIdx: 0,
-                explanation: "Because boost_speed has no return statement, the function returns None by default."
-            },
-            {
-                part: 2,
-                prompt: "Question 16: Predict what prints when the while loop finishes its countdown:",
-                code: "m = 6\nwhile m > 2:\n    m -= 2\nprint(m)",
-                choices: ["2", "4", "0", "6"],
-                correctIdx: 0,
-                explanation: "m starts at 6 -> 4 -> 2. When m reaches 2, 2 > 2 is False, so the loop terminates and prints 2."
-            },
-            {
-                part: 2,
-                prompt: "Question 17: Predict the output when looking up and adding dictionary values:",
-                code: "points = {\"star\": 10, \"coin\": 5}\ntotal = points[\"star\"] + points[\"coin\"]\nprint(total)",
-                choices: ["15", "105", "star coin", "2"],
-                correctIdx: 0,
-                explanation: "points['star'] is 10 and points['coin'] is 5. 10 + 5 = 15."
-            },
-            {
-                part: 2,
-                prompt: "Question 18: What value of count will print after this for loop finishes?",
-                code: "count = 0\nfor x in [1, 2, 3, 4]:\n    if x > 2:\n        count += 1\nprint(count)",
-                choices: ["2", "4", "3", "1"],
-                correctIdx: 0,
-                explanation: "Only numbers 3 and 4 are strictly greater than 2, so count increases twice to 2."
-            },
-            {
-                part: 2,
-                prompt: "Question 19: Predict the output of this power (**) and addition expression:",
-                code: "score = 3 ** 2 + 1\nprint(score)",
-                choices: ["10", "7", "8", "9"],
-                correctIdx: 0,
-                explanation: "3 ** 2 is 3 squared (3 × 3 = 9). Then 9 + 1 = 10."
-            },
-            {
-                part: 2,
-                prompt: "Question 20: Predict what prints when this custom function is called:",
-                code: "def make_tag(label, id_num):\n    print(label + \"-\" + str(id_num))\n\nmake_tag(\"Item\", 7)",
-                choices: ["Item-7", "Item-id_num", "Item 7", "Error"],
-                correctIdx: 0,
-                explanation: "The function concatenates 'Item', '-', and '7' to print 'Item-7'."
-            },
-
-            // --- Q21 to Q25: TURTLE GRAPHICS ---
-            {
-                part: 3,
-                prompt: "Question 21: You want turtle to draw a regular octagon . How many times must your drawing loop repeat?",
-                choices: ["8 times", "6 times", "10 times", "4 times"],
-                correctIdx: 0,
-                explanation: "An octagon has 8 equal sides and corners, so the loop must repeat exactly 8 times."
-            },
-            {
-                part: 3,
-                prompt: "Question 22: You want to draw an equilateral triangle using turtle. How many degrees must the turtle turn at each corner?",
-                choices: ["120 degrees", "60 degrees", "90 degrees", "180 degrees"],
-                correctIdx: 0,
-                explanation: "Total exterior turns in any closed shape equal 360°. For a 3-sided triangle, 360° ÷ 3 = 120°."
-            },
-            {
-                part: 3,
-                prompt: "Question 23: Which command makes the lines drawn by the turtle thicker?",
-                choices: ["pen.pensize(5)", "pen.thick(5)", "pen.width_set(5)", "pen.bold(5)"],
-                correctIdx: 0,
-                explanation: "pen.pensize(pixels) sets the stroke thickness of the turtle pen."
-            },
-            {
-                part: 3,
-                prompt: "Question 24: Which command changes the color of the line drawn by the turtle to green?",
-                choices: ["pen.pencolor(\"green\")", "pen.paint(\"green\")", "pen.set_line(\"green\")", "pen.brush(\"green\")"],
-                correctIdx: 0,
-                explanation: "pen.pencolor('green') changes the ink color used when drawing lines."
-            },
-            {
-                part: 3,
-                prompt: "Question 25: Turtle is at the center (0, 0). Which command teleports it straight to x = -100 and y = 50?",
-                choices: ["pen.goto(-100, 50)", "pen.move_to(-100, 50)", "pen.teleport(-100, 50)", "pen.place(-100, 50)"],
-                correctIdx: 0,
-                explanation: "pen.goto(x, y) instructs the turtle to move directly to that coordinate."
-            },
-
-            // --- Q26 to Q30: PYGAME ZERO CHARACTER MOVEMENT & CONTROLS ---
-            {
-                part: 3,
-                prompt: "Question 26: In Pygame Zero, if you want to move your actor UPWARDS towards the top of the screen, which coordinate value must decrease?",
-                choices: [
-                    "actor.y -= 5",
-                    "actor.x += 5",
-                    "actor.y += 5",
-                    "actor.x -= 5"
-                ],
-                correctIdx: 0,
-                explanation: "In computer graphics, y = 0 is at the top of the window. Decreasing actor.y moves the sprite UP."
-            },
-            {
-                part: 3,
-                prompt: "Question 27: In Pygame Zero, how do you move your character to the RIGHT when the player presses the right arrow key?",
-                choices: [
-                    "actor.x += 5",
-                    "actor.y += 5",
-                    "actor.x -= 5",
-                    "actor.y -= 5"
-                ],
-                correctIdx: 0,
-                explanation: "Increasing actor.x moves the sprite horizontally to the RIGHT."
-            },
-            {
-                part: 3,
-                prompt: "Question 28: Which condition checks if the player is currently pressing the 'W' key on the keyboard in Pygame Zero?",
-                choices: [
-                    "if keyboard.w:",
-                    "if keyboard.pressed(\"w\"):",
-                    "if key.W == True:",
-                    "if keyboard.is_down(\"W\"):"
-                ],
-                correctIdx: 0,
-                explanation: "Pygame Zero provides a built-in 'keyboard' object where keys are accessed directly, like 'if keyboard.w:'."
-            },
-            {
-                part: 3,
-                prompt: "Question 29: In which built-in Pygame Zero function should you write your character movement code?",
-                choices: [
-                    "def update():",
-                    "def draw():",
-                    "def start():",
-                    "def move():"
-                ],
-                correctIdx: 0,
-                explanation: "def update(): runs automatically every frame to handle game logic, timers, and sprite movements."
-            },
-            {
-                part: 3,
-                prompt: "Question 30: Which code snippet moves the alien character to the left ONLY when the LEFT arrow key is pressed?",
-                choices: [
-                    "if keyboard.left:\n    alien.x -= 4",
-                    "if keyboard.left:\n    alien.y -= 4",
-                    "if keyboard.left:\n    alien.x += 4",
-                    "if keyboard.down:\n    alien.x -= 4"
-                ],
-                correctIdx: 0,
-                explanation: "To move left, check 'keyboard.left' and decrease 'alien.x' with '-='."
+                explanation: "First, Speech-to-Text transcribes what you said so the AI can read it; then, Text-to-Speech turns the AI's written response into spoken audio."
             }
         ];
 
         let activeQuestionIndex = 0;
         let score = 0;
-        let p1Score = 0;
-        let p2Score = 0;
-        let p3Score = 0;
 
         let clockInterval = null;
-        let timeLeft = 50;
+        let timeLeft = 30;
         let questionLocked = false;
         let userAnswersLog = [];
 
@@ -847,19 +638,12 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        // Tetris shapes defined as 4-block relative grids
         const tetrominoShapes = [
-            // I-Piece (Cyan)
             { color: "#06B6D4", blocks: [[0, 0], [0, 1], [0, 2], [0, 3]] },
-            // O-Square (Yellow)
             { color: "#EAB308", blocks: [[0, 0], [1, 0], [0, 1], [1, 1]] },
-            // T-Piece (Purple)
             { color: "#A855F7", blocks: [[0, 0], [-1, 0], [1, 0], [0, 1]] },
-            // L-Piece (Orange)
             { color: "#F97316", blocks: [[0, 0], [0, 1], [0, 2], [1, 2]] },
-            // Z-Piece (Red)
             { color: "#EF4444", blocks: [[0, 0], [-1, 0], [0, 1], [1, 1]] },
-            // S-Piece (Green)
             { color: "#10B981", blocks: [[0, 0], [1, 0], [0, 1], [-1, 1]] }
         ];
 
@@ -891,7 +675,6 @@
                 c.fillRect(px, py, piece.blockSize, piece.blockSize);
                 c.strokeRect(px, py, piece.blockSize, piece.blockSize);
 
-                // Highlight inner square for authentic Tetris look
                 c.fillStyle = "rgba(255, 255, 255, 0.35)";
                 c.fillRect(px + 2, py + 2, piece.blockSize - 4, 3);
                 c.fillStyle = piece.color;
@@ -924,7 +707,6 @@
             target.classList.add("active");
         }
 
-        // --- SHUFFLE FUNCTION FOR CHOICES ---
         function shuffleQuestionChoices(question) {
             const correctAnswerText = question.choices[question.correctIdx];
             for (let i = question.choices.length - 1; i > 0; i--) {
@@ -937,13 +719,9 @@
         function startQuiz() {
             activeQuestionIndex = 0;
             score = 0;
-            p1Score = 0;
-            p2Score = 0;
-            p3Score = 0;
             userAnswersLog = [];
             hudScoreTracker.innerText = "⭐ Score: 0";
 
-            // Randomize choices for all questions each time the quiz starts
             quizQuestions.forEach(q => shuffleQuestionChoices(q));
 
             switchView(viewArena);
@@ -958,15 +736,8 @@
             arenaSyntaxTerminal.style.display = "none";
 
             const current = quizQuestions[activeQuestionIndex];
-            hudIndexTracker.innerText = `Question ${activeQuestionIndex + 1}/30`;
-
-            if (current.part === 1) {
-                arenaLevelHeader.innerText = "Level 1: Choose the Correct Syntax 🧩";
-            } else if (current.part === 2) {
-                arenaLevelHeader.innerText = "Level 2: Predict the Output 🔍";
-            } else {
-                arenaLevelHeader.innerText = "Level 3: Turtle & Pygame Zero Controls 🐢🎮";
-            }
+            hudIndexTracker.innerText = `Question ${activeQuestionIndex + 1}/10`;
+            arenaLevelHeader.innerText = "Python AI & Vision 🤖";
 
             arenaQuestionText.innerText = current.prompt;
 
@@ -988,12 +759,12 @@
 
         function startTimer() {
             clearInterval(clockInterval);
-            timeLeft = 50;
+            timeLeft = 30; // 30 seconds per question
             arenaTimerFill.style.width = "100%";
 
             clockInterval = setInterval(() => {
                 timeLeft -= 0.1;
-                let pct = (timeLeft / 50) * 100;
+                let pct = (timeLeft / 30) * 100;
                 arenaTimerFill.style.width = `${pct}%`;
 
                 if (timeLeft <= 0) {
@@ -1015,10 +786,6 @@
             if (isCorrect) {
                 btnElement.classList.add("flash-green");
                 score++;
-                if (current.part === 1) p1Score++;
-                else if (current.part === 2) p2Score++;
-                else p3Score++;
-
                 hudScoreTracker.innerText = `⭐ Score: ${score}`;
             } else {
                 btnElement.classList.add("flash-red");
@@ -1079,21 +846,18 @@
 
         function showReportCard() {
             switchView(viewReport);
-            document.getElementById("rep-p1-score").innerText = `${p1Score} / 10`;
-            document.getElementById("rep-p2-score").innerText = `${p2Score} / 10`;
-            document.getElementById("rep-p3-score").innerText = `${p3Score} / 10`;
-            document.getElementById("rep-grand-total").innerText = `${score} / 30`;
+            document.getElementById("rep-grand-total").innerText = `${score} / 10`;
 
-            const percentage = Math.round((score / 30) * 100);
+            const percentage = Math.round((score / 10) * 100);
             document.getElementById("rep-percentage").innerText = `${percentage}%`;
 
             const noteContent = document.getElementById("tutor-note-content");
-            if (score >= 26) {
-                noteContent.innerHTML = `"Dear student, what an incredible revision session! You mastered loops, functions, turtle turns, and character controls in Pygame Zero like a real developer!"<br><br>With proud smiles,<br>Tutor Priyadarshini 🌟`;
-            } else if (score >= 18) {
-                noteContent.innerHTML = `"Dear student, fantastic effort! You have a really solid grip on loops, coordinate movements, and Python syntax. Keep up this amazing momentum!"<br><br>Keep shining,<br>Tutor Priyadarshini 🚀`;
+            if (score >= 9) {
+                noteContent.innerHTML = `"Dear student, fantastic job! You remembered all the core AI steps—face capture with os.makedirs, grayscale conversions, Groq API requests, chat history tracking, and sounddevice voice automation. You're becoming a real AI engineer!"<br><br>Super proud of you,<br>Tutor Priyadarshini 🌟`;
+            } else if (score >= 6) {
+                noteContent.innerHTML = `"Dear student, very good effort! You have a solid grasp of how our Smart Attendance System and AI chatbot APIs work together. Make sure to review how sounddevice handles microphone recording!"<br><br>Keep learning AI,<br>Tutor Priyadarshini 🚀`;
             } else {
-                noteContent.innerHTML = `"Dear student, great effort completing all 30 questions today! Remember that character x controls left/right and y controls up/down. Let's practice together and try again!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
+                noteContent.innerHTML = `"Dear student, good try today! AI concepts like Haar cascades, API requests, and chat conversation lists take a little practice to stick. Review the questions below and give it another try!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
             }
 
             renderReviewTabs();
@@ -1165,26 +929,10 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // DOWNLOAD HANDLER (Allows saving the complete standalone file)
-        function downloadCurrentHTML() {
-            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
-            const downloadUrl = URL.createObjectURL(blob);
-            const downloadLink = document.createElement("a");
-            downloadLink.href = downloadUrl;
-            downloadLink.download = "python_revision_quiz.html";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(downloadUrl);
-        }
-
         // EVENT ATTACHMENTS
         document.getElementById("btn-start-quiz").addEventListener("click", startQuiz);
         document.getElementById("btn-next-step").addEventListener("click", nextQuestion);
         document.getElementById("btn-restart-quiz").addEventListener("click", () => switchView(viewHome));
-        document.getElementById("btn-download-html").addEventListener("click", downloadCurrentHTML);
-        document.getElementById("btn-download-report").addEventListener("click", downloadCurrentHTML);
     </script>
 </body>
 </html>
