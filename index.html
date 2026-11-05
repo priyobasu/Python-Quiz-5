@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python AI revision</title>
+    <title>Python &amp; Pygame revision</title>
     <!-- Fonts: Clean Inter, Arcade Heading, and Handwritten Font for Teacher's Note -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -402,7 +402,7 @@
         <!-- SCREEN 1: HOME COVER -->
         <div id="view-home" class="game-view active">
             <div class="home-layout">
-                <h1 class="home-title">Python AI revision</h1>
+                <h1 class="home-title">Python &amp; Pygame revision</h1>
                 <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                     <button id="btn-start-quiz" class="btn-start">Start with the revision 🚀</button>
                 </div>
@@ -412,7 +412,7 @@
         <!-- SCREEN 2: ACTIVE QUESTION ARENA -->
         <div id="view-arena" class="game-view">
             <div class="arena-subbar">
-                <div id="arena-level-header" class="level-headline">AI &amp; Vision Revision</div>
+                <div id="arena-level-header" class="level-headline">Pygame &amp; Python Revision</div>
                 <div class="progress-timer-bar">
                     <div id="arena-timer-fill" class="timer-progress-fill"></div>
                 </div>
@@ -443,7 +443,7 @@
 
             <div class="report-score-board">
                 <div class="report-score-row">
-                    <span>Python AI &amp; Smart Systems</span>
+                    <span>Pygame &amp; Python Revision</span>
                     <span id="rep-grand-total" style="color: #16A34A; font-weight: 700;">0 / 10</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; padding-top: 6px; color: #854D0E;">
@@ -458,7 +458,7 @@
                     📝 A Note from Tutor Priyadarshini:
                 </div>
                 <div id="tutor-note-content" class="note-signature">
-                    "Dear student, let's see how much of Python AI you remembered today!"
+                    "Dear student, let's see how much of Pygame and Python you remembered today!"
                     <br><br>
                     Warmly,<br>
                     Tutor Priyadarshini ✨
@@ -486,117 +486,117 @@
     </div>
 
     <script>
-        // MASTER 10 PYTHON AI REVISION QUESTIONS
+        // MASTER 10 PYGAME & PYTHON REVISION QUESTIONS
         const quizQuestions = [
             {
-                prompt: "Question 1: In our Smart Attendance System, which Python command do we use to automatically create a folder with the student's name to save their captured faces?",
+                prompt: "Question 1: Before doing anything in Pygame, which command must we write at the start to turn on and set up Pygame?",
                 choices: [
-                    "os.makedirs()",
-                    "os.create_folder()",
-                    "file.make()",
-                    "sys.new_directory()"
+                    "pygame.init()",
+                    "pygame.start()",
+                    "pygame.open()",
+                    "pygame.create()"
                 ],
                 correctIdx: 0,
-                explanation: "We use os.makedirs() because it automatically creates new folders and paths to store each student's captured face images."
+                explanation: "We always run pygame.init() right at the beginning because it wakes up and readies all the parts of Pygame."
             },
             {
-                prompt: "Question 2: Why do we convert captured face images into grayscale before saving them?",
+                prompt: "Question 2: In game coding, what is the main difference between a plain image and a sprite?",
                 choices: [
-                    "It reduces file size and standardizes the dataset for training",
-                    "It makes the image colorful and bright",
-                    "The camera can only save pictures in black and white",
-                    "It deletes all pixels except the eyes and nose"
+                    "An image just sits on the screen, but a sprite can move, be controlled, and touch other items",
+                    "An image is always in 3D, while a sprite is only in black and white",
+                    "A sprite is only sound effects, while an image is a video",
+                    "There is no difference, both words mean the exact same thing"
                 ],
                 correctIdx: 0,
-                explanation: "Converting to grayscale strips away unnecessary color data, making image files smaller and standardizing them so the model trains faster and more accurately."
+                explanation: "A plain image is just a drawing, but a sprite is a game character that can move around, respond to your keys, and collide with obstacles."
             },
             {
-                prompt: "Question 3: What are the three main steps involved in building our Smart Attendance System?",
+                prompt: "Question 3: How many loops do we usually use in a normal Pygame game?",
                 choices: [
-                    "Capturing the face, creating the training dataset, and recognizing faces to log attendance",
-                    "Connecting to internet, deleting old folders, and turning off the webcam",
-                    "Writing a text file, recording microphone audio, and restarting the PC",
-                    "Drawing shapes, scaling window resolution, and closing Python"
+                    "Two loops: a while loop to keep the game running, and a for loop to check key clicks",
+                    "Ten loops: one loop for each game character",
+                    "Only one loop: a while loop that handles everything",
+                    "Zero loops: games in Python do not need any loops"
                 ],
                 correctIdx: 0,
-                explanation: "First we capture faces with a webcam, second we train the model dataset with those images, and third we recognize students in real-time to log their attendance."
+                explanation: "We use a big while loop that keeps the whole game window running, and a for loop inside it to listen for events like keyboard clicks or closing the window."
             },
             {
-                prompt: "Question 4: Which ultra-fast AI inference platform API did we connect to for generating smart, instant chatbot responses?",
+                prompt: "Question 4: Which command do we use to paint or stamp our character onto the game display screen?",
                 choices: [
-                    "Groq API",
-                    "Pygame API",
-                    "Turtle API",
-                    "Excel API"
+                    "screen.blit(character_image, position)",
+                    "screen.paste(character_image)",
+                    "screen.show_pic(character_image)",
+                    "pygame.drop_image(character_image)"
                 ],
                 correctIdx: 0,
-                explanation: "We used Groq's API because its LPU hardware runs large language models super fast to give instant chatbot replies."
+                explanation: "The command is screen.blit()! Think of 'blit' as stamping your character picture right onto the screen at its (x, y) position."
             },
             {
-                prompt: "Question 5: In simple words, what does an API actually do in our programs?",
+                prompt: "Question 5: If our game character image is way too big, which command do we use to resize and scale it down?",
                 choices: [
-                    "It receives a request from our app and sends back a response",
-                    "It turns off the computer when an error occurs",
-                    "It cleans your screen pixels and removes viruses",
-                    "It saves your code into a Word document"
+                    "pygame.transform.scale(image, (width, height))",
+                    "pygame.resize.picture(image, smaller)",
+                    "image.shrink_down(50)",
+                    "pygame.cut_image(image, 100)"
                 ],
                 correctIdx: 0,
-                explanation: "An API acts like a smart messenger: your program sends a request (your question), and the API brings back a response (the AI answer)."
+                explanation: "pygame.transform.scale() takes your image and changes it to the exact new width and height numbers you choose."
             },
             {
-                prompt: "Question 6: Which client library did we import to connect our code seamlessly with the language model API?",
+                prompt: "Question 6: [Guess the Snippet: Conditions] Which code snippet correctly checks if the player's score is 50 or more to show 'You Win!'?",
                 choices: [
-                    "from openai import OpenAI",
-                    "import turtle_ai",
-                    "import camera_screen",
-                    "import website_maker"
+                    "if score >= 50:\n    print(\"You Win!\")",
+                    "if score == 50 then\n    print \"You Win!\"",
+                    "check score > 50:\n    display(\"You Win!\")",
+                    "if score >= 50\nprint(\"You Win!\")"
                 ],
                 correctIdx: 0,
-                explanation: "We use the OpenAI Python client library (from openai import OpenAI) because platforms like Groq use the compatible OpenAI API format."
+                explanation: "A proper Python if-statement starts with 'if', has a comparison check like '>=', ends with a colon ':', and indents the code underneath."
             },
             {
-                prompt: "Question 7: How did we keep track of the entire ongoing chat history so the AI remembers past messages?",
+                prompt: "Question 7: [Guess the Snippet: Math] Which snippet correctly multiplies coins by 10 and adds a bonus of 5 to find total_points?",
                 choices: [
-                    "By appending each user and assistant message into a conversation list/dictionary",
-                    "By restarting the chatbot after every question",
-                    "By saving each word in a variable named temp_word",
-                    "By deleting older answers to keep only the latest word"
+                    "total_points = coins * 10 + 5",
+                    "total_points = coins x 10 plus 5",
+                    "total_points = coins(10) + bonus",
+                    "total_points == coins * 10 and 5"
                 ],
                 correctIdx: 0,
-                explanation: "We keep appending each message as a dictionary ({'role': ..., 'content': ...}) into our messages list so the AI has full conversational context."
+                explanation: "In Python math, we use the star symbol '*' for multiplication and the plus symbol '+' for addition, assigning with a single '='."
             },
             {
-                prompt: "Question 8: What role does a Haar Cascade classifier file (XML) play in our camera vision system?",
+                prompt: "Question 8: [Guess the Snippet: Loops] Which code snippet correctly uses a for loop to print the numbers 1, 2, 3, 4, 5?",
                 choices: [
-                    "It quickly detects and finds the bounding box coordinates of faces in the video frame",
-                    "It converts speech voice notes into text files",
-                    "It downloads games from the internet",
-                    "It controls the speed of the computer's cooling fan"
+                    "for i in range(1, 6):\n    print(i)",
+                    "for i in range(1, 5):\n    print(i)",
+                    "repeat 5 times:\n    print(i)",
+                    "loop i from 1 to 5:\n    print(i)"
                 ],
                 correctIdx: 0,
-                explanation: "A Haar Cascade is a pre-trained feature detection model in OpenCV that spots where faces appear in each video frame."
+                explanation: "range(1, 6) starts at 1 and stops right before 6, so it neatly prints 1, 2, 3, 4, and 5."
             },
             {
-                prompt: "Question 9: Which Python library do we use for audio recording and capturing voice signals from the microphone for voice automation?",
+                prompt: "Question 9: [Guess the Snippet: Lists] We have a player's bag: bag = ['sword', 'shield']. Which snippet correctly adds a 'gem' to the bag?",
                 choices: [
-                    "sounddevice",
-                    "pygame.music",
-                    "os.audio",
-                    "math.sound"
+                    "bag.append(\"gem\")",
+                    "bag.add_word(\"gem\")",
+                    "bag.insert_end = \"gem\"",
+                    "bag + \"gem\" = new_bag"
                 ],
                 correctIdx: 0,
-                explanation: "The sounddevice library lets Python capture real-time audio from your microphone as well as play sound arrays back through speakers."
+                explanation: ".append() is the standard Python command that neatly tucks a new item right onto the end of a list."
             },
             {
-                prompt: "Question 10: In voice automation, what is the two-step cycle for converting user voice into an AI reply?",
+                prompt: "Question 10: [Guess the Snippet: Functions] Which code snippet correctly defines a greeting function (without returning anything) and then calls it?",
                 choices: [
-                    "Speech-to-Text (STT) to understand audio, then Text-to-Speech (TTS) to speak back",
-                    "Taking a screenshot, then saving it as an MP3 song",
-                    "Creating a folder, then deleting the microphone driver",
-                    "Converting video to black and white, then closing the browser"
+                    "def greet(name):\n    print(\"Hello\", name)\n\ngreet(\"Sam\")",
+                    "function greet(name):\n    print(\"Hello\", name)\ncall greet",
+                    "def greet(name)\nprint(\"Hello\", name)\ngreet",
+                    "make_function greet:\n    display(\"Hello\")\nrun greet"
                 ],
                 correctIdx: 0,
-                explanation: "First, Speech-to-Text transcribes what you said so the AI can read it; then, Text-to-Speech turns the AI's written response into spoken audio."
+                explanation: "In Python, we create functions using 'def name(parameters):', indent the print statement inside, and then call it using its name with round brackets: greet('Sam')."
             }
         ];
 
@@ -737,7 +737,7 @@
 
             const current = quizQuestions[activeQuestionIndex];
             hudIndexTracker.innerText = `Question ${activeQuestionIndex + 1}/10`;
-            arenaLevelHeader.innerText = "Python AI & Vision 🤖";
+            arenaLevelHeader.innerText = "Pygame & Python Revision 🎮";
 
             arenaQuestionText.innerText = current.prompt;
 
@@ -853,11 +853,11 @@
 
             const noteContent = document.getElementById("tutor-note-content");
             if (score >= 9) {
-                noteContent.innerHTML = `"Dear student, fantastic job! You remembered all the core AI steps—face capture with os.makedirs, grayscale conversions, Groq API requests, chat history tracking, and sounddevice voice automation. You're becoming a real AI engineer!"<br><br>Super proud of you,<br>Tutor Priyadarshini 🌟`;
+                noteContent.innerHTML = `"Dear student, stellar work! You know all the big game blocks—pygame.init(), how sprites move, screen.blit(), and scaling characters, plus your Python loop and condition snippets were spot on! Keep building awesome games!"<br><br>Super proud of you,<br>Tutor Priyadarshini 🌟`;
             } else if (score >= 6) {
-                noteContent.innerHTML = `"Dear student, very good effort! You have a solid grasp of how our Smart Attendance System and AI chatbot APIs work together. Make sure to review how sounddevice handles microphone recording!"<br><br>Keep learning AI,<br>Tutor Priyadarshini 🚀`;
+                noteContent.innerHTML = `"Dear student, wonderful effort! You clearly remember how Pygame displays graphics and how our while and for loops keep games alive. Review screen.blit() and how range() numbers work, and you will be unstoppable!"<br><br>Keep creating,<br>Tutor Priyadarshini 🚀`;
             } else {
-                noteContent.innerHTML = `"Dear student, good try today! AI concepts like Haar cascades, API requests, and chat conversation lists take a little practice to stick. Review the questions below and give it another try!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
+                noteContent.innerHTML = `"Dear student, great try today! Pygame commands like blit, scale, and list appending take a little time to become second nature. Check your answers in the tabs below and give it another spin!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
             }
 
             renderReviewTabs();
