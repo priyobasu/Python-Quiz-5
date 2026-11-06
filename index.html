@@ -1,938 +1,766 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python &amp; Pygame revision</title>
-    <!-- Fonts: Clean Inter, Arcade Heading, and Handwritten Font for Teacher's Note -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-light-yellow: #FEF08A;
-            --yellow-card-bg: #FFFFFF;
-            --yellow-accent: #FDE047;
-            --yellow-accent-hover: #EAB308;
-            --border-dark: #1C1917;
-            --color-correct: #4ADE80;
-            --color-wrong: #F87171;
-            --text-dark: #1C1917;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alphagen Learning ✦ | Python</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            user-select: none;
-        }
-
-        body {
-            background-color: var(--bg-light-yellow);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* --- BACKGROUND CANVAS: FALLING TETRIS BLOCKS --- */
-        #tetrisCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* --- MAIN CARD --- */
-        .quiz-card {
-            width: 100%;
-            max-width: 880px;
-            background: var(--yellow-card-bg);
-            border: 4px solid var(--border-dark);
-            border-radius: 24px;
-            box-shadow: 8px 8px 0px var(--border-dark);
-            overflow: hidden;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* --- HUD / TOP BAR --- */
-        .hud-topbar {
-            background: #FDE047;
-            border-bottom: 4px solid var(--border-dark);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .hud-badge {
-            background: #FFFFFF;
-            border: 2px solid var(--border-dark);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 3px 3px 0px var(--border-dark);
-        }
-
-        .game-view {
-            display: none;
-            padding: 28px;
-        }
-
-        .game-view.active {
-            display: block;
-        }
-
-        /* --- COVER SCREEN --- */
-        .home-layout {
-            text-align: center;
-            padding: 60px 16px;
-        }
-
-        .home-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 32px;
-            color: var(--text-dark);
-            margin-bottom: 40px;
-            line-height: 1.5;
-            text-shadow: 3px 3px 0px #EAB308;
-        }
-
-        .btn-start, .btn-restart {
-            background: var(--yellow-accent);
-            color: var(--text-dark);
-            border: 3px solid var(--border-dark);
-            padding: 16px 40px;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 16px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--border-dark);
-            transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
-        }
-
-        .btn-start:hover, .btn-restart:hover {
-            background: var(--yellow-accent-hover);
-        }
-
-        .btn-start:active, .btn-restart:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--border-dark);
-        }
-
-        /* --- QUESTION ARENA SUBBAR & TIMER --- */
-        .arena-subbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .level-headline {
-            font-weight: 700;
-            font-size: 14px;
-            color: #854D0E;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .progress-timer-bar {
-            width: 200px;
-            background: #FFFFFF;
-            border: 2px solid var(--border-dark);
-            border-radius: 12px;
-            height: 24px;
-            overflow: hidden;
-            box-shadow: 2px 2px 0px var(--border-dark);
-        }
-
-        .timer-progress-fill {
-            width: 100%;
-            height: 100%;
-            background: #EAB308;
-            transition: width 0.1s linear;
-        }
-
-        /* --- QUESTION PROMPT CARD --- */
-        .problem-description-card {
-            background-color: #FEFCE8;
-            border: 3px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 22px;
-            box-shadow: 4px 4px 0px var(--border-dark);
-        }
-
-        .problem-prompt-text {
-            font-size: 17px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
-
-        .python-syntax-box {
-            background: #1C1917;
-            border: 2px solid var(--border-dark);
-            border-radius: 12px;
-            padding: 16px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 15px;
-            color: #FEF08A;
-            white-space: pre-wrap;
-            margin-top: 14px;
-            line-height: 1.5;
-        }
-
-        /* --- CHOICE OPTIONS (CODE BOXES / MCQS 2x2) --- */
-        .choices-stack-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 22px;
-        }
-
-        .choice-item-btn {
-            background: #FFFFFF;
-            border: 3px solid var(--border-dark);
-            border-radius: 14px;
-            padding: 14px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
-            text-align: left;
-            box-shadow: 4px 4px 0px var(--border-dark);
-            transition: transform 0.05s, box-shadow 0.05s, background-color 0.1s;
-            white-space: pre-wrap;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 1.45;
-            display: flex;
-            align-items: center;
-            min-height: 58px;
-        }
-
-        .choice-item-btn:hover {
-            background: #FEFCE8;
-            transform: translate(-1px, -1px);
-            box-shadow: 5px 5px 0px var(--border-dark);
-        }
-
-        .choice-item-btn.flash-green {
-            background-color: var(--color-correct) !important;
-            font-weight: 700;
-            color: #064E3B;
-        }
-
-        .choice-item-btn.flash-red {
-            background-color: var(--color-wrong) !important;
-            font-weight: 700;
-            color: #7F1D1D;
-        }
-
-        /* --- EXPLANATION SYSTEM --- */
-        .explanation-review-box {
-            display: none;
-            background: #F0FDF4;
-            border: 3px solid var(--border-dark);
-            border-radius: 14px;
-            padding: 18px 22px;
-            margin-bottom: 22px;
-            box-shadow: 3px 3px 0px var(--border-dark);
-        }
-
-        .explanation-label-tag {
-            font-weight: 700;
-            color: #166534;
-            margin-bottom: 6px;
-            font-size: 15px;
-        }
-
-        .explanation-body-text {
-            font-size: 15px;
-            line-height: 1.5;
-            color: #1F2937;
-        }
-
-        /* --- REPORT SCREEN & HANDWRITTEN NOTE --- */
-        .report-header {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 22px;
-            color: var(--text-dark);
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .report-score-board {
-            background: #FEFCE8;
-            border: 3px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 22px;
-            max-width: 580px;
-            margin: 0 auto 28px auto;
-            box-shadow: 4px 4px 0px var(--border-dark);
-        }
-
-        .report-score-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            border-bottom: 2px dashed #FDE047;
-            padding-bottom: 6px;
-        }
-
-        .note-card {
-            background: #FFFBEB;
-            border: 3px solid #78350F;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 640px;
-            margin: 0 auto 28px auto;
-            box-shadow: 5px 5px 0px #78350F;
-            position: relative;
-        }
-
-        .note-signature {
-            font-family: 'Caveat', cursive;
-            font-size: 24px;
-            color: #92400E;
-            line-height: 1.4;
-            text-align: left;
-        }
-
-        .review-tabs {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: #FFFFFF;
-            border: 2px solid var(--border-dark);
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0px var(--border-dark);
-        }
-
-        .tab-btn.active {
-            background: var(--yellow-accent);
-        }
-
-        .tab-content {
-            display: none;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 2px solid var(--border-dark);
-            border-radius: 14px;
-            padding: 16px;
-            background: #F8FAFC;
-            margin-bottom: 24px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .review-item {
-            background: #FFFFFF;
-            border: 2px solid var(--border-dark);
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .review-item.is-correct {
-            border-left: 8px solid var(--color-correct);
-        }
-
-        .review-item.is-wrong {
-            border-left: 8px solid var(--color-wrong);
-        }
-
-        @media (max-width: 640px) {
-            .choices-stack-grid {
-                grid-template-columns: 1fr;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              purple: '#5E48C4',
+              purpleDark: '#4A3AAD',
+              purpleMid: '#7B6ED4',
+              purplePale: '#EAE7FE',
+              purpleGhost: '#F5F4FF',
+              yellow: '#FFD071',
+              yellowDark: '#E6B84A',
+              nearBlack: '#1A1A1A',
+              darkGrey: '#404048',
+              midGrey: '#888896',
+              lightGrey: '#F2F2F4',
+              cyanPrimary: '#59E4FB',
+              cyanDark: '#055F6E',
+              coralPrimary: '#ED5661',
+              coralDark: '#993040'
             }
-            .home-title {
-                font-size: 22px;
-            }
-            .hud-topbar {
-                padding: 12px 16px;
-            }
-            .hud-badge {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-            .progress-timer-bar {
-                width: 140px;
-            }
+          },
+          fontFamily: {
+            sans: ['"Poppins"', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace']
+          }
         }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F5F4FF;
+      color: #1A1A1A;
+      font-family: 'Poppins', sans-serif;
+    }
+    .token-comment { color: #888896 !important; font-style: italic !important; }
+    .token-keyword { color: #5E48C4 !important; font-weight: 700 !important; }
+    .token-builtin { color: #055F6E !important; font-weight: 600 !important; }
+    .token-string  { color: #993040 !important; }
+    .token-number  { color: #E6B84A !important; font-weight: 600 !important; }
+    .token-operator{ color: #4A3AAD !important; font-weight: 600 !important; }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #F2F2F4; }
+    ::-webkit-scrollbar-thumb { background: #7B6ED4; border-radius: 4px; }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col bg-brand-purpleGhost text-brand-nearBlack selection:bg-brand-purplePale selection:text-brand-purpleDark">
 
-    <!-- ANIMATED TETRIS BLOCKS BACKGROUND CANVAS -->
-    <canvas id="tetrisCanvas"></canvas>
-
-    <div class="quiz-card">
-        <!-- TOP HUD -->
-        <div class="hud-topbar">
-            <div id="hud-index-tracker" class="hud-badge">Question 1/10</div>
-            <div id="hud-score-tracker" class="hud-badge">⭐ Score: 0</div>
+  <!-- TOP BAR -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-lightGrey px-4 lg:px-8 py-3.5 shadow-sm">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+      
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-brand-purple flex items-center justify-center text-brand-yellow font-bold text-lg">
+          ✦
         </div>
-
-        <!-- SCREEN 1: HOME COVER -->
-        <div id="view-home" class="game-view active">
-            <div class="home-layout">
-                <h1 class="home-title">Python &amp; Pygame revision</h1>
-                <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-                    <button id="btn-start-quiz" class="btn-start">Start with the revision 🚀</button>
-                </div>
-            </div>
+        <div>
+          <span class="text-xs font-bold tracking-widest text-brand-purple uppercase">Alphagen Learning</span>
+          <h1 class="text-base sm:text-lg font-bold text-brand-nearBlack tracking-tight leading-tight">Python Practice</h1>
         </div>
+      </div>
 
-        <!-- SCREEN 2: ACTIVE QUESTION ARENA -->
-        <div id="view-arena" class="game-view">
-            <div class="arena-subbar">
-                <div id="arena-level-header" class="level-headline">Pygame &amp; Python Revision</div>
-                <div class="progress-timer-bar">
-                    <div id="arena-timer-fill" class="timer-progress-fill"></div>
-                </div>
-            </div>
-
-            <div id="arena-prompt-frame" class="problem-description-card">
-                <p id="arena-question-text" class="problem-prompt-text">Loading question...</p>
-                <div id="arena-syntax-terminal" class="python-syntax-box" style="display: none;"></div>
-            </div>
-
-            <!-- Four Syntax/Option Box Stack (2x2 Grid) -->
-            <div id="arena-choices-stack" class="choices-stack-grid"></div>
-
-            <!-- Explanation Box -->
-            <div id="arena-explanation-drawer" class="explanation-review-box">
-                <div class="explanation-label-tag">Explanation 💡</div>
-                <p id="explanation-body-text" class="explanation-body-text">Explanation text...</p>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end;">
-                <button id="btn-next-step" class="btn-start" style="display: none; font-size: 15px; padding: 12px 26px;">Next Question ➡️</button>
-            </div>
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex flex-col text-right">
+          <span class="text-xs text-brand-darkGrey font-medium">Completed</span>
+          <span class="text-xs font-bold text-brand-purple" id="progressPercent">0%</span>
         </div>
-
-        <!-- SCREEN 3: REPORT CARD & PRIYADARSHINI NOTE -->
-        <div id="view-report" class="game-view">
-            <h2 class="report-header">Revision Complete! 🌟</h2>
-
-            <div class="report-score-board">
-                <div class="report-score-row">
-                    <span>Pygame &amp; Python Revision</span>
-                    <span id="rep-grand-total" style="color: #16A34A; font-weight: 700;">0 / 10</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; padding-top: 6px; color: #854D0E;">
-                    <span>ACCURACY</span>
-                    <span id="rep-percentage">0%</span>
-                </div>
-            </div>
-
-            <!-- HANDWRITTEN NOTE FROM TUTOR PRIYADARSHINI -->
-            <div class="note-card">
-                <div style="font-weight: 700; margin-bottom: 8px; color: #78350F; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
-                    📝 A Note from Tutor Priyadarshini:
-                </div>
-                <div id="tutor-note-content" class="note-signature">
-                    "Dear student, let's see how much of Pygame and Python you remembered today!"
-                    <br><br>
-                    Warmly,<br>
-                    Tutor Priyadarshini ✨
-                </div>
-            </div>
-
-            <!-- DETAILED QUESTION-BY-QUESTION REVIEW TABS -->
-            <div style="margin-top: 24px;">
-                <h3 style="text-align: center; margin-bottom: 12px; font-size: 16px; font-weight: 700;">Check Your Answers:</h3>
-                <div class="review-tabs">
-                    <button class="tab-btn active" onclick="showReviewTab('all')">All (10)</button>
-                    <button class="tab-btn" onclick="showReviewTab('correct')">Correct (✔️)</button>
-                    <button class="tab-btn" onclick="showReviewTab('wrong')">Review Needed (❌)</button>
-                </div>
-
-                <div id="tab-all" class="tab-content active"></div>
-                <div id="tab-correct" class="tab-content"></div>
-                <div id="tab-wrong" class="tab-content"></div>
-            </div>
-
-            <div style="text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-                <button id="btn-restart-quiz" class="btn-restart">Try Again 🔄</button>
-            </div>
+        <div class="w-28 sm:w-40 h-2.5 bg-brand-lightGrey rounded-full overflow-hidden p-[2px]">
+          <div id="progressBar" class="h-full bg-brand-purple rounded-full transition-all duration-300" style="width: 0%"></div>
         </div>
+        <button onclick="resetProgress()" class="p-2 text-xs text-brand-darkGrey hover:text-brand-purple hover:bg-brand-purplePale rounded-lg transition" title="Reset">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+      </div>
+
     </div>
+  </header>
 
-    <script>
-        // MASTER 10 PYGAME & PYTHON REVISION QUESTIONS
-        const quizQuestions = [
-            {
-                prompt: "Question 1: Before doing anything in Pygame, which command must we write at the start to turn on and set up Pygame?",
-                choices: [
-                    "pygame.init()",
-                    "pygame.start()",
-                    "pygame.open()",
-                    "pygame.create()"
-                ],
-                correctIdx: 0,
-                explanation: "We always run pygame.init() right at the beginning because it wakes up and readies all the parts of Pygame."
-            },
-            {
-                prompt: "Question 2: In game coding, what is the main difference between a plain image and a sprite?",
-                choices: [
-                    "An image just sits on the screen, but a sprite can move, be controlled, and touch other items",
-                    "An image is always in 3D, while a sprite is only in black and white",
-                    "A sprite is only sound effects, while an image is a video",
-                    "There is no difference, both words mean the exact same thing"
-                ],
-                correctIdx: 0,
-                explanation: "A plain image is just a drawing, but a sprite is a game character that can move around, respond to your keys, and collide with obstacles."
-            },
-            {
-                prompt: "Question 3: How many loops do we usually use in a normal Pygame game?",
-                choices: [
-                    "Two loops: a while loop to keep the game running, and a for loop to check key clicks",
-                    "Ten loops: one loop for each game character",
-                    "Only one loop: a while loop that handles everything",
-                    "Zero loops: games in Python do not need any loops"
-                ],
-                correctIdx: 0,
-                explanation: "We use a big while loop that keeps the whole game window running, and a for loop inside it to listen for events like keyboard clicks or closing the window."
-            },
-            {
-                prompt: "Question 4: Which command do we use to paint or stamp our character onto the game display screen?",
-                choices: [
-                    "screen.blit(character_image, position)",
-                    "screen.paste(character_image)",
-                    "screen.show_pic(character_image)",
-                    "pygame.drop_image(character_image)"
-                ],
-                correctIdx: 0,
-                explanation: "The command is screen.blit()! Think of 'blit' as stamping your character picture right onto the screen at its (x, y) position."
-            },
-            {
-                prompt: "Question 5: If our game character image is way too big, which command do we use to resize and scale it down?",
-                choices: [
-                    "pygame.transform.scale(image, (width, height))",
-                    "pygame.resize.picture(image, smaller)",
-                    "image.shrink_down(50)",
-                    "pygame.cut_image(image, 100)"
-                ],
-                correctIdx: 0,
-                explanation: "pygame.transform.scale() takes your image and changes it to the exact new width and height numbers you choose."
-            },
-            {
-                prompt: "Question 6: [Guess the Snippet: Conditions] Which code snippet correctly checks if the player's score is 50 or more to show 'You Win!'?",
-                choices: [
-                    "if score >= 50:\n    print(\"You Win!\")",
-                    "if score == 50 then\n    print \"You Win!\"",
-                    "check score > 50:\n    display(\"You Win!\")",
-                    "if score >= 50\nprint(\"You Win!\")"
-                ],
-                correctIdx: 0,
-                explanation: "A proper Python if-statement starts with 'if', has a comparison check like '>=', ends with a colon ':', and indents the code underneath."
-            },
-            {
-                prompt: "Question 7: [Guess the Snippet: Math] Which snippet correctly multiplies coins by 10 and adds a bonus of 5 to find total_points?",
-                choices: [
-                    "total_points = coins * 10 + 5",
-                    "total_points = coins x 10 plus 5",
-                    "total_points = coins(10) + bonus",
-                    "total_points == coins * 10 and 5"
-                ],
-                correctIdx: 0,
-                explanation: "In Python math, we use the star symbol '*' for multiplication and the plus symbol '+' for addition, assigning with a single '='."
-            },
-            {
-                prompt: "Question 8: [Guess the Snippet: Loops] Which code snippet correctly uses a for loop to print the numbers 1, 2, 3, 4, 5?",
-                choices: [
-                    "for i in range(1, 6):\n    print(i)",
-                    "for i in range(1, 5):\n    print(i)",
-                    "repeat 5 times:\n    print(i)",
-                    "loop i from 1 to 5:\n    print(i)"
-                ],
-                correctIdx: 0,
-                explanation: "range(1, 6) starts at 1 and stops right before 6, so it neatly prints 1, 2, 3, 4, and 5."
-            },
-            {
-                prompt: "Question 9: [Guess the Snippet: Lists] We have a player's bag: bag = ['sword', 'shield']. Which snippet correctly adds a 'gem' to the bag?",
-                choices: [
-                    "bag.append(\"gem\")",
-                    "bag.add_word(\"gem\")",
-                    "bag.insert_end = \"gem\"",
-                    "bag + \"gem\" = new_bag"
-                ],
-                correctIdx: 0,
-                explanation: ".append() is the standard Python command that neatly tucks a new item right onto the end of a list."
-            },
-            {
-                prompt: "Question 10: [Guess the Snippet: Functions] Which code snippet correctly defines a greeting function (without returning anything) and then calls it?",
-                choices: [
-                    "def greet(name):\n    print(\"Hello\", name)\n\ngreet(\"Sam\")",
-                    "function greet(name):\n    print(\"Hello\", name)\ncall greet",
-                    "def greet(name)\nprint(\"Hello\", name)\ngreet",
-                    "make_function greet:\n    display(\"Hello\")\nrun greet"
-                ],
-                correctIdx: 0,
-                explanation: "In Python, we create functions using 'def name(parameters):', indent the print statement inside, and then call it using its name with round brackets: greet('Sam')."
-            }
-        ];
+  <!-- QUICK NAV -->
+  <nav class="max-w-6xl mx-auto px-4 lg:px-8 pt-6 pb-2 w-full">
+    <div class="flex flex-wrap gap-2 text-xs">
+      <a href="#level-1" class="px-3 py-1.5 rounded-lg bg-white border border-brand-purplePale text-brand-purple hover:bg-brand-purple hover:text-white font-semibold transition">1. Variables & Math</a>
+      <a href="#level-2" class="px-3 py-1.5 rounded-lg bg-white border border-brand-purplePale text-brand-purple hover:bg-brand-purple hover:text-white font-semibold transition">2. Conditions</a>
+      <a href="#level-3" class="px-3 py-1.5 rounded-lg bg-white border border-brand-purplePale text-brand-purple hover:bg-brand-purple hover:text-white font-semibold transition">3. Loops</a>
+      <a href="#level-4" class="px-3 py-1.5 rounded-lg bg-white border border-brand-purplePale text-brand-purple hover:bg-brand-purple hover:text-white font-semibold transition">4. Data Structures</a>
+      <a href="#level-5" class="px-3 py-1.5 rounded-lg bg-white border border-brand-purplePale text-brand-purple hover:bg-brand-purple hover:text-white font-semibold transition">5. Functions</a>
+    </div>
+  </nav>
 
-        let activeQuestionIndex = 0;
-        let score = 0;
+  <!-- CONTENT -->
+  <main class="max-w-6xl mx-auto px-4 lg:px-8 py-4 w-full space-y-10 flex-1" id="curriculumContainer"></main>
 
-        let clockInterval = null;
-        let timeLeft = 30;
-        let questionLocked = false;
-        let userAnswersLog = [];
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 bg-white border border-brand-purple rounded-xl shadow-lg text-brand-nearBlack text-xs transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none">
+    <span class="text-brand-purple font-bold">✦</span>
+    <span id="toastMsg" class="font-medium"></span>
+  </div>
 
-        // DOM REFERENCES
-        const viewHome = document.getElementById("view-home");
-        const viewArena = document.getElementById("view-arena");
-        const viewReport = document.getElementById("view-report");
+  <script>
+    const CURRICULUM = [
+      {
+        id: "level-1",
+        title: "1. Variables, Inputs & Math",
+        challenges: [
+          {
+            id: "l1_c1",
+            title: "Sharing Pizza Slices (* and /)",
+            desc: "Ask the user how many friends are eating and how many pizzas they bought (each pizza has 8 slices). Calculate the total slices using * and the slices per friend using /.",
+            solution: [
+              "# Simple pizza slice share",
+              "friends = int(input(\"Number of friends: \"))",
+              "pizzas = int(input(\"Pizzas ordered: \"))",
+              "",
+              "total_slices = pizzas * 8",
+              "slices_each = total_slices / friends",
+              "",
+              "print(\"Total slices:\", total_slices)",
+              "print(\"Slices per friend:\", slices_each)"
+            ].join("\n")
+          },
+          {
+            id: "l1_c2",
+            title: "Hours to Days (// and %)",
+            desc: "Ask the user for a total number of hours (e.g. 50). Use // to find how many full days that is, and % to find the remaining leftover hours.",
+            solution: [
+              "# Floor division and remainder",
+              "hours = int(input(\"Enter total hours: \"))",
+              "",
+              "full_days = hours // 24",
+              "leftover_hours = hours % 24",
+              "",
+              "print(\"Full days:\", full_days)",
+              "print(\"Hours left over:\", leftover_hours)"
+            ].join("\n")
+          },
+          {
+            id: "l1_c3",
+            title: "Square and Cube Power (**)",
+            desc: "Ask the user for their favorite number. Use the ** power operator to calculate and print its square (power of 2) and its cube (power of 3).",
+            solution: [
+              "# Powers using **",
+              "num = int(input(\"Enter a number: \"))",
+              "",
+              "squared = num ** 2",
+              "cubed = num ** 3",
+              "",
+              "print(\"Squared:\", squared)",
+              "print(\"Cubed:\", cubed)"
+            ].join("\n")
+          }
+        ],
+        anecdote: {
+          title: "Level 1 Complete",
+          quote: "Python handles math like a breeze once you know the symbols.",
+          bullets: [
+            "input() always takes in text, so wrap it with int() or float() to do math.",
+            "/ gives a decimal answer (like 7 / 2 = 3.5).",
+            "// divides and rounds down to the nearest whole number (7 // 2 = 3).",
+            "% gives you the leftover remainder after dividing.",
+            "Use ** for powers (2 ** 3 is 2 cubed = 8)."
+          ]
+        }
+      },
+      {
+        id: "level-2",
+        title: "2. Conditions & Logic Gates",
+        challenges: [
+          {
+            id: "l2_c1",
+            title: "Exam Pass Check (if, elif, else)",
+            desc: "Ask for an exam score from 0 to 100. If score >= 50 print 'Passed!'. Otherwise print 'Try again next time!'.",
+            solution: [
+              "# Checking score condition",
+              "score = int(input(\"Enter your score (0-100): \"))",
+              "",
+              "if score >= 50:",
+              "    print(\"Passed!\")",
+              "else:",
+              "    print(\"Try again next time!\")"
+            ].join("\n")
+          },
+          {
+            id: "l2_c2",
+            title: "Theme Park Ride (and, or)",
+            desc: "Ask for age and whether they have a VIP pass (yes/no). Allow entry if age is 12 or older AND they have a pass, OR if their age is 18 or older.",
+            solution: [
+              "# Logical and / or",
+              "age = int(input(\"Enter your age: \"))",
+              "has_pass = input(\"Do you have a VIP pass? (yes/no): \") == \"yes\"",
+              "",
+              "if (age >= 12 and has_pass) or (age >= 18):",
+              "    print(\"You can ride!\")",
+              "else:",
+              "    print(\"Sorry, not this time.\")"
+            ].join("\n")
+          },
+          {
+            id: "l2_c3",
+            title: "Weekend Alarm (not and nested if)",
+            desc: "Ask if today is a weekday (yes/no). If it is a weekday, ask if school is open. If not open, print 'Sleep in!'. If open, print 'Time to wake up!'.",
+            solution: [
+              "# Nested condition with not",
+              "is_weekday = input(\"Is it a weekday? (yes/no): \") == \"yes\"",
+              "",
+              "if is_weekday:",
+              "    school_open = input(\"Is school open? (yes/no): \") == \"yes\"",
+              "    if not school_open:",
+              "        print(\"School is closed, sleep in!\")",
+              "    else:",
+              "        print(\"Time to wake up!\")",
+              "else:",
+              "    print(\"It is the weekend, sleep in!\")"
+            ].join("\n")
+          }
+        ],
+        anecdote: {
+          title: "Level 2 Complete",
+          quote: "Conditions help your program make decisions based on what is happening.",
+          bullets: [
+            "Use == to compare if two things are equal, and = to save a value to a variable.",
+            "and requires both sides to be True.",
+            "or requires only one of the sides to be True.",
+            "not flips True to False, or False to True.",
+            "Indent 4 spaces inside an if block so Python knows what code belongs inside it."
+          ]
+        }
+      },
+      {
+        id: "level-3",
+        title: "3. Loops & Sequences",
+        challenges: [
+          {
+            id: "l3_c1",
+            title: "Simple Countdown (while loop)",
+            desc: "Start a variable countdown at 5. Use a while loop to print the number and subtract 1 each time until reaching 0, then print 'Go!'.",
+            solution: [
+              "# Simple countdown loop",
+              "count = 5",
+              "",
+              "while count > 0:",
+              "    print(count)",
+              "    count = count - 1",
+              "",
+              "print(\"Go!\")"
+            ].join("\n")
+          },
+          {
+            id: "l3_c2",
+            title: "Counting by Twos (for loop)",
+            desc: "Use a for loop with range() to print even numbers from 2 up to 10 on screen.",
+            solution: [
+              "# Counting by steps of 2",
+              "for number in range(2, 11, 2):",
+              "    print(number)"
+            ].join("\n")
+          },
+          {
+            id: "l3_c3",
+            title: "Adding Numbers 1 to 5 (sum total)",
+            desc: "Create a total variable starting at 0. Loop through numbers 1 to 5 and add each number to total, then print the final sum.",
+            solution: [
+              "# Adding numbers together",
+              "total = 0",
+              "",
+              "for num in range(1, 6):",
+              "    total = total + num",
+              "",
+              "print(\"Sum of 1 to 5 is:\", total)"
+            ].join("\n")
+          }
+        ],
+        anecdote: {
+          title: "Level 3 Complete",
+          quote: "Loops save time by repeating steps without writing the same code over and over.",
+          bullets: [
+            "while loops run as long as a condition stays True.",
+            "Always change your loop variable inside a while loop so it doesn't run forever.",
+            "range(1, 6) starts at 1 and stops before 6 (giving 1, 2, 3, 4, 5).",
+            "range(start, stop, step) allows counting in steps, like step 2 for even numbers."
+          ]
+        }
+      },
+      {
+        id: "level-4",
+        title: "4. Data Structures",
+        challenges: [
+          {
+            id: "l4_c1",
+            title: "Favorite Snacks (Lists)",
+            desc: "Start with a list of 2 snacks: ['Chips', 'Cookies']. Ask the user for one new snack, add it using .append(), and print the whole list.",
+            solution: [
+              "# Adding an item to a list",
+              "snacks = [\"Chips\", \"Cookies\"]",
+              "",
+              "new_snack = input(\"Enter a new snack: \")",
+              "snacks.append(new_snack)",
+              "",
+              "print(\"My snacks list:\", snacks)"
+            ].join("\n")
+          },
+          {
+            id: "l4_c2",
+            title: "Map Coordinate (Tuples)",
+            desc: "Create a coordinate tuple with x and y: (12, 25). Unpack them into separate x and y variables and print them.",
+            solution: [
+              "# Unpacking a tuple",
+              "coordinate = (12, 25)",
+              "",
+              "x, y = coordinate",
+              "",
+              "print(\"X position:\", x)",
+              "print(\"Y position:\", y)"
+            ].join("\n")
+          },
+          {
+            id: "l4_c3",
+            title: "Phonebook Lookup (Dictionaries)",
+            desc: "Create a dictionary with names and numbers: {'Sam': '1234', 'Alex': '5678'}. Ask for a name and look up their number using .get().",
+            solution: [
+              "# Safe lookup in a dictionary",
+              "phonebook = {",
+              "    \"Sam\": \"1234\",",
+              "    \"Alex\": \"5678\"",
+              "}",
+              "",
+              "name = input(\"Whose number do you want? \")",
+              "number = phonebook.get(name, \"Not found\")",
+              "",
+              "print(\"Phone number:\", number)"
+            ].join("\n")
+          }
+        ],
+        anecdote: {
+          title: "Level 4 Complete",
+          quote: "Different data structures help store groups of items depending on how you use them.",
+          bullets: [
+            "Lists [...] hold ordered items that you can change anytime using .append() or .remove().",
+            "Tuples (...) hold fixed items that cannot be changed once created.",
+            "Dictionaries {...} hold pairs of keys and values (like a word and its definition).",
+            "Using .get('key', 'Not found') is friendly because it doesn't crash if a key is missing."
+          ]
+        }
+      },
+      {
+        id: "level-5",
+        title: "5. Functions & Recursion",
+        challenges: [
+          {
+            id: "l5_c1",
+            title: "Greeting Function (def and return)",
+            desc: "Write a function make_greeting(name) that takes a name and returns 'Hello, ' followed by the name. Call it and print the result.",
+            solution: [
+              "# Simple greeting function",
+              "def make_greeting(name):",
+              "    return \"Hello, \" + name + \"!\"",
+              "",
+              "# Testing the function",
+              "message = make_greeting(\"Maya\")",
+              "print(message)"
+            ].join("\n")
+          },
+          {
+            id: "l5_c2",
+            title: "Double and Triple (Returning two values)",
+            desc: "Write a function double_and_triple(number) that returns both the number times 2 and times 3 as a pair. Unpack and print both answers.",
+            solution: [
+              "# Returning two values",
+              "def double_and_triple(number):",
+              "    d = number * 2",
+              "    t = number * 3",
+              "    return d, t",
+              "",
+              "# Calling the function",
+              "twice, thrice = double_and_triple(4)",
+              "print(\"Double:\", twice)",
+              "print(\"Triple:\", thrice)"
+            ].join("\n")
+          },
+          {
+            id: "l5_c3",
+            title: "Echo Countdown (Simple recursion)",
+            desc: "Write a function countdown(n) that prints n and calls countdown(n - 1). Make sure it stops when n reaches 0 (the base case).",
+            solution: [
+              "# Function that calls itself",
+              "def countdown(n):",
+              "    if n == 0:",
+              "        print(\"Done!\")",
+              "        return",
+              "    ",
+              "    print(n)",
+              "    countdown(n - 1)",
+              "",
+              "# Call it with 3",
+              "countdown(3)"
+            ].join("\n")
+          }
+        ],
+        anecdote: {
+          title: "Level 5 Complete",
+          quote: "Functions let you write an action once and reuse it whenever you need it.",
+          bullets: [
+            "def defines your custom function.",
+            "return sends the result back so you can save it into a variable.",
+            "You can return multiple values separated by commas.",
+            "Recursion is simply a function that calls itself to solve a smaller piece, always stopping at a base case."
+          ]
+        }
+      }
+    ];
 
-        const hudIndexTracker = document.getElementById("hud-index-tracker");
-        const hudScoreTracker = document.getElementById("hud-score-tracker");
-        const arenaTimerFill = document.getElementById("arena-timer-fill");
+    const STORAGE_KEY = "alphagen_py_app";
+    let state = { completed: {}, submissions: {} };
+
+    function loadState() {
+      try {
+        const s = localStorage.getItem(STORAGE_KEY);
+        if (s) state = JSON.parse(s);
+      } catch(e) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch(e) {}
+      updateHeaderProgress();
+      checkLevelStatus();
+    }
+
+    function resetProgress() {
+      state = { completed: {}, submissions: {} };
+      saveState();
+      renderCurriculum();
+      notify("Progress reset");
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function highlightPython(code) {
+      if (!code) return "";
+      
+      const keywords = new Set(['def', 'return', 'if', 'elif', 'else', 'while', 'for', 'in', 'and', 'or', 'not', 'try', 'except', 'True', 'False', 'None']);
+      const builtins = new Set(['print', 'input', 'int', 'float', 'str', 'len', 'range', 'list', 'dict', 'tuple', 'sum', 'append', 'get', 'remove', 'sort']);
+      
+      return code.split('\n').map(line => {
+        let commentPart = "";
+        let codePart = line;
         
-        const arenaLevelHeader = document.getElementById("arena-level-header");
-        const arenaQuestionText = document.getElementById("arena-question-text");
-        const arenaSyntaxTerminal = document.getElementById("arena-syntax-terminal");
-        const arenaChoicesStack = document.getElementById("arena-choices-stack");
+        // Separate comment safely first so it doesn't get tokenized
+        const commentIdx = line.indexOf('#');
+        if (commentIdx !== -1) {
+          codePart = line.slice(0, commentIdx);
+          commentPart = '<span class="token-comment">' + escapeHtml(line.slice(commentIdx)) + '</span>';
+        }
         
-        const arenaExplanationDrawer = document.getElementById("arena-explanation-drawer");
-        const explanationBodyText = document.getElementById("explanation-body-text");
-        const btnNextStep = document.getElementById("btn-next-step");
+        // Tokenizer regex matching strings, identifiers, numbers, operators, whitespace
+        const tokenRegex = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|[a-zA-Z_]\w*|==|!=|<=|>=|\/\/|\*\*|[+\-*\/%<>=]|\s+|[^\s\w]+)/g;
+        
+        const highlighted = codePart.replace(tokenRegex, (token) => {
+          if (token.startsWith('"') || token.startsWith("'")) {
+            return '<span class="token-string">' + escapeHtml(token) + '</span>';
+          }
+          if (keywords.has(token)) {
+            return '<span class="token-keyword">' + token + '</span>';
+          }
+          if (builtins.has(token)) {
+            return '<span class="token-builtin">' + token + '</span>';
+          }
+          if (/^\d+(\.\d+)?$/.test(token)) {
+            return '<span class="token-number">' + token + '</span>';
+          }
+          if (/^(==|!=|<=|>=|\/\/|\*\*|[+\-*\/%<>=])$/.test(token)) {
+            return '<span class="token-operator">' + escapeHtml(token) + '</span>';
+          }
+          return escapeHtml(token);
+        });
+        
+        return highlighted + commentPart;
+      }).join('\n');
+    }
 
-        // --- BACKGROUND CANVAS: ANIMATED FALLING TETRIS BLOCKS ---
-        const canvas = document.getElementById("tetrisCanvas");
-        const ctx = canvas.getContext("2d");
-        let tetrisPieces = [];
+    function renderCurriculum() {
+      const container = document.getElementById('curriculumContainer');
+      container.innerHTML = "";
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+      CURRICULUM.forEach(level => {
+        const isLevelComplete = level.challenges.every(c => state.completed[c.id]);
 
-        const tetrominoShapes = [
-            { color: "#06B6D4", blocks: [[0, 0], [0, 1], [0, 2], [0, 3]] },
-            { color: "#EAB308", blocks: [[0, 0], [1, 0], [0, 1], [1, 1]] },
-            { color: "#A855F7", blocks: [[0, 0], [-1, 0], [1, 0], [0, 1]] },
-            { color: "#F97316", blocks: [[0, 0], [0, 1], [0, 2], [1, 2]] },
-            { color: "#EF4444", blocks: [[0, 0], [-1, 0], [0, 1], [1, 1]] },
-            { color: "#10B981", blocks: [[0, 0], [1, 0], [0, 1], [-1, 1]] }
-        ];
+        const section = document.createElement('section');
+        section.id = level.id;
+        section.className = "scroll-mt-24 space-y-4";
 
-        for (let i = 0; i < 18; i++) {
-            const template = tetrominoShapes[Math.floor(Math.random() * tetrominoShapes.length)];
-            tetrisPieces.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                blockSize: Math.random() * 6 + 12,
-                speedY: Math.random() * 0.7 + 0.3,
-                angle: Math.random() * Math.PI * 2,
-                spinSpeed: (Math.random() * 0.015 + 0.005) * (Math.random() > 0.5 ? 1 : -1),
-                color: template.color,
-                blocks: template.blocks
-            });
-        }
+        const challengesHTML = level.challenges.map(c => {
+          const checked = !!state.completed[c.id];
+          const hasSubmission = !!state.submissions[c.id];
+          const userCode = state.submissions[c.id] || "";
 
-        function drawTetrisPiece(c, piece) {
-            c.save();
-            c.translate(piece.x, piece.y);
-            c.rotate(piece.angle);
-            c.fillStyle = piece.color;
-            c.strokeStyle = "#1C1917";
-            c.lineWidth = 2;
-
-            piece.blocks.forEach(([bx, by]) => {
-                const px = bx * piece.blockSize;
-                const py = by * piece.blockSize;
-                c.fillRect(px, py, piece.blockSize, piece.blockSize);
-                c.strokeRect(px, py, piece.blockSize, piece.blockSize);
-
-                c.fillStyle = "rgba(255, 255, 255, 0.35)";
-                c.fillRect(px + 2, py + 2, piece.blockSize - 4, 3);
-                c.fillStyle = piece.color;
-            });
-
-            c.restore();
-        }
-
-        function animateTetris() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            tetrisPieces.forEach(p => {
-                p.y += p.speedY;
-                p.angle += p.spinSpeed;
-
-                if (p.y > canvas.height + 60) {
-                    p.y = -60;
-                    p.x = Math.random() * canvas.width;
-                }
-                drawTetrisPiece(ctx, p);
-            });
-            requestAnimationFrame(animateTetris);
-        }
-        animateTetris();
-
-        // --- QUIZ NAVIGATION & LOGIC ---
-        function switchView(target) {
-            viewHome.classList.remove("active");
-            viewArena.classList.remove("active");
-            viewReport.classList.remove("active");
-            target.classList.add("active");
-        }
-
-        function shuffleQuestionChoices(question) {
-            const correctAnswerText = question.choices[question.correctIdx];
-            for (let i = question.choices.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [question.choices[i], question.choices[j]] = [question.choices[j], question.choices[i]];
-            }
-            question.correctIdx = question.choices.indexOf(correctAnswerText);
-        }
-
-        function startQuiz() {
-            activeQuestionIndex = 0;
-            score = 0;
-            userAnswersLog = [];
-            hudScoreTracker.innerText = "⭐ Score: 0";
-
-            quizQuestions.forEach(q => shuffleQuestionChoices(q));
-
-            switchView(viewArena);
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            questionLocked = false;
-            arenaExplanationDrawer.style.display = "none";
-            btnNextStep.style.display = "none";
-            arenaChoicesStack.innerHTML = "";
-            arenaSyntaxTerminal.style.display = "none";
-
-            const current = quizQuestions[activeQuestionIndex];
-            hudIndexTracker.innerText = `Question ${activeQuestionIndex + 1}/10`;
-            arenaLevelHeader.innerText = "Pygame & Python Revision 🎮";
-
-            arenaQuestionText.innerText = current.prompt;
-
-            if (current.code) {
-                arenaSyntaxTerminal.innerText = current.code;
-                arenaSyntaxTerminal.style.display = "block";
-            }
-
-            current.choices.forEach((choiceText, index) => {
-                const btn = document.createElement("button");
-                btn.className = "choice-item-btn";
-                btn.innerText = choiceText;
-                btn.onclick = () => selectChoice(index, btn);
-                arenaChoicesStack.appendChild(btn);
-            });
-
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(clockInterval);
-            timeLeft = 30; // 30 seconds per question
-            arenaTimerFill.style.width = "100%";
-
-            clockInterval = setInterval(() => {
-                timeLeft -= 0.1;
-                let pct = (timeLeft / 30) * 100;
-                arenaTimerFill.style.width = `${pct}%`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(clockInterval);
-                    handleTimeOut();
-                }
-            }, 100);
-        }
-
-        function selectChoice(chosenIdx, btnElement) {
-            if (questionLocked) return;
-            questionLocked = true;
-            clearInterval(clockInterval);
-
-            const current = quizQuestions[activeQuestionIndex];
-            const buttons = arenaChoicesStack.children;
-            const isCorrect = (chosenIdx === current.correctIdx);
-
-            if (isCorrect) {
-                btnElement.classList.add("flash-green");
-                score++;
-                hudScoreTracker.innerText = `⭐ Score: ${score}`;
-            } else {
-                btnElement.classList.add("flash-red");
-                if (buttons[current.correctIdx]) {
-                    buttons[current.correctIdx].classList.add("flash-green");
-                }
-            }
-
-            userAnswersLog.push({
-                index: activeQuestionIndex + 1,
-                prompt: current.prompt,
-                code: current.code || null,
-                userChoiceText: current.choices[chosenIdx],
-                correctChoiceText: current.choices[current.correctIdx],
-                explanation: current.explanation,
-                isCorrect: isCorrect
-            });
-
-            showExplanation(current.explanation);
-        }
-
-        function handleTimeOut() {
-            questionLocked = true;
-            const current = quizQuestions[activeQuestionIndex];
-            const buttons = arenaChoicesStack.children;
-
-            if (buttons[current.correctIdx]) {
-                buttons[current.correctIdx].classList.add("flash-green");
-            }
-
-            userAnswersLog.push({
-                index: activeQuestionIndex + 1,
-                prompt: current.prompt,
-                code: current.code || null,
-                userChoiceText: "Timed Out ⏳",
-                correctChoiceText: current.choices[current.correctIdx],
-                explanation: current.explanation,
-                isCorrect: false
-            });
-
-            showExplanation("Time is up! " + current.explanation);
-        }
-
-        function showExplanation(text) {
-            explanationBodyText.innerText = text;
-            arenaExplanationDrawer.style.display = "block";
-            btnNextStep.style.display = "inline-block";
-        }
-
-        function nextQuestion() {
-            activeQuestionIndex++;
-            if (activeQuestionIndex < quizQuestions.length) {
-                loadQuestion();
-            } else {
-                showReportCard();
-            }
-        }
-
-        function showReportCard() {
-            switchView(viewReport);
-            document.getElementById("rep-grand-total").innerText = `${score} / 10`;
-
-            const percentage = Math.round((score / 10) * 100);
-            document.getElementById("rep-percentage").innerText = `${percentage}%`;
-
-            const noteContent = document.getElementById("tutor-note-content");
-            if (score >= 9) {
-                noteContent.innerHTML = `"Dear student, stellar work! You know all the big game blocks—pygame.init(), how sprites move, screen.blit(), and scaling characters, plus your Python loop and condition snippets were spot on! Keep building awesome games!"<br><br>Super proud of you,<br>Tutor Priyadarshini 🌟`;
-            } else if (score >= 6) {
-                noteContent.innerHTML = `"Dear student, wonderful effort! You clearly remember how Pygame displays graphics and how our while and for loops keep games alive. Review screen.blit() and how range() numbers work, and you will be unstoppable!"<br><br>Keep creating,<br>Tutor Priyadarshini 🚀`;
-            } else {
-                noteContent.innerHTML = `"Dear student, great try today! Pygame commands like blit, scale, and list appending take a little time to become second nature. Check your answers in the tabs below and give it another spin!"<br><br>Warmly,<br>Tutor Priyadarshini ✨`;
-            }
-
-            renderReviewTabs();
-        }
-
-        function renderReviewTabs() {
-            const tabAll = document.getElementById("tab-all");
-            const tabCorrect = document.getElementById("tab-correct");
-            const tabWrong = document.getElementById("tab-wrong");
-
-            tabAll.innerHTML = "";
-            tabCorrect.innerHTML = "";
-            tabWrong.innerHTML = "";
-
-            userAnswersLog.forEach(item => {
-                const itemDiv = document.createElement("div");
-                itemDiv.className = `review-item ${item.isCorrect ? 'is-correct' : 'is-wrong'}`;
-
-                itemDiv.innerHTML = `
-                    <div style="font-weight: 700; margin-bottom: 4px;">
-                        ${item.isCorrect ? '✅' : '❌'} Q${item.index}: ${item.prompt}
+          return `
+            <div id="card_${c.id}" class="rounded-xl border ${checked ? 'border-brand-purpleMid bg-brand-purpleGhost' : 'border-brand-lightGrey bg-white'} p-4 sm:p-5 transition shadow-sm">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3">
+                  <label class="pt-0.5 cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" ${checked ? 'checked' : ''} onchange="toggleCheck('${c.id}', '${level.id}', this.checked)">
+                    <div class="w-5 h-5 rounded-md border-2 border-brand-midGrey peer-checked:border-brand-purple peer-checked:bg-brand-purple flex items-center justify-center transition">
+                      <i class="fa-solid fa-check text-white text-[10px] ${checked ? 'block' : 'hidden'}"></i>
                     </div>
-                    ${item.code ? `<div style="background:#F1F5F9; padding:6px 10px; border-radius:6px; font-family:monospace; font-size:12px; margin:6px 0; white-space:pre-wrap;">${escapeHtml(item.code)}</div>` : ''}
-                    <div style="font-size: 13px; margin-top: 4px;">
-                        <strong>Your Answer:</strong> <span style="color: ${item.isCorrect ? '#16A34A' : '#DC2626'};">${escapeHtml(item.userChoiceText)}</span>
+                  </label>
+                  <div>
+                    <h3 class="text-sm font-bold ${checked ? 'line-through text-brand-midGrey' : 'text-brand-nearBlack'}" id="title_${c.id}">${c.title}</h3>
+                    <div class="mt-1 text-xs text-brand-darkGrey leading-relaxed">${c.desc}</div>
+                  </div>
+                </div>
+
+                <button onclick="toggleHelp('${c.id}')" class="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${hasSubmission ? 'bg-brand-purple text-white hover:bg-brand-purpleDark' : 'bg-brand-yellow text-brand-nearBlack hover:bg-brand-yellowDark'}">
+                  <span>✦</span>
+                  <span>${hasSubmission ? 'Compare' : 'Need Help?'}</span>
+                </button>
+              </div>
+
+              <!-- SIDE-BY-SIDE CODE COMPARATOR -->
+              <div id="help_${c.id}" class="${hasSubmission ? 'block' : 'hidden'} mt-4 pt-4 border-t border-brand-lightGrey">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-xs">
+                  
+                  <!-- Left: Student input & formatted review -->
+                  <div class="flex flex-col bg-brand-purpleGhost/50 rounded-lg border border-brand-lightGrey p-3">
+                    <div class="flex items-center justify-between font-semibold text-brand-nearBlack mb-2">
+                      <span>Your Code</span>
+                      <button onclick="submitCode('${c.id}')" class="px-3 py-1 bg-brand-purple hover:bg-brand-purpleDark text-white font-semibold rounded text-xs transition">
+                        Submit
+                      </button>
                     </div>
-                    ${!item.isCorrect ? `<div style="font-size: 13px; color: #16A34A;"><strong>Correct Answer:</strong> ${escapeHtml(item.correctChoiceText)}</div>` : ''}
-                    <div style="font-size: 12px; color: #475569; margin-top: 4px;">
-                        <em>💡 ${escapeHtml(item.explanation)}</em>
+                    <textarea id="input_${c.id}" placeholder="# Paste your Python code here..." class="w-full h-36 p-2 font-mono text-xs rounded border border-brand-lightGrey bg-white text-brand-nearBlack resize-none focus:outline-none focus:border-brand-purple">${userCode}</textarea>
+                    
+                    <div id="previewWrap_${c.id}" class="${userCode ? 'block' : 'hidden'} mt-2">
+                      <div class="text-[10px] uppercase font-bold text-brand-midGrey mb-1">Syntax View</div>
+                      <pre id="preview_${c.id}" class="font-mono text-xs p-2 rounded bg-white border border-brand-lightGrey overflow-x-auto">${highlightPython(userCode)}</pre>
                     </div>
-                `;
+                  </div>
 
-                tabAll.appendChild(itemDiv.cloneNode(true));
-                if (item.isCorrect) tabCorrect.appendChild(itemDiv.cloneNode(true));
-                else tabWrong.appendChild(itemDiv.cloneNode(true));
-            });
+                  <!-- Right: Target reference solution -->
+                  <div class="flex flex-col bg-white rounded-lg border border-brand-lightGrey p-3 relative">
+                    <div class="flex items-center justify-between font-semibold text-brand-purpleDark mb-2">
+                      <span>Solution</span>
+                      <button onclick="copySolution('${c.id}')" class="text-brand-purple hover:underline text-[11px] font-semibold">Copy</button>
+                    </div>
 
-            if (tabCorrect.children.length === 0) {
-                tabCorrect.innerHTML = "<p style='text-align:center; color:#64748B; font-size:14px; padding:12px;'>No correct answers yet. Give it another try!</p>";
-            }
-            if (tabWrong.children.length === 0) {
-                tabWrong.innerHTML = "<p style='text-align:center; color:#16A34A; font-size:14px; font-weight:700; padding:12px;'>🎉 Perfect! No wrong answers to review!</p>";
-            }
+                    <!-- Locked placeholder -->
+                    <div id="lock_${c.id}" class="${hasSubmission ? 'hidden' : 'flex'} flex-col items-center justify-center p-6 text-center h-36 bg-brand-purpleGhost rounded border border-dashed border-brand-purplePale">
+                      <span class="text-brand-purple font-bold text-sm mb-1">✦</span>
+                      <span class="text-xs text-brand-darkGrey">Paste code and click Submit to compare.</span>
+                    </div>
+
+                    <!-- Solution display -->
+                    <div id="sol_${c.id}" class="${hasSubmission ? 'block' : 'hidden'}">
+                      <pre class="font-mono text-xs p-2.5 rounded bg-brand-purpleGhost border border-brand-purplePale overflow-x-auto whitespace-pre leading-relaxed">${highlightPython(c.solution)}</pre>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const anecdoteHTML = `
+          <div id="anecdote_${level.id}" class="${isLevelComplete ? 'block' : 'hidden'} rounded-xl bg-brand-purplePale border-l-4 border-brand-purple p-4 text-xs">
+            <div class="flex items-center gap-1.5 font-bold text-brand-nearBlack mb-1">
+              <span class="text-brand-purple font-bold">✦</span>
+              <span>${level.anecdote.title}</span>
+            </div>
+            <p class="text-brand-darkGrey italic mb-3">"${level.anecdote.quote}"</p>
+            <ul class="space-y-1">
+              ${level.anecdote.bullets.map(b => `
+                <li class="flex items-start gap-1.5 bg-white/70 p-2 rounded border border-brand-purplePale/60">
+                  <span class="text-brand-purple font-bold">✦</span>
+                  <span class="leading-relaxed">${b}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+
+        section.innerHTML = `
+          <div class="flex items-center justify-between border-b border-brand-lightGrey pb-2">
+            <h2 class="text-sm font-bold text-brand-nearBlack">${level.title}</h2>
+            <span id="badge_${level.id}" class="text-[11px] font-semibold px-2 py-0.5 rounded ${isLevelComplete ? 'bg-brand-purple text-white' : 'bg-brand-lightGrey text-brand-darkGrey'}">
+              ${isLevelComplete ? 'Done ✦' : `${getCompletedInLevel(level.id)} / ${level.challenges.length}`}
+            </span>
+          </div>
+          <div class="space-y-3">
+            ${challengesHTML}
+          </div>
+          ${anecdoteHTML}
+        `;
+
+        container.appendChild(section);
+      });
+    }
+
+    function getCompletedInLevel(levelId) {
+      const level = CURRICULUM.find(l => l.id === levelId);
+      if (!level) return 0;
+      return level.challenges.filter(c => state.completed[c.id]).length;
+    }
+
+    function toggleCheck(challengeId, levelId, isChecked) {
+      if (isChecked) {
+        state.completed[challengeId] = true;
+        notify("Completed");
+      } else {
+        delete state.completed[challengeId];
+      }
+      saveState();
+
+      const card = document.getElementById(`card_${challengeId}`);
+      const title = document.getElementById(`title_${challengeId}`);
+      const checkIcon = card ? card.querySelector('.fa-check') : null;
+
+      if (card && title) {
+        if (isChecked) {
+          card.classList.replace('border-brand-lightGrey', 'border-brand-purpleMid');
+          card.classList.replace('bg-white', 'bg-brand-purpleGhost');
+          title.classList.add('line-through', 'text-brand-midGrey');
+          if (checkIcon) checkIcon.classList.remove('hidden');
+        } else {
+          card.classList.replace('border-brand-purpleMid', 'border-brand-lightGrey');
+          card.classList.replace('bg-brand-purpleGhost', 'bg-white');
+          title.classList.remove('line-through', 'text-brand-midGrey');
+          if (checkIcon) checkIcon.classList.add('hidden');
         }
+      }
 
-        function showReviewTab(tabName) {
-            document.querySelectorAll(".review-tabs .tab-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      checkLevelStatus();
+    }
 
-            if (tabName === 'all') {
-                document.querySelector(".review-tabs .tab-btn:nth-child(1)").classList.add("active");
-                document.getElementById("tab-all").classList.add("active");
-            } else if (tabName === 'correct') {
-                document.querySelector(".review-tabs .tab-btn:nth-child(2)").classList.add("active");
-                document.getElementById("tab-correct").classList.add("active");
-            } else {
-                document.querySelector(".review-tabs .tab-btn:nth-child(3)").classList.add("active");
-                document.getElementById("tab-wrong").classList.add("active");
-            }
+    function checkLevelStatus() {
+      CURRICULUM.forEach(level => {
+        const count = getCompletedInLevel(level.id);
+        const isDone = count === level.challenges.length;
+        const badge = document.getElementById(`badge_${level.id}`);
+        const anecdote = document.getElementById(`anecdote_${level.id}`);
+
+        if (badge) {
+          badge.textContent = isDone ? 'Done ✦' : `${count} / ${level.challenges.length}`;
+          badge.className = `text-[11px] font-semibold px-2 py-0.5 rounded ${isDone ? 'bg-brand-purple text-white' : 'bg-brand-lightGrey text-brand-darkGrey'}`;
         }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        if (anecdote) {
+          if (isDone) {
+            anecdote.classList.remove('hidden');
+            anecdote.classList.add('block');
+          } else {
+            anecdote.classList.add('hidden');
+            anecdote.classList.remove('block');
+          }
         }
+      });
+    }
 
-        // EVENT ATTACHMENTS
-        document.getElementById("btn-start-quiz").addEventListener("click", startQuiz);
-        document.getElementById("btn-next-step").addEventListener("click", nextQuestion);
-        document.getElementById("btn-restart-quiz").addEventListener("click", () => switchView(viewHome));
-    </script>
+    function toggleHelp(challengeId) {
+      const box = document.getElementById(`help_${challengeId}`);
+      if (!box) return;
+      box.classList.toggle('hidden');
+    }
+
+    function submitCode(challengeId) {
+      const input = document.getElementById(`input_${challengeId}`);
+      const code = input ? input.value.trim() : "";
+      if (!code) {
+        notify("Please paste code first");
+        return;
+      }
+
+      state.submissions[challengeId] = code;
+      saveState();
+
+      const lock = document.getElementById(`lock_${challengeId}`);
+      const sol = document.getElementById(`sol_${challengeId}`);
+      if (lock) lock.classList.add('hidden');
+      if (sol) sol.classList.remove('hidden');
+
+      const wrap = document.getElementById(`previewWrap_${challengeId}`);
+      const pre = document.getElementById(`preview_${challengeId}`);
+      if (wrap && pre) {
+        pre.innerHTML = highlightPython(code);
+        wrap.classList.remove('hidden');
+      }
+
+      notify("Solution unlocked ✦");
+    }
+
+    function copySolution(challengeId) {
+      let solCode = "";
+      for (const level of CURRICULUM) {
+        const found = level.challenges.find(c => c.id === challengeId);
+        if (found) { solCode = found.solution; break; }
+      }
+      if (!solCode) return;
+
+      const ta = document.createElement("textarea");
+      ta.value = solCode;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        notify("Copied to clipboard");
+      } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function updateHeaderProgress() {
+      let total = 0, done = 0;
+      CURRICULUM.forEach(lvl => {
+        total += lvl.challenges.length;
+        lvl.challenges.forEach(c => {
+          if (state.completed[c.id]) done++;
+        });
+      });
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      const bar = document.getElementById('progressBar');
+      const txt = document.getElementById('progressPercent');
+      if (bar) bar.style.width = `${pct}%`;
+      if (txt) txt.textContent = `${pct}%`;
+    }
+
+    function notify(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      if (!toast) return;
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2500);
+    }
+
+    window.onload = function() {
+      loadState();
+      renderCurriculum();
+      updateHeaderProgress();
+      checkLevelStatus();
+    };
+  </script>
 </body>
 </html>
